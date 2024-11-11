@@ -1,8 +1,52 @@
-# React + Vite
-
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+```bash
+root/
+│
+├── public/
+│   │
+│   └── favicon.ico
+│
+├── src/
+│   ├── assets/
+│   │   ├── images/
+│   │   │   ├── logo.png
+│   │   │   └── banner.jpg
+│   │   └── fonts/
+│
+│   ├── components/
+│   │   ├── Navbar/
+│   │   │   ├── Navbar.jsx
+│   │   │   └── Navbar.css
+│   │   ├── Footer/
+│   │   │   ├── Footer.jsx
+│   │   │   └── Footer.css
+│   │   ├── ProductCard/
+│   │   │   ├── ProductCard.jsx
+│   │   │   └── ProductCard.css
+│   │   ├── Review/
+│   │   │   ├── Review.jsx
+│   │   │   └── Review.css
+│   ├── pages/
+│   │   ├── Home/
+│   │   │   ├── Home.jsx
+│   │   │   └── Home.css
+│   │   ├── Products/
+│   │   │   ├── Products.jsx
+│   │   │   └── Products.css
+│   │   ├── ProductDetail/
+│   │   │   ├── ProductDetail.jsx
+│   │   │   └── ProductDetail.css
+│   │   ├── Cart/
+│   │   │   ├── Cart.jsx
+│   │   │   └── Cart.css
+│   │   ├── Checkout/
+│   │   │   ├── Checkout.jsx
+│   │   │   └── Checkout.css
+│   │   └── Auth/
+│   │       ├── Login.jsx
+│   │       ├── Register.jsx
+│   │       └── Auth.css
+│   ├── App.jsx
+│   ├── index.js
+│
+└── package.json
+```
