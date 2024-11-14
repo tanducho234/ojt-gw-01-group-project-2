@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import "./ProductDetail.css";
@@ -56,6 +57,7 @@ const ProductDetail = () => {
     ],
   };
   const { id } = useParams();
+
   const [selectedColor, setSelectedColor] = useState(product.colors[0]);
   const [selectedSize, setSelectedSize] = useState(null);
   const [quantity, setQuantity] = useState(1);
