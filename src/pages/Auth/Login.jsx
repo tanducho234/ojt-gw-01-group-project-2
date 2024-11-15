@@ -15,7 +15,7 @@ const Register = () => {
             <div className="images-column">
               <div className="image-wrapper trapezoid-right">
                 <img 
-                  src="/Pic/reg1.png" 
+                  src="/assets/images/reg1.png" 
                   alt="Fashion model in brown sweater" 
                   width="400" 
                   height="500"
@@ -23,7 +23,7 @@ const Register = () => {
               </div>
               <div className="image-wrapper trapezoid-left">
                 <img 
-                  src="/Pic/reg2.png" 
+                  src="/assets/images/reg2.png" 
                   alt="Fashion model in brown sweater" 
                   width="400" 
                   height="300"
@@ -33,7 +33,7 @@ const Register = () => {
             <div className="images-column offset">
               <div className="image-wrapper trapezoid-right">
                 <img 
-                  src="/Pic/reg3.png" 
+                  src="/assets/images/reg3.png" 
                   alt="Fashion model in brown sweater" 
                   width="400" 
                   height="300"
@@ -41,7 +41,7 @@ const Register = () => {
               </div>
               <div className="image-wrapper trapezoid-left">
                 <img 
-                  src="/Pic/reg1.png" 
+                  src="/assets/images/reg1.png" 
                   alt="Fashion model in brown sweater" 
                   width="400" 
                   height="500"
