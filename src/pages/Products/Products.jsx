@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
-
+import Pagination from "../../components/Pagination/Pagination";
 import { products } from "../../assets/dataexample";
 import ProductCard from "../../components/ProductCard/ProductCard";
 import "../../index.css";
+import "../Products/Products.css";
+import "../../pages/Products/Products.css";
+import Breadcrumb from "../../components/BreadCrumb/BreadCrumb";
 
 function Products() {
   // State to hold the filter values
-  const [price, setPrice] = useState([50, 200]);
-  const minPrice = 25;
+  const [price, setPrice] = useState([0, 200]);
+  const minPrice = 0;
   const maxPrice = 200;
   const [selectedColor, setSelectedColor] = useState("");
   const [selectedSize, setSelectedSize] = useState("");
@@ -23,11 +26,25 @@ function Products() {
 
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 9; // Number of products per page
+  // Calculate total pages
+  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
 
   const [sortCriteria, setSortCriteria] = useState("");
 
   const handleSortChange = (e) => {
     setSortCriteria(e.target.value);
+  };
+
+  const handleSliderChange = (index, value) => {
+    setTempPrice((prevPrice) => {
+      const newPrice = [...prevPrice];
+      newPrice[index] = Math.max(minPrice, Math.min(maxPrice, value)); // Clamp values within bounds
+      if (newPrice[0] > newPrice[1]) {
+        // Prevent crossing handles
+        newPrice[index === 0 ? 1 : 0] = newPrice[index];
+      }
+      return newPrice;
+    });
   };
 
   // Function to handle filter application
@@ -89,8 +106,6 @@ function Products() {
     sortCriteria,
   ]);
 
-  // Calculate total pages
-  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
   // Get products for the current page
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
@@ -99,40 +114,35 @@ function Products() {
     indexOfLastProduct
   );
 
-  const handleSliderChange = (index, value) => {
-    setTempPrice((prevPrice) => {
-      const newPrice = [...prevPrice];
-      newPrice[index] = Math.max(minPrice, Math.min(maxPrice, value)); // Clamp values within bounds
-      if (newPrice[0] > newPrice[1]) {
-        // Prevent crossing handles
-        newPrice[index === 0 ? 1 : 0] = newPrice[index];
-      }
-      return newPrice;
-    });
-  };
-
   // Handle page change
   const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <div className="flex p-5">
-      <aside className="relative top-2.5 left-2.5 rounded-[30px] gap-6 p-5 max-h-[120vh] shadow-inner shadow-gray-400/30">
-        <div className="w-48 p-5">
-          <h3 className="text-lg mb-4">Filters</h3>
+      <aside className="relative top-2.5 w-[25%] left-2.5 rounded-2xl gap-3  h-[1350px] shadow-inner shadow-gray">
+        <div className="mb-5">
+          {/* <Breadcrumb
+            className=" flex z-10"
+            category={selectedCategory}
+            filters={selectedDressStyle || selectedColor || selectedSize}
+          /> */}
+        </div>
+        <div className=" p-5">
+          <h3 className="font-bold text-2xl">Filters</h3>
           <hr />
 
-          {/* Categories Filter */}
-          <div className="pb-2.5 mb-2.5 border-b border-gray-300">
-            <h4 className="mb-2.5">Categories</h4>
-            <div className="flex flex-col gap-2">
+          {/* _______________________________ Categories Filter _______________________________ */}
+          <div className="filter-section pb-2 mb-2 border-b border-gray">
+            <h4 className="my-2 text-lg font-normal">Categories</h4>
+            <div className="category-options flex flex-col gap-2 rounded-xl bg-transparent shadow-md">
               {["T-Shirts", "Shorts", "Shirts", "Hoodie", "Jeans"].map(
                 (category) => (
                   <button
                     key={category}
-                    className={`text-left p-2.5 rounded ${
+                    className={`category-btn px-5 py-2 border-none text-center rounded-md cursor-pointer hover:bg-gray ${
                       tempSelectedCategory === category
-                        ? "bg-black text-white"
-                        : "bg-gray-100"
+                        ? "bg-black text-[#ffffff]"
+                        : ""
                     }`}
                     onClick={() =>
                       setTempSelectedCategory(
@@ -147,36 +157,66 @@ function Products() {
             </div>
           </div>
 
-          {/* Price Filter */}
-          <div className="pb-2.5 mb-2.5 border-b border-gray-300">
-            <h4 className="mb-2.5">Price</h4>
-            <div className="relative w-full h-1.5 bg-gray-300 my-2.5 rounded">
+          {/* _______________________________ Price Filter _______________________________ */}
+          <div className="w-full my-5">
+            {/* Display Current Price Range */}
+            <div className="flex justify-between mb-2">
+              <span className="text-lg font-medium">${tempPrice[0]}</span>
+              <span className="text-lg font-medium">${tempPrice[1]}</span>
+            </div>
+
+            {/* Slider Container */}
+            <div className="relative w-full h-1 bg-gray rounded-md">
+              {/* Highlighted Range */}
+              <div
+                className="absolute h-1 bg-black rounded-md"
+                style={{
+                  left: `${
+                    ((tempPrice[0] - minPrice) / (maxPrice - minPrice)) * 100
+                  }%`,
+                  width: `${
+                    ((tempPrice[1] - tempPrice[0]) / (maxPrice - minPrice)) *
+                    100
+                  }%`,
+                }}
+              ></div>
+
+              {/* Left Slider */}
               <input
                 type="range"
                 min={minPrice}
                 max={maxPrice}
                 value={tempPrice[0]}
-                onChange={(e) => handleSliderChange(0, Number(e.target.value))}
-                className="absolute appearance-none h-1 bg-transparent w-full pointer-events-none"
+                onChange={(e) =>
+                  handleSliderChange(
+                    0,
+                    Math.min(Number(e.target.value), tempPrice[1])
+                  )
+                }
+                className="absolute z-10 w-full h-1 appearance-none bg-transparent pointer-events-none"
               />
+
+              {/* Right Slider */}
               <input
                 type="range"
                 min={minPrice}
                 max={maxPrice}
                 value={tempPrice[1]}
-                onChange={(e) => handleSliderChange(1, Number(e.target.value))}
-                className="absolute appearance-none h-1 bg-transparent w-full pointer-events-none"
+                onChange={(e) =>
+                  handleSliderChange(
+                    1,
+                    Math.max(Number(e.target.value), tempPrice[0])
+                  )
+                }
+                className="absolute  w-full h-1 appearance-none bg-transparent pointer-events-none"
               />
-            </div>
-            <div>
-              ${tempPrice[0]} - ${tempPrice[1]}
             </div>
           </div>
 
-          {/* Colors Filter */}
-          <div className="pb-2.5 mb-2.5 border-b border-gray-300">
-            <h4 className="mb-2.5">Colors</h4>
-            <div className="flex gap-2 flex-wrap">
+          {/* _______________________________ Colors Filter _______________________________ */}
+          <div className="filter-section pb-2 mb-2 border-b border-gray-300">
+            <h4 className="my-2 text-lg font-normal">Colors</h4>
+            <div className="color-options flex gap-2 flex-wrap">
               {[
                 "Green",
                 "Red",
@@ -192,32 +232,33 @@ function Products() {
               ].map((color) => (
                 <span
                   key={color}
-                  className={`w-6 h-6 rounded-full cursor-pointer bg-${color.toLowerCase()}-500`}
+                  className="w-6 h-6 rounded-full cursor-pointer"
+                  style={{
+                    backgroundColor: color.toLowerCase(),
+                    border:
+                      tempSelectedColor === color ? "2px solid black" : "none",
+                  }}
                   onClick={() =>
                     setTempSelectedColor(
                       tempSelectedColor === color ? "" : color
                     )
                   }
-                  style={{
-                    border:
-                      tempSelectedColor === color ? "2px solid black" : "none",
-                  }}
                 ></span>
               ))}
             </div>
           </div>
 
-          {/* Size Filter */}
-          <div className="pb-2.5 mb-2.5 border-b border-gray-300">
-            <h4 className="mb-2.5">Size</h4>
-            <div className="flex gap-2 flex-wrap">
+          {/* _______________________________ Sizes Filter _______________________________ */}
+          <div className="filter-section pb-2 mb-2 border-b border-gray-300">
+            <h4 className="my-2 text-lg font-normal">Size</h4>
+            <div className="size-options flex gap-2 flex-wrap ">
               {["S", "M", "L", "XL"].map((size) => (
                 <button
                   key={size}
-                  className={`px-5 py-2 rounded-full cursor-pointer ${
+                  className={`size-btn py-2 px-4 rounded-full cursor-pointer hover:bg-gray ${
                     tempSelectedSize === size
                       ? "bg-black text-white"
-                      : "bg-gray-200"
+                      : "bg-white"
                   }`}
                   onClick={() =>
                     setTempSelectedSize(tempSelectedSize === size ? "" : size)
@@ -229,17 +270,17 @@ function Products() {
             </div>
           </div>
 
-          {/* Dress Style Filter */}
-          <div className="pb-2.5 mb-2.5 border-b border-gray-300">
-            <h4 className="mb-2.5">Dress Style</h4>
-            <div className="flex flex-col gap-2">
+          {/* _______________________________ Dress Style Filter _______________________________ */}
+          <div className="filter-section pb-2 mb-2 border-b border-gray">
+            <h4 className="my-2 text-lg font-normal">Dress Style</h4>
+            <div className="dress-style-options flex flex-col gap-2 rounded-xl flex-wrap bg-transparent shadow-md">
               {["Casual", "Formal", "Party", "Gym"].map((style) => (
                 <button
                   key={style}
-                  className={`text-left p-2.5 rounded ${
+                  className={`style-btn py-2 px-4 rounded-lg cursor-pointer hover:bg-gray ${
                     tempSelectedDressStyle === style
                       ? "bg-black text-white"
-                      : "bg-gray-100"
+                      : "bg-white"
                   }`}
                   onClick={() =>
                     setTempSelectedDressStyle(
@@ -253,21 +294,25 @@ function Products() {
             </div>
           </div>
 
-          <button className="w-full bg-black text-white rounded-full py-4 text-lg">
+          <button
+            className="apply-filter-btn w-full bg-black  text-white border-none cursor-pointer text-lg rounded-full py-2 px-1 hover:bg-gray hover:text-white font-semibold "
+            
+            onClick={applyFilters}
+          >
             Apply Filter
           </button>
         </div>
       </aside>
-
-      <div className="ml-8 flex flex-col items-center relative">
-        {/* Sort By dropdown */}
-        <div className="mb-5">
-          <label htmlFor="sort">Sort By: </label>
+      <div className="grid-pagination flex flex-col items-center space-y-6">
+        <div className="sort-by flex items-center ml-[900px] space-x-2 ">
+          <label htmlFor="sort" className="text-lg font-medium">
+            Sort By:{" "}
+          </label>
           <select
             id="sort"
             value={sortCriteria}
             onChange={handleSortChange}
-            className="px-2 py-1 text-lg rounded border border-gray-300"
+            className="py-2 px-4 border border-gray rounded-md"
           >
             <option value="">Select...</option>
             <option value="priceLowToHigh">Price: Low to High</option>
@@ -276,8 +321,7 @@ function Products() {
           </select>
         </div>
 
-        {/* Product Grid */}
-        <section className="grid grid-cols-3 gap-20 p-5">
+        <section className="product-grid grid grid-cols-3 gap-8 w-full ml-[150px]">
           {currentProducts.map((product, index) => (
             <ProductCard
               key={index}
@@ -290,36 +334,12 @@ function Products() {
           ))}
         </section>
 
-        {/* Pagination buttons */}
-        <div className="flex justify-between items-center gap-2">
-          <button
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-            className="px-4 py-2 rounded border border-gray-300 bg-white hover:bg-gray-100 disabled:bg-gray-300 disabled:cursor-not-allowed"
-          >
-            Previous
-          </button>
-          {Array.from({ length: totalPages }, (_, i) => (
-            <button
-              key={i + 1}
-              onClick={() => handlePageChange(i + 1)}
-              className={`px-4 py-2 rounded border ${
-                currentPage === i + 1
-                  ? "bg-blue-500 text-white"
-                  : "border-gray-300 bg-white hover:bg-gray-100"
-              }`}
-            >
-              {i + 1}
-            </button>
-          ))}
-          <button
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            className="px-4 py-2 rounded border border-gray-300 bg-white hover:bg-gray-100 disabled:bg-gray-300 disabled:cursor-not-allowed"
-          >
-            Next
-          </button>
-        </div>
+        {/* Pagination Component */}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
       </div>
     </div>
   );
