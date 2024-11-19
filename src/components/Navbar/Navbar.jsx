@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import './Navbar.css';
+import React, { useState } from "react";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -9,47 +8,148 @@ const Navbar = () => {
   };
 
   return (
-    <header className="shop-header">
-      {/* Logo */}
-      <button className="shop-header__mobile-btn" onClick={toggleMobileMenu}>
-          ☰
-        </button>
-      <a href="/" className="shop-header__logo">SHOP.CO</a>
+    <header className="bg-white shadow-md sticky top-0 z-50">
+      <div className="container mx-auto px-4 py-3 flex justify-between items-center">
+        {/* Logo */}
+        <a href="/" className="flex items-center space-x-2">
+          <img
+            src="/public/assets/images/Logofast.png"
+            alt="Shop Logo"
+            className="h-8 w-auto"
+          />
+        </a>
 
-      {/* Navigation */}
-      <nav className="shop-header__nav">
-        
-        <ul className={`shop-header__nav-items ${isMobileMenuOpen ? 'active' : ''}`}>
-          <li className="shop-header__dropdown">
-            <a href="#" className="shop-header__nav-link">Shop</a>
-            <div className="shop-header__dropdown-content">
-              <a href="/products" className="shop-header__dropdown-link">All Products</a>
-              <a href="#" className="shop-header__dropdown-link">New Arrivals</a>
-              <a href="#" className="shop-header__dropdown-link">Best Sellers</a>
-            </div>
-          </li>
-          <li><a href="#" className="shop-header__nav-link">On Sale</a></li>
-          <li><a href="#" className="shop-header__nav-link">New Arrivals</a></li>
-          <li><a href="#" className="shop-header__nav-link">Brands</a></li>
-        </ul>
-      </nav>
+        {/* Desktop Navigation */}
+        <nav className="hidden lg:flex items-center space-x-8">
+          <ul className="flex items-center space-x-6">
+            <li className="relative group">
+              <a href="#" className="text-gray-600 hover:text-black transition">
+                Shop
+              </a>
+              {/* Dropdown Menu */}
+              <div className="absolute hidden group-hover:block bg-white shadow-lg rounded-lg py-2 z-10 top-full left-0 w-48">
+                <a
+                  href="/products"
+                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                >
+                  All Products
+                </a>
+                <a
+                  href="#"
+                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                >
+                  New Arrivals
+                </a>
+                <a
+                  href="#"
+                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                >
+                  Best Sellers
+                </a>
+              </div>
+            </li>
+            <li>
+              <a href="#" className="text-gray-600 hover:text-black transition">
+                On Sale
+              </a>
+            </li>
+            <li>
+              <a href="#" className="text-gray-600 hover:text-black transition">
+                New Arrivals
+              </a>
+            </li>
+            <li>
+              <a href="#" className="text-gray-600 hover:text-black transition">
+                Brands
+              </a>
+            </li>
+          </ul>
+        </nav>
 
-      {/* Search Bar */}
-      <div className="shop-header__search">
-        <input 
-          type="text" 
-          className="shop-header__search-input" 
-          placeholder="Search for products..." 
-        />
-        <span className="shop-header__search-icon"><img src="../../assets/images/search.png" alt="Visa" /></span>
+        {/* Search Bar */}
+        <div className="hidden md:flex flex-1 mx-8 max-w-lg relative">
+          <input
+            type="text"
+            className="w-full pl-4 pr-12 py-2 border rounded-full focus:ring-2 focus:ring-blue-500 bg-gray-100 shadow-md text-sm"
+            placeholder="Search for products..."
+          />
+          <span className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-600">
+            <img
+              src="../../assets/images/search.png"
+              alt="Search"
+              className="w-5 h-5"
+            />
+          </span>
+        </div>
+
+        {/* User Actions */}
+        <div className="flex items-center space-x-4">
+          <a href="/cart" className="relative">
+            <img
+              src="../../assets/images/stores.png"
+              alt="Cart"
+              className="w-6 h-6"
+            />
+            <span className="absolute -top-2 -right-2 flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full">
+              3
+            </span>
+          </a>
+          <a href="/login">
+            <img
+              src="../../assets/images/users.png"
+              alt="User"
+              className="w-6 h-6"
+            />
+          </a>
+          {/* Mobile Menu Button */}
+          <button
+            className="lg:hidden text-gray-600 focus:outline-none"
+            onClick={toggleMobileMenu}
+          >
+            ☰
+          </button>
+        </div>
       </div>
 
-      {/* User Actions */}
-      <div className="shop-header__actions">
-      <a href="/cart" className="shop-header__icon"><img src="../../assets/images/stores.png" alt="Visa" /></a>
-      <a href="/login" className="shop-header__icon"><img src="../../assets/images/users.png" alt="Visa" /></a>
-
-      </div>
+      {/* Mobile Menu */}
+      {isMobileMenuOpen && (
+        <div className="lg:hidden bg-white shadow-md">
+          <ul className="px-4 py-2 space-y-2">
+            <li>
+              <a
+                href="#"
+                className="block text-gray-700 hover:bg-gray-100 px-4 py-2 rounded"
+              >
+                Shop
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                className="block text-gray-700 hover:bg-gray-100 px-4 py-2 rounded"
+              >
+                On Sale
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                className="block text-gray-700 hover:bg-gray-100 px-4 py-2 rounded"
+              >
+                New Arrivals
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                className="block text-gray-700 hover:bg-gray-100 px-4 py-2 rounded"
+              >
+                Brands
+              </a>
+            </li>
+          </ul>
+        </div>
+      )}
     </header>
   );
 };

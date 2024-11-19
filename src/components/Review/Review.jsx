@@ -10,8 +10,7 @@ const Review = ({
   },
 }) => {
   return (
-    <div className="review-card">
-              <span className="review-more-btn">...</span>
+    <div className="review-card"> 
 
        <div className="review-rating">
         {Array.from({ length: 5 }, (_, i) => (
