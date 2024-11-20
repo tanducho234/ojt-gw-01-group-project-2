@@ -24,17 +24,17 @@ function Home() {
   const brands = ['Versace', 'Vector', 'Gucci', 'Prada', 'Calvin_Klein'];
 
   const newArrivals = [
-    { id: 1, name: 'T-shirt with Tape Details', price: 120, rating: 4.5, reviews: 145, image: '/public/images/Frame_32.png' },
-    { id: 2, name: 'Skinny Fit Jeans', price: 240, oldPrice: 260, rating: 4.3, reviews: 130, image: '/public/images/Frame_33.png' },
-    { id: 3, name: 'Checkered Shirt', price: 180, rating: 4.4, reviews: 140, image: '/public/images/Frame_34.png' },
-    { id: 4, name: 'Sleeve Striped T-shirt', price: 130, oldPrice: 160, rating: 4.2, reviews: 120, image: '/public/images/Frame_38.png' }
+    { id: 1, name: 'T-shirt with Tape Details', price: 120, rating: 4.5, reviews: 145, image: '/images/Frame_32.png' },
+    { id: 2, name: 'Skinny Fit Jeans', price: 240, oldPrice: 260, rating: 4.3, reviews: 130, image: '/images/Frame_33.png' },
+    { id: 3, name: 'Checkered Shirt', price: 180, rating: 4.4, reviews: 140, image: '/images/Frame_34.png' },
+    { id: 4, name: 'Sleeve Striped T-shirt', price: 130, oldPrice: 160, rating: 4.2, reviews: 120, image: '/images/Frame_38.png' }
   ];
 
   const topSelling = [
-    { id: 1, name: 'Vertical Striped Shirt', price: 212, oldPrice: 232, rating: 4.6, reviews: 160, image: '/public/images/Frame_32_1.png' },
-    { id: 2, name: 'Courage Graphic T-shirt', price: 145, rating: 4.7, reviews: 167, image: '/public/images/Frame_33_1.png' },
-    { id: 3, name: 'Loose Fit Bermuda Shorts', price: 80, rating: 4.3, reviews: 120, image: '/public/images/Frame_34_1.png' },
-    { id: 4, name: 'Faded Skinny Jeans', price: 210, rating: 4.4, reviews: 140, image: '/public/images/Frame_38_1.png' }
+    { id: 1, name: 'Vertical Striped Shirt', price: 212, oldPrice: 232, rating: 4.6, reviews: 160, image: '/images/Frame_32_1.png' },
+    { id: 2, name: 'Courage Graphic T-shirt', price: 145, rating: 4.7, reviews: 167, image: '/images/Frame_33_1.png' },
+    { id: 3, name: 'Loose Fit Bermuda Shorts', price: 80, rating: 4.3, reviews: 120, image: '/images/Frame_34_1.png' },
+    { id: 4, name: 'Faded Skinny Jeans', price: 210, rating: 4.4, reviews: 140, image: '/images/Frame_38_1.png' }
   ];
 
   // Check if device is mobile
@@ -217,7 +217,7 @@ function Home() {
             {[...brands, ...brands, ...brands].map((brand, index) => (
               <img 
                 key={`${brand}-${index}`}
-                src={`/public/images/${brand}.png`} 
+                src={`/images/${brand}.png`} 
                 alt={brand} 
                 className="max-w-[120px] md:max-w-[200px] h-auto transform transition-all duration-500 hover:scale-110 hover:brightness-110 hover:contrast-110 select-none"
                 draggable="false"
@@ -293,7 +293,7 @@ function Home() {
           {['Casual', 'Formal', 'Party', 'GYM'].map((style) => (
             <div key={style} className="bg-transparent transform transition-all duration-500 hover:scale-105 hover:shadow-lg">
               <img 
-                src={`/public/images/${style}.png`} 
+                src={`/images/${style}.png`} 
                 alt={`${style} Style`} 
                 className="block w-full md:w-auto h-auto transition-all duration-500 hover:brightness-110"
               />
