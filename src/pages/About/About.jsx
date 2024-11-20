@@ -2,70 +2,118 @@ import React from "react";
 
 const AboutUs = () => {
   return (
-    <div className="about-us-page">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 p-8 max-w-screen-xl mx-auto">
-        {/* Left Column */}
-        <div className="col-span-1 flex flex-col justify-center">
-          <h1 className="text-4xl font-bold mb-6">ABOUT US</h1>
-          <p className="text-lg mb-6">
-            Lashes – where fashion meets dynamism. Born from a burning passion
-            for fashion, Lashes is dedicated to bringing you the most
-            exceptional shopping experience.
-          </p>
-          <button className="px-6 py-2 bg-black text-white rounded-full hover:bg-gray-800">
-            Explore
-          </button>
+    <div className="about-us-page bg-white">
+      <div className="max-w-[1200px] mx-auto px-4">
+        {/* Very Top Image */}
+        <div className="grid grid-cols-12 gap-6 mb-6">
+          <div className="col-span-6">
+            <img
+              src="https://via.placeholder.com/400x200"
+              alt="Fashion detail top"
+              className="w-full h-[200px] object-cover grayscale"
+            />
+          </div>
+          <div className="col-span-6 flex justify-center">
+            <img
+              src="https://via.placeholder.com/800x500"
+              alt="Fashion model"
+              className="w-[full] h-[250px] object-cover grayscale"
+            />
+          </div>
         </div>
 
-        {/* Right Column: Image Grid */}
-        <div className="col-span-2 grid grid-cols-2 gap-4">
-          <img
-            src="https://via.placeholder.com/300x300"
-            alt="Fashion 1"
-            className="w-full h-full object-cover"
-          />
-          <img
-            src="https://via.placeholder.com/300x300"
-            alt="Fashion 2"
-            className="w-full h-full object-cover"
-          />
-          <img
-            src="https://via.placeholder.com/300x300"
-            alt="Fashion 3"
-            className="w-full h-full object-cover"
-          />
-          <img
-            src="https://via.placeholder.com/300x300"
-            alt="Fashion 4"
-            className="w-full h-full object-cover"
-          />
-        </div>
-      </div>
+        {/* First Row */}
+        <div className="grid grid-cols-22 gap-6 mb-6">
+          {/* Text Column */}
+          <div className="col-span-4 flex items-center space-x-500">
+            <div className="mb-200">
+              <h2 className="text-xl font-bold mb-4">ABOUT US</h2>
+              <p className="text-sm text-gray-600 mb-6 leading-relaxed">
+                Lashes - where fashion meets<br></br> dynamism. Born from a burning<br></br>
+                passion for fashion, Lashes is<br></br> dedicated to bringing you the
+                most<br></br> exceptional shopping experience.
+              </p>
+              
+              <button className="px-6 py-1.5 bg-black text-white text-sm rounded-sm">
+                Explore
+              </button>
+            </div>
 
-      {/* Bottom Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8 max-w-screen-xl mx-auto mt-10">
-        <div className="grid grid-cols-2 gap-4">
-          <img
-            src="https://via.placeholder.com/300x300"
-            alt="Fashion 5"
-            className="w-full h-full object-cover"
-          />
-          <img
-            src="https://via.placeholder.com/300x300"
-            alt="Fashion 6"
-            className="w-full h-full object-cover"
-          />
+            <div className="col-span-8 flex justify-center">
+            <img 
+              src="https://via.placeholder.com/400x300"
+              alt="Fashion detail"
+              className="w-400 h-[300px] object-cover grayscale"
+            />
+            </div>
+          </div>
+
         </div>
 
-        <div className="flex flex-col justify-center">
-          <p className="text-lg mb-6">
-            With youthful, bold designs and premium materials, Lashes empowers
-            you to confidently express your unique style.
-          </p>
-          <p className="text-lg">
-            Our mission is to inspire and connect people through fashion,
-            ensuring you shine in every situation.
-          </p>
+        {/* Second Row - Right Side Image */}
+        <div className="grid grid-cols-12 gap-6 mb-6">
+          <div className="col-span-8"></div>
+          
+        </div>
+
+        {/* Third Row - Left Side Images */}
+        <div className="flex justify-center  grid grid-cols-12 gap-6 mb-6">
+          <div className="col-span-6">
+            <img
+              src="https://via.placeholder.com/400x300"
+              alt="White pants"
+              className=" w-full h-[320px] object-cover grayscale mb-6"
+            />
+          </div>
+          <div className="col-span-6">
+            <img
+              src="https://via.placeholder.com/400x300"
+              alt="Model with hat"
+              className="w-full h-[320px] object-cover grayscale"
+            />
+          </div>
+        </div>
+
+        {/* Fourth Row - Large Hat Image and Text */}
+        <div className="grid grid-cols-12 gap-6 mb-6">
+          <div className="col-span-6">
+            <img
+              src="https://via.placeholder.com/600x800"
+              alt="Model with large hat"
+              className="w-full h-[380px] object-cover grayscale"
+            />
+          </div>
+          <div className="col-span-6 flex flex-col justify-center pl-12">
+            <div className="max-w-[400px]">
+              <p className="text-sm text-gray-600 mb-6 leading-relaxed">
+                With youthful, bold designs <br></br> and premium materials, <br></br> Lashes
+                empowers you to<br></br> confidently express your unique style.
+              </p>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                Our mission is to inspire and connect people through fashion,
+                ensuring you shine in every situation.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Last Row - Two Large Images */}
+        <div className="grid grid-cols-12 gap-6 mb-12">
+          <div className="col-span-6 flex flex-col justify-end h-full">
+            <img
+              src="https://via.placeholder.com/600x800"
+              alt="Model in dress"
+              className="w-full h-[350px] pb-1 object-cover grayscale"
+            />
+          </div>
+
+          <div className="col-span-6">
+            <img
+              src="https://via.placeholder.com/600x800"
+              alt="Model in black"
+              className="w-full h-[380px] object-cover grayscale"
+            />
+          </div>
         </div>
       </div>
     </div>
