@@ -1,3 +1,51 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+
+/* Custom animation styles with responsive durations */
+@keyframes scrollUp {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
+}
+
+@keyframes scrollDown {
+  0% {
+    transform: translateY(-50%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.animate-scroll-up {
+  animation: scrollUp 20s linear infinite;
+}
+
+.animate-scroll-down {
+  animation: scrollDown 20s linear infinite;
+}
+
+/* Responsive animation speeds */
+@media (max-width: 768px) {
+  .animate-scroll-up {
+    animation-duration: 15s;
+  }
+  .animate-scroll-down {
+    animation-duration: 15s;
+  }
+}
+
+@media (max-width: 480px) {
+  .animate-scroll-up {
+    animation-duration: 10s;
+  }
+  .animate-scroll-down {
+    animation-duration: 10s;
+  }
+}

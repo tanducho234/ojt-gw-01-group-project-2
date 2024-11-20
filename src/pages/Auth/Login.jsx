@@ -1,82 +1,226 @@
 import React, { useState } from 'react';
-import './Auth.css';
 
-const Register = () => {
-  const [searchValue, setSearchValue] = useState('');
+const Login = () => {
+  const images = [
+    '/assets/images/reg1.png',
+    '/assets/images/reg2.png',
+    '/assets/images/reg3.png',
+    '/assets/images/reg1.png',
+    '/assets/images/reg2.png',
+    '/assets/images/reg3.png',
+    '/assets/images/reg1.png',
+    '/assets/images/reg2.png',
+  ];
+
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+  });
+
+  const [errors, setErrors] = useState({
+    email: false,
+    password: false,
+  });
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneRegex = /^[0-9]{10,11}$/;
+    return emailRegex.test(email) || phoneRegex.test(email);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+
+    setErrors(prev => ({
+      ...prev,
+      [name]: validateField(name, value)
+    }));
+  };
+
+  const validateField = (fieldName, value) => {
+    switch (fieldName) {
+      case 'email':
+        return !validateEmail(value);
+      case 'password':
+        return value.length < 8;
+      default:
+        return false;
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    const newErrors = {
+      email: validateField('email', formData.email),
+      password: validateField('password', formData.password),
+    };
+
+    setErrors(newErrors);
+
+    if (!Object.values(newErrors).some(error => error)) {
+      console.log('Form submitted:', formData);
+    }
+  };
 
   return (
-    <div className="regiscontainer">
-      {/* Navigation */}
-      {/* Main Content */}
-      <main className="main-content">
-        <div className="content-grid">
-          {/* Left side - Images */}
-          <div className="images-grid">
-            <div className="images-column">
-              <div className="image-wrapper trapezoid-right">
-                <img 
-                  src="/assets/images/reg1.png" 
-                  alt="Fashion model in brown sweater" 
-                  width="400" 
-                  height="500"
-                />
-              </div>
-              <div className="image-wrapper trapezoid-left">
-                <img 
-                  src="/assets/images/reg2.png" 
-                  alt="Fashion model in brown sweater" 
-                  width="400" 
-                  height="300"
-                />
-              </div>
-            </div>
-            <div className="images-column offset">
-              <div className="image-wrapper trapezoid-right">
-                <img 
-                  src="/assets/images/reg3.png" 
-                  alt="Fashion model in brown sweater" 
-                  width="400" 
-                  height="300"
-                />
-              </div>
-              <div className="image-wrapper trapezoid-left">
-                <img 
-                  src="/assets/images/reg1.png" 
-                  alt="Fashion model in brown sweater" 
-                  width="400" 
-                  height="500"
-                />
+    <div className="min-h-screen lg:flex">
+      {/* Left side - Images */}
+      <div className="hidden lg:block w-1/2 bg-white-100 relative overflow-hidden">
+        <div className="absolute inset-0 flex">
+          {/* Column 1 - Moving down */}
+          <div className="w-1/2 relative overflow-hidden">
+            <div className="absolute w-full">
+              <div className="animate-scroll-down">
+                <div className="flex flex-col">
+                  {images.slice(0, 4).map((src, index) => (
+                    <div key={`down-1-${index}`} className="p-2">
+                      <img 
+                        src={src} 
+                        alt={`Login ${index + 1}`} 
+                        className="w-full rounded-lg shadow-lg clip-path-trapezoid-left transform hover:scale-105 transition duration-300" 
+                      />
+                    </div>
+                  ))}
+                  {images.slice(0, 4).map((src, index) => (
+                    <div key={`down-2-${index}`} className="p-2">
+                      <img 
+                        src={src} 
+                        alt={`Login ${index + 1}`} 
+                        className="w-full rounded-lg shadow-lg clip-path-trapezoid-left transform hover:scale-105 transition duration-300" 
+                      />
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Right side - Form */}
-          <div className="register-form">
-            <h1>Create an account</h1>
-            <p className="subtitle">Enter your details below</p>
-            
-            <form>
-              <div className="form-field">
-                <input type="email" placeholder="Email or Phone Number" />
+          {/* Column 2 - Moving up */}
+          <div className="w-1/2 relative overflow-hidden">
+            <div className="absolute w-full">
+              <div className="animate-scroll-up">
+                <div className="flex flex-col">
+                  {images.slice(4, 8).map((src, index) => (
+                    <div key={`up-1-${index}`} className="p-2">
+                      <img 
+                        src={src} 
+                        alt={`Login ${index + 5}`} 
+                        className="w-full rounded-lg shadow-lg clip-path-trapezoid-right transform hover:scale-105 transition duration-300" 
+                      />
+                    </div>
+                  ))}
+                  {images.slice(4, 8).map((src, index) => (
+                    <div key={`up-2-${index}`} className="p-2">
+                      <img 
+                        src={src} 
+                        alt={`Login ${index + 5}`} 
+                        className="w-full rounded-lg shadow-lg clip-path-trapezoid-right transform hover:scale-105 transition duration-300" 
+                      />
+                    </div>
+                  ))}
+                </div>
               </div>
-              <div className="form-field">
-                <input type="password" placeholder="Password" />
-              </div>
-              
-              <button type="submit" className="submit-button">
-                Create Account
-              </button>
-              
-              <div className="login-link">
-                <span>Don't have an account? </span>
-                <a href="#">Sign In</a>
-              </div>
-            </form>
+            </div>
           </div>
         </div>
-      </main>
+      </div>
+
+      {/* Right side - Form */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
+        <div className="max-w-md w-full space-y-8">
+          <div className="text-center">
+            <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
+              Login to Your Account
+            </h2>
+            <p className="mt-2 text-sm text-gray-600">
+              Enter your email or phone number and password
+            </p>
+          </div>
+
+          <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Email or Phone Number
+                  {errors.email && <span className="text-red-500 ml-1">*</span>}
+                </label>
+                <input
+                  type="text"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 ${
+                    errors.email ? 'border-red-500' : ''
+                  }`}
+                />
+                {errors.email && (
+                  <p className="mt-1 text-sm text-red-500">Please enter a valid email or phone number</p>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Password
+                  {errors.password && <span className="text-red-500 ml-1">*</span>}
+                </label>
+                <input
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 ${
+                    errors.password ? 'border-red-500' : ''
+                  }`}
+                />
+                {errors.password && (
+                  <p className="mt-1 text-sm text-red-500">Password must be at least 8 characters long</p>
+                )}
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <input
+                    id="remember-me"
+                    name="remember-me"
+                    type="checkbox"
+                    className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                  />
+                  <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
+                    Remember me
+                  </label>
+                </div>
+
+                <div className="text-sm">
+                  <a href="#" className="font-medium text-black-600 hover:text-indigo-500">
+                    Forgot your password?
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              className="w-full py-3 bg-black text-white rounded-3xl hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              Login
+            </button>
+
+            <div className="text-sm text-center">
+              <span className="text-gray-600">Don't have an account? </span>
+              <a href="#" className="font-medium text-black-600 hover:text-indigo-500">
+                Register
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   );
 };
 
-export default Register;
+export default Login;
