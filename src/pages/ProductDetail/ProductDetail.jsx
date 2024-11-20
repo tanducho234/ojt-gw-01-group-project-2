@@ -1,7 +1,5 @@
-
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import "./ProductDetail.css";
 import Review from "../../components/Review/Review";
 
 const ProductDetail = () => {
@@ -11,12 +9,11 @@ const ProductDetail = () => {
     category: "Dress",
     price: 39.99,
     salePercentage: 20,
-    colors: ["Red", "Blue", "Green", "Pink","Black"],
-    size: ["S", "M", "L","XL"],
+    colors: ["Red", "Blue", "Green", "Pink", "Black"],
+    size: ["S", "M", "L", "XL"],
     dress_style: "Casual",
     img_url: "https://placehold.co/295x298",
-    desc:           "Absolutely love this dress! The fit is perfect, and the colors are so vibrant. Definitely my new go-to summer dress!",
-
+    desc: "Absolutely love this dress! The fit is perfect, and the colors are so vibrant. Definitely my new go-to summer dress!",
     rating: 3,
     reviews: [
       {
@@ -56,8 +53,8 @@ const ProductDetail = () => {
       },
     ],
   };
-  const { id } = useParams();
 
+  const { id } = useParams();
   const [selectedColor, setSelectedColor] = useState(product.colors[0]);
   const [selectedSize, setSelectedSize] = useState(null);
   const [quantity, setQuantity] = useState(1);
@@ -66,139 +63,174 @@ const ProductDetail = () => {
     index < Math.floor(product.rating) ? "★" : "☆"
   );
 
-  const salePrice =
-    product.salePercentage > 0
-      ? Number(product.price * (1 - product.salePercentage / 100)).toFixed(2).replace(/\.00$/, '')
-      : product.price;  
+  const salePrice = product.salePercentage > 0
+    ? Number(product.price * (1 - product.salePercentage / 100))
+      .toFixed(2)
+      .replace(/\.00$/, '')
+    : product.price;
 
   const increment = () => setQuantity((prev) => prev + 1);
   const decrement = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
 
   const sizes = product.size;
   const colors = product.colors;
-  const handleColorSelect = (color) => {
-    setSelectedColor(color);
-  };
-  const handleSizeSelect = (size) => {
-    setSelectedSize(size);
-  };
+  
+  const handleColorSelect = (color) => setSelectedColor(color);
+  const handleSizeSelect = (size) => setSelectedSize(size);
+  
   const getSizeLabel = (size) => {
     if (size === "S") return "Small";
     if (size === "M") return "Medium";
     if (size === "L") return "Large";
     if (size === "XL") return "Extra Large";
   };
+
   return (
-    <div>
-      <nav className="breadcrumb">
-        <a href="/">Home</a>
-        <span className="separator">{">"}</span>
-        <a href="/shop">Shop</a>
-        <span className="separator">{">"}</span>
-        <a href="/shop/men">Men</a>
-        <span className="separator">{">"}</span>
-        <span className="active">T-shirts</span>
+    <div className="container mx-auto px-4">
+      {/* Breadcrumb */}
+      <nav className="flex items-center text-sm text-gray-500 py-4">
+        <a href="/" className="hover:underline">Home</a>
+        <span className="mx-2">{">"}</span>
+        <a href="/shop" className="hover:underline">Shop</a>
+        <span className="mx-2">{">"}</span>
+        <a href="/shop/products" className="hover:underline"></a>
+        <span className="mx-2">{">"}</span>
+        <span className="text-black font-semibold">T-shirts</span>
       </nav>
-      <div className="product-detail-container">
-        <div className="product-images">
-          <div className="small-images">
-            <img src="https://placehold.co/150x160"></img>
-            <img src="https://placehold.co/150x160"></img>
-            <img src="https://placehold.co/150x160"></img>
-          </div>
-          <div className="big-image">
-            <img src="https://placehold.co/400x500"></img>
+
+      {/* Product Container */}
+      <div className="flex flex-wrap lg:flex-nowrap gap-8">
+        {/* Product Images */}
+        <div className="w-full lg:w-1/2">
+          <div className="flex flex-col-reverse md:flex-row gap-4">
+          {/* Thumbnail Images */}
+            <div className="flex flex-wrap gap-2 md:flex-col md:gap-4">
+              {[1, 2, 3].map((_, index) => (
+                <img
+                  key={index}
+                  src="https://placehold.co/150x180"
+                  alt={`Thumbnail ${index + 1}`}
+                  className="w-[calc(33%-0.3rem)] md:w-[150px] h-auto rounded-3xl object-cover cursor-pointer hover:opacity-75"
+                />
+              ))}
+            </div>
+            {/* Main Image */}
+            <div className="flex-1">
+              <img
+                src="https://placehold.co/400x500"
+                alt="Main product"
+                className="w-[520px] h-[570px] rounded-3xl object-cover cursor-pointer hover:opacity-75"
+              />
+            </div>
           </div>
         </div>
-        <div className="product-details">
-          <h1>{product.name}</h1>
-          <div className="product-rating">
-            {stars.join(" ")}{" "}
-            <span>
-              {product.rating}/{5}
+
+        {/* Product Details */}
+        <div className="w-full lg:w-1/2 space-y-6 mr-12  ">
+          <h1 className="text-3xl font-bold">{product.name}</h1>
+          
+          {/* Rating */}
+          <div className="flex items-center gap-2">
+            <div className="text-2xl text-yellow-400">{stars.join(" ")}</div>
+            <span className="text-xl text-gray-700">
+              {product.rating}/5
             </span>
           </div>
-          <div className="product-price">
-            <span className="real-price">${salePrice}</span>
+
+          {/* Price */}
+          <div className="flex items-center gap-4">
+            <span className="text-3xl font-bold">${salePrice}</span>
             {product.salePercentage > 0 && (
-              <span className="original-price">${product.price}</span> // Original price
-            )}
-            {product.salePercentage > 0 && (
-              <span className="sale-percentage">{product.salePercentage}%</span>
+              <>
+                <span className="text-2xl text-gray-500 line-through">${product.price}</span>
+                <span className="px-3 py-1 text-red-600 bg-red-100 rounded-full text-sm">
+                  {product.salePercentage}% OFF
+                </span>
+              </>
             )}
           </div>
 
-          <div className="product-desc">{product.desc}</div>
-          <div className="color-selector">
-            <p>Select Color</p>
-            {colors.map((color) => (
-              <div
-                key={color}
-                className={`color-option ${
-                  selectedColor === color ? "selected" : ""
-                }`}
-                style={{ backgroundColor: color.toLowerCase() }}
-                onClick={() => handleColorSelect(color)}>
-                {selectedColor === color && "✓"}
-              </div>
-            ))}
+          {/* Description */}
+          <p className="text-gray-600 pb-4 pl-1 border-b">{product.desc}</p>
+
+          {/* Color Selection */}
+          <div className="space-y-4 pb-4 border-b">
+            <p className="pl-1">Select Color</p>
+            <div className="flex flex-wrap gap-3">
+              {colors.map((color) => (
+                <button
+                  key={color}
+                  onClick={() => handleColorSelect(color)}
+                  className={`w-9 h-9 rounded-full flex items-center justify-center transition-transform
+                    ${selectedColor === color ? 'scale-110' : ''}
+                  `}
+                  style={{ backgroundColor: color.toLowerCase() }}
+                >
+                  {selectedColor === color && (
+                    <span className="text-white">✓</span>
+                  )}
+                </button>
+              ))}
+            </div>
           </div>
-          <div className="size-selector">
-            <p>Choose Size</p>
-            {sizes.map((size) => (
-              <div
-                key={size}
-                className={`size-option ${
-                  selectedSize === size ? "selected" : ""
-                }`}
-                onClick={() => handleSizeSelect(size)}>
-                {getSizeLabel(size)}
-              </div>
-            ))}
-          </div>{" "}
-          <div className="quantity-section">
-            <div className="quantity-selector">
-              <button className="quantity-button-decrement" onClick={decrement}>
+
+          {/* Size Selection */}
+          <div className="space-y-4 pb-4 border-b">
+            <p className="pl-1">Choose Size</p>
+            <div className="flex flex-wrap gap-3">
+              {sizes.map((size) => (
+                <button
+                  key={size}
+                  onClick={() => handleSizeSelect(size)}
+                  className={`px-6 py-2 rounded-full transition-colors
+                    ${selectedSize === size 
+                      ? 'bg-black text-white' 
+                      : 'bg-gray-200 hover:bg-gray-300'
+                    }`}
+                >
+                  {getSizeLabel(size)}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Quantity and Add to Cart */}
+          <div className="flex gap-4">
+            <div className="flex items-center bg-gray-100 rounded-full">
+              <button
+                onClick={decrement}
+                className="w-14 h-12 flex items-center justify-center text-2xl rounded-l-full hover:bg-gray-200"
+              >
                 -
               </button>
-              <span className="quantity">{quantity}</span>
-              <button className="quantity-button-increment" onClick={increment}>
+              <span className="w-14 text-center text-lg">{quantity}</span>
+              <button
+                onClick={increment}
+                className="w-14 h-12 flex items-center justify-center text-2xl rounded-r-full hover:bg-gray-200"
+              >
                 +
               </button>
             </div>
             <button
-              className="add-to-cart-button"
-              onClick={() => {
-                if (!selectedSize) {
-                  alert("Please select a size");
-                  return;
-                }
-                // TODO: Implement add to cart functionality
-                alert(
-                  `Added ${quantity} ${product.name} in ${selectedColor} color, size ${selectedSize} to cart`
-                );
-              }}>
-              Add to Cart{" "}
-            </button>
+  onClick={() => {
+    if (!selectedSize) {
+      alert("Please select a size");
+      return;
+    }
+    alert(
+      `Added ${quantity} ${product.name} in ${selectedColor} color, size ${selectedSize} to cart` 
+    );
+  }}
+  className="w-[450px] h-12 bg-black text-white rounded-full hover:bg-gray-800 transition-colors border-2 border-gray-300 p-2"
+>
+  Add to Cart
+</button>
+
           </div>
         </div>
       </div>
-      <div className="product-description">
-        <div className="tab-nav">
-          <div className="tab-button-2">Description</div>
-          <div className="tab-button">Rating & Reviews</div>
-          <div className="tab-button-2">FAQs</div>
-        </div>
-        <div className="review-container">
-          {product.reviews.length > 0 ? (
-            product.reviews.map((review, index) => (
-              <Review key={index} review={review} />
-            ))
-          ) : (
-            <p>No reviews yet.</p>
-          )}
-        </div>
-      </div>
+
+      
     </div>
   );
 };
