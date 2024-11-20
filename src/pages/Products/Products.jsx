@@ -6,10 +6,17 @@ import "../../index.css";
 import "../Products/Products.css";
 import "../../pages/Products/Products.css";
 import axios from "axios";
+
+import Breadcrumb from '../../components/BreadCrumb';
+
 // import Breadcrumb from "../../components/BreadCrumb/BreadCrumb";
 
-function Products() {
-  // State to hold the filter values
+const Products = () => {  // State to hold the filter values
+  const breadcrumbPaths = [
+    { name: 'Home', link: '/home' },
+    { name: 'Products', link: '/products' },
+    
+  ];
   const [price, setPrice] = useState([25, 200]);
   const minPrice = 0;
   const maxPrice = 200;
@@ -176,7 +183,12 @@ function Products() {
   const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
+    <div>
+                  <Breadcrumb paths={breadcrumbPaths} />
+
     <div className="flex p-5">
+      
+      
       <aside className="relative top-2.5 w-[20%] left-2.5 rounded-2xl gap-3  h-[1450px] shadow-inner shadow-gray">
         <div className="mb-5"></div>
         <div className=" p-5">
@@ -439,6 +451,7 @@ function Products() {
           />
         </div>
       </div>
+    </div>
     </div>
   );
 }

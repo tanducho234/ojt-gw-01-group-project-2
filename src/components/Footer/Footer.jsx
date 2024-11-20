@@ -1,7 +1,14 @@
 import React from 'react';
 import './Footer.css';
+import { useLocation } from 'react-router-dom';
 
 const Footer = () => {
+
+  const location = useLocation(); // Get the current location
+  // Check if the current path is '/admin' to hide the Navbar
+  if (location.pathname.startsWith("/admin")) {
+    return null; // Don't render the Navbar when the route starts with /admin
+  }
   return (
     <footer>
       <div className="container">

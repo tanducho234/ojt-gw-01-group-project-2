@@ -7,26 +7,69 @@ import Products from "./pages/Products/Products";
 import ProductDetail from "./pages/ProductDetail/ProductDetail";
 import Cart from "./pages/Cart/Cart";
 import Checkout from "./pages/Checkout/Checkout";
-import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
+import Login from "./pages/Auth/Login";
+
 import AboutUs from "./pages/About/About";
+import Profile from "./pages/Profile/Profile";
+import { ProtectedRoute } from "./utils/ProtectedRoute";
+import { AuthProvider } from "./hooks/useAuth";
+import { AdminRoute } from "./utils/AdminRoute";
+import { Dashboard } from "./pages/Admin/Dashboard";
+import { AdminLogin } from "./pages/Admin/Login";
 
 function App() {
   return (
-    <Router>
+    <AuthProvider>
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/about" element={<AboutUs />} />
+        {/* <Route path="/login" element={<Login />} /> */}
+        <Route path="/admin/login" element={<AdminLogin />} />
+
+        {/* <Route path="/admin/login" element={<Login />} /> */}
         <Route path="/products" element={<Products />} />
         <Route path="/products/:id" element={<ProductDetail />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/checkout" element={<Checkout />} />
-        <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/about" element={<AboutUs />} />
+        <Route
+          path="/cart"
+          element={
+            <ProtectedRoute>
+              <Cart />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/checkout"
+          element={
+            <ProtectedRoute>
+              <Checkout />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/dashboard"
+          element={
+            <AdminRoute>
+              <Dashboard />
+            </AdminRoute>
+          }
+        />
+        {/* <Route path="/admin/products" element={<AdminRoute></AdminRoute>} /> */}
       </Routes>
       <Footer />
-    </Router>
+    </AuthProvider>
   );
 }
 

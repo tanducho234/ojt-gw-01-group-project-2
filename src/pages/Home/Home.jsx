@@ -2,21 +2,22 @@ import React from "react";
 import "./Home.css";
 import { products } from "../../assets/dataexample";
 
+
 function Home() {
   console.log(products);
 
   const newArrivals = [
-    { id: 1, name: 'T-shirt with Tape Details', price: 120, rating: 4.5, reviews: 145, image: '/public/images/Frame_32.png' },
-    { id: 2, name: 'Skinny Fit Jeans', price: 240, oldPrice: 260, rating: 4.3, reviews: 130, image: '/public/images/Frame_33.png' },
-    { id: 3, name: 'Checkered Shirt', price: 180, rating: 4.4, reviews: 140, image: '/public/images/Frame_34.png' },
-    { id: 4, name: 'Sleeve Striped T-shirt', price: 130, oldPrice: 160, rating: 4.2, reviews: 120, image: '/public/images/Frame_38.png' }
+    { id: 1, name: 'T-shirt with Tape Details', price: 120, rating: 4.5, reviews: 145, image: '/images/Frame_32.png' },
+    { id: 2, name: 'Skinny Fit Jeans', price: 240, oldPrice: 260, rating: 4.3, reviews: 130, image: '/images/Frame_33.png' },
+    { id: 3, name: 'Checkered Shirt', price: 180, rating: 4.4, reviews: 140, image: '/images/Frame_34.png' },
+    { id: 4, name: 'Sleeve Striped T-shirt', price: 130, oldPrice: 160, rating: 4.2, reviews: 120, image: '/images/Frame_38.png' }
   ];
 
   const topSelling = [
-    { id: 1, name: 'Vertical Striped Shirt', price: 212, oldPrice: 232, rating: 4.6, reviews: 160, image: '/public/images/Frame_32_1.png' },
-    { id: 2, name: 'Courage Graphic T-shirt', price: 145, rating: 4.7, reviews: 167, image: '/public/images/Frame_33_1.png' },
-    { id: 3, name: 'Loose Fit Bermuda Shorts', price: 80, rating: 4.3, reviews: 120, image: '/public/images/Frame_34_1.png' },
-    { id: 4, name: 'Faded Skinny Jeans', price: 210, rating: 4.4, reviews: 140, image: '/public/images/Frame_38_1.png' }
+    { id: 1, name: 'Vertical Striped Shirt', price: 212, oldPrice: 232, rating: 4.6, reviews: 160, image: '/images/Frame_32_1.png' },
+    { id: 2, name: 'Courage Graphic T-shirt', price: 145, rating: 4.7, reviews: 167, image: '/images/Frame_33_1.png' },
+    { id: 3, name: 'Loose Fit Bermuda Shorts', price: 80, rating: 4.3, reviews: 120, image: '/images/Frame_34_1.png' },
+    { id: 4, name: 'Faded Skinny Jeans', price: 210, rating: 4.4, reviews: 140, image: '/images/Frame_38_1.png' }
   ];
 
   const renderStars = (rating) => {
@@ -51,11 +52,11 @@ function Home() {
 
       <section className="brands">
   <div className="brand-list">
-    <img src='/public/images/Versace.png'alt="Versace" />
-    <img src='/public/images/Vector.png' alt="Zara" />
-    <img src='/public/images/Gucci.png' alt="Gucci" />
-    <img src='/public/images/Prada.png' alt="Prada" />
-    <img src='/public/images/Calvin_Klein.png' alt="Calvin Klein" />
+    <img src='/images/Versace.png'alt="Versace" />
+    <img src='/images/Vector.png' alt="Zara" />
+    <img src='/images/Gucci.png' alt="Gucci" />
+    <img src='/images/Prada.png' alt="Prada" />
+    <img src='/images/Calvin_Klein.png' alt="Calvin Klein" />
   </div>
 </section>
 
@@ -113,19 +114,19 @@ function Home() {
   <h2>BROWSE BY DRESS STYLE</h2>
   <div className="style-grid">
     <div className="style-card casual">
-      <img src="/public/images/Casual.png" alt="Casual Style" />
+      <img src="/images/Casual.png" alt="Casual Style" />
       
     </div>
     <div className="style-card formal">
-      <img src="/public/images/Formal.png" alt="Formal Style" />
+      <img src="/images/Formal.png" alt="Formal Style" />
       
     </div>
     <div className="style-card party">
-      <img src="/public/images/Party.png" alt="Party Style" />
+      <img src="/images/Party.png" alt="Party Style" />
       
     </div>
     <div className="style-card gym">
-      <img src="/public/images/GYM.png" alt="Gym Style" />
+      <img src="/images/GYM.png" alt="Gym Style" />
       
     </div>
   </div>
