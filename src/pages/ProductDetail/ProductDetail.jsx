@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import "./ProductDetail.css";
 import Review from "../../components/Review/Review";
 import { Tabs, Tab, Box } from '@mui/material';
 
