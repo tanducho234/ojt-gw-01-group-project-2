@@ -275,12 +275,12 @@ const Checkout = () => {
           {/* Shipping Method Section */}
           <div className="bg-white shadow rounded-lg p-4">
             <h2 className="text-xl font-semibold mb-4">Shipping Method</h2>
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-wrap">
               {["economy", "basic", "express"].map((method) => (
                 <button
                   key={method}
                   onClick={() => setShippingMethod(method)}
-                  className={`flex-1 py-2 px-4 rounded-lg text-white font-semibold ${
+                  className={`lg:flex-1 py-2 px-4 rounded-lg text-white font-semibold w-full ${
                     shippingMethod === method
                       ? "bg-blue-500"
                       : "bg-gray-300 hover:bg-gray-400"
@@ -303,7 +303,7 @@ const Checkout = () => {
               <select
                 value={discountCode}
                 onChange={(e) => setDiscountCode(e.target.value)}
-                className="flex-1 border border-gray-300 rounded-lg px-4 py-2"
+                className="flex-1 border border-gray-300 rounded-lg px-4 py-2 w-1/2"
               >
                 <option value="">Select a Discount Code</option>
                 {discounts
