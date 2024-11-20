@@ -6,17 +6,12 @@ import "../../index.css";
 import "../Products/Products.css";
 import "../../pages/Products/Products.css";
 import axios from "axios";
-
-import Breadcrumb from '../../components/BreadCrumb';
-
+import 'bootstrap/dist/css/bootstrap.css';
 // import Breadcrumb from "../../components/BreadCrumb/BreadCrumb";
 
-const Products = () => {  // State to hold the filter values
-  const breadcrumbPaths = [
-    { name: 'Home', link: '/home' },
-    { name: 'Products', link: '/products' },
-    
-  ];
+function Products() {
+  // State to hold the filter values
+  const [showFilters, setShowFilters] = useState(false);
   const [price, setPrice] = useState([25, 200]);
   const minPrice = 0;
   const maxPrice = 200;
@@ -62,10 +57,10 @@ const Products = () => {  // State to hold the filter values
   const handleSliderChange = (index, value) => {
     setPrice((prevPrice) => {
       const newPrice = [...prevPrice];
-  
+
       // Ensure the value is within min/max range
       const clampedValue = Math.max(minPrice, Math.min(maxPrice, value));
-  
+
       // Prevent sliders from crossing each other and ensure at least a 10-gap
       if (index === 0) {
         // Left slider: Make sure the gap is at least 10
@@ -74,11 +69,10 @@ const Products = () => {  // State to hold the filter values
         // Right slider: Make sure the gap is at least 10
         newPrice[1] = Math.max(clampedValue, newPrice[0] + 10);
       }
-  
+
       return newPrice;
     });
   };
-  
 
   // Function to handle filter application
   // Function to handle filter application
@@ -183,17 +177,25 @@ const Products = () => {  // State to hold the filter values
   const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
-    <div>
-                  <Breadcrumb paths={breadcrumbPaths} />
-
-    <div className="flex p-5">
+    <div className="flex flex-row p-5">
       
-      
-      <aside className="relative top-2.5 w-[20%] left-2.5 rounded-2xl gap-3  h-[1450px] shadow-inner shadow-gray">
-        <div className="mb-5"></div>
+      <aside
+        className={`absolute z-20 mt-[100px] bg-white top-0 left-0 rounded-2xl shadow-inner shadow-gray h-screen h-auto p-5 transition-transform duration-300 ${
+          showFilters ? "translate-x-0" : "-translate-x-full"
+        } sm:translate-x-0`}
+      >
+        {" "}
         <div className=" p-5">
+          <div>
           <h3 className="font-bold text-2xl">Filters</h3>
-          <hr className="text-gray"/>
+          <button
+            className="absolute top-4 right-4 text-xl text-gray-500"
+            onClick={() => setShowFilters(false)}
+          >
+            &times; {/* Close button */}
+          </button>
+          </div>
+          <hr className="text-gray" />
 
           {/* _______________________________ Categories Filter _______________________________ */}
           <div className="filter-section pb-2 mb-2 border-b border-gray">
@@ -292,14 +294,13 @@ const Products = () => {  // State to hold the filter values
                 "Brown",
                 "Gray",
                 "HotPink",
-
               ].map((color) => (
                 <span
                   key={color}
                   className="w-6 h-6 rounded-full cursor-pointer"
                   style={{
-                    fontWeight:1000,
-                    fontSize:20,
+                    fontWeight: 1000,
+                    fontSize: 20,
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
@@ -309,7 +310,9 @@ const Products = () => {  // State to hold the filter values
                         ? "black"
                         : "white", // Change text color based on background
                     border:
-                      selectedColor === color ? "4px solid black" : "2px solid gray",
+                      selectedColor === color
+                        ? "4px solid black"
+                        : "2px solid gray",
                   }}
                   onClick={() =>
                     setSelectedColor(selectedColor === color ? "" : color)
@@ -342,49 +345,52 @@ const Products = () => {  // State to hold the filter values
           </div>
 
           {/* _______________________________ Dress Style Filter _______________________________ */}
-<div className="filter-section pb-2 mb-2 border-b border-gray">
-  <h4 className="my-2 font-semibold text-xl">Dress Style</h4>
-  <div className="flex flex-col overflow-y-auto space-y-2 max-h-[12rem] custom-scrollbar">
-    {styles.map((style) => (
-      <button
-        key={style._id}
-        className={`style-btn px-5 py-2 border-none text-left text-gray rounded-md cursor-pointer hover:bg-[#cfcfcf] hover:text-white ${
-          selectedDressStyle === style._id
-            ? "bg-black text-white"
-            : "bg-white"
-        }`}
-        onClick={() =>
-          setSelectedDressStyle(
-            selectedDressStyle === style._id ? "" : style._id
-          )
-        }
-      >
-        {style.name}
-      </button>
-    ))}
-  </div>
-</div>
+          <div className="filter-section pb-2 mb-2 border-b border-gray">
+            <h4 className="my-2 font-semibold text-xl">Dress Style</h4>
+            <div className="flex flex-col overflow-y-auto space-y-2 max-h-[12rem] custom-scrollbar">
+              {styles.map((style) => (
+                <button
+                  key={style._id}
+                  className={`style-btn px-5 py-2 border-none text-left text-gray rounded-md cursor-pointer hover:bg-[#cfcfcf] hover:text-white ${
+                    selectedDressStyle === style._id
+                      ? "bg-black text-white"
+                      : "bg-white"
+                  }`}
+                  onClick={() =>
+                    setSelectedDressStyle(
+                      selectedDressStyle === style._id ? "" : style._id
+                    )
+                  }
+                >
+                  {style.name}
+                </button>
+              ))}
+            </div>
+          </div>
 
-{/* _______________________________ Brands Filter _______________________________ */}
-<div className="filter-section pb-2 mb-2 border-b border-gray">
-  <h4 className="my-2 font-semibold text-xl">Brand</h4>
-  <div className="flex flex-col overflow-y-auto space-y-2 max-h-[12rem] custom-scrollbar">
-    {brands.map((brand) => (
-      <button
-        key={brand._id}
-        className={`style-btn px-5 py-2 border-none text-left text-gray rounded-md cursor-pointer hover:bg-[#cfcfcf] hover:text-white ${
-          selectedBrand === brand._id ? "bg-black text-white" : "bg-white"
-        }`}
-        onClick={() =>
-          setSelectedBrand(selectedBrand === brand._id ? "" : brand._id)
-        }
-      >
-        {brand.name}
-      </button>
-    ))}
-  </div>
-</div>
-
+          {/* _______________________________ Brands Filter _______________________________ */}
+          <div className="filter-section pb-2 mb-2 border-b border-gray">
+            <h4 className="my-2 font-semibold text-xl">Brand</h4>
+            <div className="flex flex-col overflow-y-auto space-y-2 max-h-[12rem] custom-scrollbar">
+              {brands.map((brand) => (
+                <button
+                  key={brand._id}
+                  className={`style-btn px-5 py-2 border-none text-left text-gray rounded-md cursor-pointer hover:bg-[#cfcfcf] hover:text-white ${
+                    selectedBrand === brand._id
+                      ? "bg-black text-white"
+                      : "bg-white"
+                  }`}
+                  onClick={() =>
+                    setSelectedBrand(
+                      selectedBrand === brand._id ? "" : brand._id
+                    )
+                  }
+                >
+                  {brand.name}
+                </button>
+              ))}
+            </div>
+          </div>
 
           <button
             className="apply-filter-btn w-full bg-black  text-white border-none cursor-pointer text-lg rounded-full py-2 px-1 hover:bg-gray hover:text-white font-semibold "
@@ -395,7 +401,7 @@ const Products = () => {  // State to hold the filter values
         </div>
       </aside>
       <div className="grid-pagination flex flex-col items-center space-y-6">
-        <div className="sort-by flex items-center ml-[900px] space-x-2">
+        <div className="sort-by flex items-center mt-12">
           <label htmlFor="sort" className="text-lg font-medium">
             Sort By:{" "}
           </label>
@@ -403,17 +409,25 @@ const Products = () => {  // State to hold the filter values
             id="sort"
             value={sortCriteria}
             onChange={handleSortChange}
-            className="py-2 px-4 border border-gray rounded-md"
+            className="py-1 px-2 border border-gray rounded-md"
           >
             <option value="">Select...</option>
             <option value="priceLowToHigh">Price: Low to High</option>
             <option value="priceHighToLow">Price: High to Low</option>
             <option value="rating">Rating</option>
           </select>
+          <div>
+        <button
+          className=""
+          onClick={() => setShowFilters(!showFilters)}
+        >
+          {showFilters}232
+        </button>
+      </div>
         </div>
 
         <section
-          className="product-grid grid grid-cols-3 gap-8 w-full ml-[150px]"
+          className="product-grid grid grid-cols-2 gap-8 w-full "
           style={{ minHeight: "calc(3 * (300px + 32px))" }} // Adjust based on product card height and gap
         >
           {currentProducts.length > 0 ? (
@@ -432,7 +446,7 @@ const Products = () => {  // State to hold the filter values
               />
             ))
           ) : (
-            <p className="text-center col-span-3">No products found.</p>
+            <p className="text-center col-span-1">No products found.</p>
           )}
           {/* Add placeholders to maintain the grid */}
           {Array.from({ length: 9 - currentProducts.length }, (_, i) => (
@@ -451,7 +465,6 @@ const Products = () => {  // State to hold the filter values
           />
         </div>
       </div>
-    </div>
     </div>
   );
 }

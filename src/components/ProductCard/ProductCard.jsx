@@ -21,15 +21,15 @@ function ProductCard({
       : price;
 
   return (
-    <div className="rounded-lg w-[320px]  text-left ">
+    <div className=" w-full flex flex-col items-center text-left mx-auto">
       <img
         src={imageUrl}
         alt={name}
-        className="w-[300px] h-[300px] rounded-lg transform transition-transform duration-500 hover:scale-110 hover:shadow-lx"
+        className="w-[172px] h-[174px] rounded-xl transform transition-transform duration-500 hover:scale-110 hover:shadow-lx"
       />
       <div className="mt-3">
-        <h3 className="font-bold text-[25px] font-sans mt-2 mb-2">{name}</h3>
-        <div className="text-yellow-500 text-[20px] text-sm mb-2 flex items-center">
+        <h3 className="font-bold text-[18px] font-sans mt-2 mb-2">{name}</h3>
+        <div className="text-yellow-500 text-[16px] text-sm mb-2 flex items-center">
           {/* Full Stars */}
           {Array(fullStars)
             .fill()
@@ -57,26 +57,26 @@ function ProductCard({
             ))}
           {/* Kiểm tra và hiển thị thông báo khi rating bằng 0 */}
           {rating === 0 && (
-            <span className="ml-2 text-gray-500 italic text-sm">
+            <span className="ml-2 text-gray-500 italic text-[11px]">
               No reviews yet.
             </span>
           )}
           {/* Giá trị rating */}
           {rating > 0 && (
-            <span className="text-black text-xs ml-2">
+            <span className="text-black text-[12px] ml-2">
               {rating}/{maxRating}
             </span>
           )}
         </div>
 
-        <div className="flex items-center text-black font-bold text-xl">
-          <span className="mr-2">${salePrice}</span>
+        <div className="flex items-center text-black font-bold text-base">
+          <span className="mr-2 text-[20px]">${salePrice}</span>
           {salePercentage > 0 && (
             <>
-              <span className=" text-gray line-through  mr-2 opacity-50">
+              <span className=" text-gray line-through text-[20px]  mr-2 opacity-50">
                 ${price}
               </span>
-              <span className="bg-rose-300 text-red text-lg font-light rounded-full px-2 py-0.5">
+              <span className="bg-rose-200 text-[#FF3333] text-[10px] font-light rounded-full px-2 py-0.5">
                 {salePercentage}%
               </span>
             </>
