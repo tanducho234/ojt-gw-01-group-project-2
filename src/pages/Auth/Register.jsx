@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 
 const styles = `
   .clip-path-trapezoid-right {
@@ -8,21 +8,87 @@ const styles = `
   .clip-path-trapezoid-left {
     clip-path: polygon(0 4%, 100% 0, 100% 100%, 0 96%);
   }
-     @media (max-width: 1024px) {
-    .overlay-form {
-      background: rgba(255, 255, 255, 0.9);
-      backdrop-filter: blur(8px);
-      border-radius: 16px;
-      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+
+  /* Custom animation styles with responsive durations */
+  @keyframes scrollUp {
+    0% {
+      transform: translateY(0);
     }
-    
-    .image-wrapper {
-      opacity: 0.5;
-      transition: opacity 0.3s ease;
+    100% {
+      transform: translateY(-50%);
     }
   }
+
+  @keyframes scrollDown {
+    0% {
+      transform: translateY(-50%);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+
+  .animate-scroll-up {
+    animation: scrollUp 20s linear infinite;
+  }
+
+  .animate-scroll-down {
+    animation: scrollDown 20s linear infinite;
+  }
+
+  /* Responsive animation speeds */
+  @media (max-width: 768px) {
+    .animate-scroll-up {
+      animation-duration: 15s;
+    }
+    .animate-scroll-down {
+      animation-duration: 15s;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .animate-scroll-up {
+      animation-duration: 10s;
+    }
+    .animate-scroll-down {
+      animation-duration: 10s;
+    }
+  }
+
+  /* Mobile overlay styles */
+@media (max-width: 1024px) {
+  .mobile-image-container {
+    position: absolute;  
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+  }
+}
+
+    .mobile-form-container {
+      position: relative;
+      z-index: 10;
+      background-color: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(8px);
+    }
+}
+        .login-section {
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+    min-height: 100vh;
+    width: 100%;
+  }
+
+  .contained-height {
+    height: 100%;
+    min-height: 100vh;
+  }
 `;
-const Register = () => {
+
+const Login = () => {
   const images = [
     '/assets/images/reg1.png',
     '/assets/images/reg2.png',
@@ -34,21 +100,6 @@ const Register = () => {
     '/assets/images/reg2.png',
   ];
 
-  const DISPLAY_TIME = 4000;
-  const FADE_TIME = 3000;
-  const TOTAL_CYCLE = DISPLAY_TIME + FADE_TIME * 3;
-
-  const canvasRefs = {
-    col1: useRef([null, null, null, null]),
-    col2: useRef([null, null, null, null]),
-  };
-
-  const [loadedImages, setLoadedImages] = useState([]);
-  const [currentIndices, setCurrentIndices] = useState({
-    col1: [0, 1, 2, 3],
-    col2: [4, 5, 6, 7],
-  });
-
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -57,120 +108,49 @@ const Register = () => {
   });
 
   const [errors, setErrors] = useState({
-    name: false,
     email: false,
     password: false,
-    rePassword: false,
   });
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
-  useEffect(() => {
-    const loadImages = async () => {
-      const imagePromises = images.map((src) => {
-        return new Promise((resolve) => {
-          const img = new Image();
-          img.src = src;
-          img.onload = () => resolve(img);
-        });
-      });
-      const loadedImgs = await Promise.all(imagePromises);
-      setLoadedImages(loadedImgs);
-    };
-    loadImages();
-  }, []);
-
-  useEffect(() => {
-    if (loadedImages.length === 0) return;
-
-    const animateCanvas = (canvas, image, startDelay) => {
-      if (!canvas) return null;
-      const ctx = canvas.getContext('2d');
-      let startTime = null;
-
-      const animate = (timestamp) => {
-        if (!startTime) startTime = timestamp;
-        const elapsed = (timestamp - startTime + startDelay) % TOTAL_CYCLE;
-
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        let opacity = 0;
-        if (elapsed < FADE_TIME) {
-          opacity = elapsed / FADE_TIME;
-        } else if (elapsed < FADE_TIME + DISPLAY_TIME) {
-          opacity = 1;
-        } else if (elapsed < TOTAL_CYCLE) {
-          opacity = 1 - (elapsed - FADE_TIME - DISPLAY_TIME) / FADE_TIME;
-        }
-
-        ctx.globalAlpha = Math.max(0, Math.min(1, opacity));
-        const aspectRatio = 3 / 4;
-        const canvasWidth = canvas.width;
-        const canvasHeight = canvas.height;
-        let drawWidth = canvasWidth;
-        let drawHeight = canvasHeight;
-
-        if (canvasWidth / canvasHeight > aspectRatio) {
-          drawWidth = canvasHeight * aspectRatio;
-        } else {
-          drawHeight = canvasWidth / aspectRatio;
-        }
-
-        const x = (canvasWidth - drawWidth) / 2;
-        const y = (canvasHeight - drawHeight) / 2;
-
-        ctx.drawImage(image, x, y, drawWidth, drawHeight);
-
-        return requestAnimationFrame(animate);
-      };
-
-      return requestAnimationFrame(animate);
-    };
-
-    const animationIds = [];
-
-    currentIndices.col1.forEach((imgIndex, i) => {
-      const canvas = canvasRefs.col1.current[i];
-      if (canvas && loadedImages[imgIndex]) {
-        const delay = (i * TOTAL_CYCLE) / 4;
-        const animationId = animateCanvas(canvas, loadedImages[imgIndex], delay);
-        if (animationId) animationIds.push(animationId);
-      }
-    });
-
-    currentIndices.col2.forEach((imgIndex, i) => {
-      const canvas = canvasRefs.col2.current[i];
-      if (canvas && loadedImages[imgIndex]) {
-        const delay = ((i * TOTAL_CYCLE) / 4) + TOTAL_CYCLE / 8;
-        const animationId = animateCanvas(canvas, loadedImages[imgIndex], delay);
-        if (animationId) animationIds.push(animationId);
-      }
-    });
-
-    return () => {
-      animationIds.forEach((id) => cancelAnimationFrame(id));
-    };
-  }, [loadedImages, currentIndices]);
-
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+
+    const validateField = (fieldName, value, allValues) => {
+      switch (fieldName) {
+        case 'email':
+          return !validateEmail(value);
+        case 'password':
+          return value.length < 8;
+        case 'rePassword':
+          return value !== allValues.password;
+        case 'name':
+          return value.length === 0;
+        default:
+          return false;
+      }
+    };
+
+    setErrors(prev => ({
+      ...prev,
+      [name]: validateField(name, value)
     }));
   };
-  const validateField = (fieldName, value, allValues) => {
+
+  const validateField = (fieldName, value) => {
     switch (fieldName) {
       case 'email':
         return !validateEmail(value);
       case 'password':
         return value.length < 8;
-      case 'rePassword':
-        return value !== allValues.password;
-      case 'name':
-        return value.length === 0;
       default:
         return false;
     }
@@ -178,7 +158,6 @@ const Register = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Validate all fields
     const newErrors = {
       name: validateField('name', formData.name, formData),
       email: validateField('email', formData.email, formData),
@@ -188,69 +167,80 @@ const Register = () => {
 
     setErrors(newErrors);
 
-    // If no errors, proceed with submission
     if (!Object.values(newErrors).some(error => error)) {
       console.log('Form submitted:', formData);
-      // Add your submission logic here
     }
   };
 
   return (
-    <div className="bg-white min-h-screen">
+    <div className="min-h-screen lg:flex relative">
       <style>{styles}</style>
-    <main className="max-w-7xl mx-auto p-4 md:p-6">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-        {/* Left side - Images */}
-        <div className="relative h-[400px] md:h-[600px] lg:h-[800px] overflow-hidden">
-          <div className="absolute inset-0 flex gap-[10px]">
-            {/* Column 1 */}
-            <div className="w-[calc(50%-5px)]">
-              <div className="flex flex-col gap-2 md:gap-3 lg:gap-4">
-                {[0, 1, 2, 3].map((index) => (
-                  <div
-                    key={`col1-${index}`}
-                    className={`relative overflow-hidden aspect-[3/4] ${
-                      index % 2 === 0 ? 'clip-path-trapezoid-right' : 'clip-path-trapezoid-left'
-                    }`}
-                  >
-                    <canvas
-                      ref={el => canvasRefs.col1.current[index] = el}
-                      className="w-full h-full"
-                      width={400}
-                      height={533}
-                    />
-                  </div>
-                ))}
+      {/* Images section - visible on both desktop and mobile */}
+      <div className="lg:w-1/2 bg-white-100 relative overflow-hidden mobile-image-container">
+        <div className="absolute inset-0 flex">
+          {/* Column 1 - Moving down */}
+          <div className="w-1/2 relative overflow-hidden">
+            <div className="absolute w-full">
+              <div className="animate-scroll-down">
+                <div className="flex flex-col">
+                  {images.slice(0, 4).map((src, index) => (
+                    <div key={`down-1-${index}`} className="p-2">
+                      <img 
+                        src={src} 
+                        alt={`Login ${index + 1}`} 
+                        className="w-full rounded-lg shadow-lg clip-path-trapezoid-left transform hover:scale-105 transition duration-300" 
+                      />
+                    </div>
+                  ))}
+                  {images.slice(0, 4).map((src, index) => (
+                    <div key={`down-2-${index}`} className="p-2">
+                      <img 
+                        src={src} 
+                        alt={`Login ${index + 1}`} 
+                        className="w-full rounded-lg shadow-lg clip-path-trapezoid-left transform hover:scale-105 transition duration-300" 
+                      />
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
+          </div>
 
-            {/* Column 2 */}
-            <div className="w-[calc(50%-5px)]">
-              <div className="flex flex-col gap-2 md:gap-3 lg:gap-4">
-                {[0, 1, 2, 3].map((index) => (
-                  <div
-                    key={`col2-${index}`}
-                    className={`relative overflow-hidden aspect-[3/4] ${
-                      index % 2 === 0 ? 'clip-path-trapezoid-right' : 'clip-path-trapezoid-left'
-                    }`}
-                  >
-                    <canvas
-                      ref={el => canvasRefs.col2.current[index] = el}
-                      className="w-full h-full"
-                      width={400}
-                      height={533}
-                    />
-                  </div>
-                ))}
+          {/* Column 2 - Moving up */}
+          <div className="w-1/2 relative overflow-hidden">
+            <div className="absolute w-full">
+              <div className="animate-scroll-up">
+                <div className="flex flex-col">
+                  {images.slice(4, 8).map((src, index) => (
+                    <div key={`up-1-${index}`} className="p-2">
+                      <img 
+                        src={src} 
+                        alt={`Login ${index + 5}`} 
+                        className="w-full rounded-lg shadow-lg clip-path-trapezoid-right transform hover:scale-105 transition duration-300" 
+                      />
+                    </div>
+                  ))}
+                  {images.slice(4, 8).map((src, index) => (
+                    <div key={`up-2-${index}`} className="p-2">
+                      <img 
+                        src={src} 
+                        alt={`Login ${index + 5}`} 
+                        className="w-full rounded-lg shadow-lg clip-path-trapezoid-right transform hover:scale-105 transition duration-300" 
+                      />
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
         </div>
-          {/* Right Side - Form */}
-          <div className="w-full lg:w-1/1 flex items-center justify-center p-8 ">
-        <div className="max-w-md w-full space-y-8 ">
-          <div className="text-center">
-            <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
+      </div>
+
+      {/* Form section - overlays images on mobile */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 mobile-form-container min-h-screen">
+        <div className="w-full max-w-md bg-white rounded-lg p-8">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-extrabold text-gray-900">
               Create an account
             </h2>
             <p className="mt-2 text-sm text-gray-600">
@@ -350,10 +340,8 @@ const Register = () => {
           </form>
         </div>
       </div>
-        </div>
-      </main>
     </div>
   );
 };
 
-export default Register;
+export default Login;

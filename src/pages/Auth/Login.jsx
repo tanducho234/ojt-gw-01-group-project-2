@@ -1,5 +1,90 @@
 import React, { useState } from 'react';
 
+const styles = `
+  .clip-path-trapezoid-right {
+    clip-path: polygon(0 0, 100% 4%, 100% 96%, 0% 100%);
+  }
+  
+  .clip-path-trapezoid-left {
+    clip-path: polygon(0 4%, 100% 0, 100% 100%, 0 96%);
+  }
+
+  @keyframes scrollUp {
+    0% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(-50%);
+    }
+  }
+
+  @keyframes scrollDown {
+    0% {
+      transform: translateY(-50%);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+
+  .animate-scroll-up {
+    animation: scrollUp 20s linear infinite;
+  }
+
+  .animate-scroll-down {
+    animation: scrollDown 20s linear infinite;
+  }
+
+  @media (max-width: 1023px) {
+    .mobile-image-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.5;
+      z-index: 10;
+    }
+
+    .mobile-form-container {
+      position: relative;
+      z-index: 20;
+      backdrop-filter: blur(8px);
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+  }
+      .login-section {
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+    min-height: 100vh;
+    width: 100%;
+  }
+
+  .contained-height {
+    height: 100%;
+    min-height: 100vh;
+  }
+
+  @media (max-width: 768px) {
+    .animate-scroll-up {
+      animation-duration: 15s;
+    }
+    .animate-scroll-down {
+      animation-duration: 15s;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .animate-scroll-up {
+      animation-duration: 10s;
+    }
+    .animate-scroll-down {
+      animation-duration: 10s;
+    }
+  }
+`;
+
 const Login = () => {
   const images = [
     '/assets/images/reg1.png',
@@ -69,8 +154,9 @@ const Login = () => {
 
   return (
     <div className="min-h-screen lg:flex">
-      {/* Left side - Images */}
-      <div className="hidden lg:block w-1/2 bg-white-100 relative overflow-hidden">
+      <style>{styles}</style>
+      {/* Images Section */}
+      <div className="lg:w-1/2 relative overflow-hidden mobile-image-container">
         <div className="absolute inset-0 flex">
           {/* Column 1 - Moving down */}
           <div className="w-1/2 relative overflow-hidden">
@@ -130,9 +216,9 @@ const Login = () => {
         </div>
       </div>
 
-      {/* Right side - Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
-        <div className="max-w-md w-full space-y-8">
+      {/* Form Section */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 mobile-form-container min-h-screen">
+        <div className="max-w-md w-full bg-white rounded-lg p-8 space-y-8">
           <div className="text-center">
             <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
               Login to Your Account
