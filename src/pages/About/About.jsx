@@ -17,43 +17,47 @@ const AboutUs = () => {
             <img
               src="https://via.placeholder.com/800x500"
               alt="Fashion model"
-              className="w-[full] h-[250px] object-cover grayscale"
+              className="w-[full] h-[300px] object-cover grayscale"
             />
           </div>
         </div>
 
         {/* First Row */}
-        <div className="grid grid-cols-22 gap-6 mb-6">
+        <div className="grid grid-cols-12 gap-6 mb-6">
           {/* Text Column */}
-          <div className="col-span-4 flex items-center space-x-500">
-            <div className="mb-200">
-              <h2 className="text-xl font-bold mb-4">ABOUT US</h2>
-              <p className="text-sm text-gray-600 mb-6 leading-relaxed">
-                Lashes - where fashion meets<br></br> dynamism. Born from a burning<br></br>
-                passion for fashion, Lashes is<br></br> dedicated to bringing you the
-                most<br></br> exceptional shopping experience.
+          <div className="col-span-4 flex items-center">
+            <div>
+            <h2 className="text-3xl font-bold mb-4">ABOUT US</h2>
+              <p className="text-lg text-gray-600 mb-6 leading-relaxed">
+                Lashes - where fashion meets
+                <br />
+                dynamism. Born from a burning
+                <br />
+                passion for fashion, Lashes is
+                <br />
+                dedicated to bringing you the most
+                <br />
+                exceptional shopping experience.
               </p>
-              
-              <button className="px-6 py-1.5 bg-black text-white text-sm rounded-sm">
+              <button className="px-6 py-1.5 bg-black text-white text-sm rounded-full">
                 Explore
               </button>
             </div>
-
-            <div className="col-span-8 flex justify-center">
-            <img 
-              src="https://via.placeholder.com/400x300"
-              alt="Fashion detail"
-              className="w-400 h-[300px] object-cover grayscale"
-            />
-            </div>
           </div>
 
+          {/* Image Column */}
+          <div className="col-span-8 flex justify-end">
+            <img
+              src="https://via.placeholder.com/400x300"
+              alt="Fashion detail"
+              className="w-[550px] h-[300px] object-cover grayscale"
+            />
+          </div>
         </div>
 
         {/* Second Row - Right Side Image */}
         <div className="grid grid-cols-12 gap-6 mb-6">
           <div className="col-span-8"></div>
-          
         </div>
 
         {/* Third Row - Left Side Images */}
@@ -85,13 +89,14 @@ const AboutUs = () => {
           </div>
           <div className="col-span-6 flex flex-col justify-center pl-12">
             <div className="max-w-[400px]">
-              <p className="text-sm text-gray-600 mb-6 leading-relaxed">
-                With youthful, bold designs <br></br> and premium materials, <br></br> Lashes
-                empowers you to<br></br> confidently express your unique style.
+              <p className="text-lg text-gray-600 mb-6 leading-relaxed">
+                With youthful, bold designs <br></br> and premium materials,{" "}
+                <br></br> Lashes empowers you to<br></br> confidently express
+                your unique style.
               </p>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                Our mission is to inspire and connect people through fashion,
-                ensuring you shine in every situation.
+              <p className="text-lg text-gray-600 leading-relaxed">
+                Our mission is to inspire <br></br> and connect people <br></br> through fashion,
+                ensuring <br></br> you shine in every <br></br> situation.
               </p>
             </div>
           </div>
