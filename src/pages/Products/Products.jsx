@@ -3,10 +3,11 @@ import Pagination from "../../components/Pagination/Pagination";
 
 import ProductCard from "../../components/ProductCard/ProductCard";
 import "../../index.css";
-import "../Products/Products.css";
+
 import "../../pages/Products/Products.css";
 import axios from "axios";
-import 'bootstrap/dist/css/bootstrap.css';
+import { AdjustmentsVerticalIcon } from "@heroicons/react/24/outline";
+
 // import Breadcrumb from "../../components/BreadCrumb/BreadCrumb";
 
 function Products() {
@@ -28,10 +29,9 @@ function Products() {
   const [filteredProducts, setFilteredProducts] = useState(products);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 9; // Number of products per page
+  const [productsPerPage, setProductsPerPage] = useState(9); // Number of products per page
   // Calculate total pages
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
-
   const [sortCriteria, setSortCriteria] = useState("");
 
   const handleSortChange = (e) => {
@@ -132,29 +132,51 @@ function Products() {
     // Reset to the first page after applying filters
     setCurrentPage(1);
   };
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 640) {
+        // sm
+        setProductsPerPage(6); // Show 6 products per page on small screens
+      } else {
+        setProductsPerPage(9); // Show 9 products per page on larger screens
+      }
+    };
+
+    handleResize(); // Initial check
+    window.addEventListener("resize", handleResize); // Add event listener for window resize
+
+    return () => {
+      window.removeEventListener("resize", handleResize); // Clean up event listener
+    };
+  }, []);
 
   // Function to handle filter changes
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const categoryResponse = await axios.get(
-          "https://ojt-gw-01-final-project-back-end.vercel.app/api/categories"
-        );
+        const [
+          categoryResponse,
+          styleResponse,
+          brandResponse,
+          productResponse,
+        ] = await Promise.all([
+          axios.get(
+            "https://ojt-gw-01-final-project-back-end.vercel.app/api/categories"
+          ),
+          axios.get(
+            "https://ojt-gw-01-final-project-back-end.vercel.app/api/styles"
+          ),
+          axios.get(
+            "https://ojt-gw-01-final-project-back-end.vercel.app/api/brands"
+          ),
+          axios.get(
+            "https://ojt-gw-01-final-project-back-end.vercel.app/api/products"
+          ),
+        ]);
+
         setCategories(categoryResponse.data);
-
-        const styleResponse = await axios.get(
-          "https://ojt-gw-01-final-project-back-end.vercel.app/api/styles"
-        );
         setStyles(styleResponse.data);
-
-        const brandResponse = await axios.get(
-          "https://ojt-gw-01-final-project-back-end.vercel.app/api/brands"
-        );
         setBrands(brandResponse.data);
-
-        const productResponse = await axios.get(
-          "https://ojt-gw-01-final-project-back-end.vercel.app/api/products"
-        );
         setProducts(productResponse.data);
         setFilteredProducts(productResponse.data);
       } catch (error) {
@@ -164,6 +186,7 @@ function Products() {
 
     fetchData();
   }, []); // Empty dependency array to run only once on component mount
+  // Empty dependency array to run only once on component mount
 
   // Get products for the current page
   const indexOfLastProduct = currentPage * productsPerPage;
@@ -177,30 +200,31 @@ function Products() {
   const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
-    <div className="flex flex-row p-5">
-      
+    <div className="flex w-full flex-wrap p-5">
       <aside
-        className={`absolute z-20 mt-[100px] bg-white top-0 left-0 rounded-2xl shadow-inner shadow-gray h-screen h-auto p-5 transition-transform duration-300 ${
-          showFilters ? "translate-x-0" : "-translate-x-full"
-        } sm:translate-x-0`}
+        className={`absolute z-20 mt-[60px] bg-white  border rounded-t-lg top-0 left-0 rounded-2xl shadow-2xl shadow-gray h-[1250px] 
+           p-3 transition-transform duration-300  md:h-[1200px] 2xl:h-[1300px] ${
+             showFilters ? "translate-x-0" : "-translate-x-full"
+           } sm:translate-x-0 sm:block max-[375px]:w-full max-[414px]:w-full max-[430px]:w-full md:w-60 max-[820px]:w-60 2xl:w-80`}
       >
         {" "}
         <div className=" p-5">
           <div>
-          <h3 className="font-bold text-2xl">Filters</h3>
-          <button
-            className="absolute top-4 right-4 text-xl text-gray-500"
-            onClick={() => setShowFilters(false)}
-          >
-            &times; {/* Close button */}
-          </button>
+            <h3 className="font-bold text-2xl">Filters</h3>
+            <button
+              className="absolute top-8 right-6 text-[20px] text-gray-500 md:hidden sm:hidden "
+              onClick={() => setShowFilters(false)}
+            >
+              &times; {/* Close button */}
+            </button>
           </div>
-          <hr className="text-gray" />
+          <hr className="text-gray my-3" />
 
           {/* _______________________________ Categories Filter _______________________________ */}
-          <div className="filter-section pb-2 mb-2 border-b border-gray">
-            <div className="category-options mt-4 rounded-xl bg-transparent shadow-md">
-              <div className="flex flex-col overflow-y-auto space-y-2 max-h-[12rem] custom-scrollbar">
+          <div className="filter-section pb-2 mb-2 ">
+          <h4 className="my-2 font-semibold text-xl">Category</h4>
+            <div className="category-options mt-4 rounded-xl ">
+              <div className="flex flex-col overflow-y-auto space-y-2 max-h-[9rem] custom-scrollbar md:max-h-[100px] 2xl:max-h-[9rem] ">
                 {categories.map((category) => (
                   <button
                     key={category._id}
@@ -221,7 +245,7 @@ function Products() {
               </div>
             </div>
           </div>
-
+          <hr className="text-gray mb-8" />
           {/* _______________________________ Price Filter _______________________________ */}
           <div className="w-full my-5">
             {/* Display Current Price Range */}
@@ -277,8 +301,9 @@ function Products() {
               />
             </div>
           </div>
+          <hr className="text-gray mb-8" />
           {/* _______________________________ Colors Filter _______________________________ */}
-          <div className="filter-section pb-2 mb-2 border-b border-gray-300">
+          <div className="filter-section pb-2 mb-2">
             <h4 className="my-2 font-semibold text-xl">Colors</h4>
             <div className="color-options flex gap-2 flex-wrap">
               {[
@@ -297,7 +322,7 @@ function Products() {
               ].map((color) => (
                 <span
                   key={color}
-                  className="w-6 h-6 rounded-full cursor-pointer"
+                  className="w-6 h-6 rounded-full cursor-pointer lg:w-7 lg:h-7 2xl:w-8 2xl:h-8"
                   style={{
                     fontWeight: 1000,
                     fontSize: 20,
@@ -323,9 +348,9 @@ function Products() {
               ))}
             </div>
           </div>
-
+          <hr className="text-gray mb-8" />
           {/* _______________________________ Sizes Filter _______________________________ */}
-          <div className="filter-section pb-2 mb-2 border-b border-gray-300">
+          <div className="filter-section pb-2 mb-2">
             <h4 className="my-2 font-semibold text-xl">Size</h4>
             <div className="size-options flex gap-2 flex-wrap ">
               {["S", "M", "L", "XL"].map((size) => (
@@ -343,11 +368,11 @@ function Products() {
               ))}
             </div>
           </div>
-
+          <hr className="text-gray mb-8" />
           {/* _______________________________ Dress Style Filter _______________________________ */}
-          <div className="filter-section pb-2 mb-2 border-b border-gray">
+          <div className="filter-section pb-2 mb-2">
             <h4 className="my-2 font-semibold text-xl">Dress Style</h4>
-            <div className="flex flex-col overflow-y-auto space-y-2 max-h-[12rem] custom-scrollbar">
+            <div className="flex flex-col overflow-y-auto space-y-2 max-h-[9rem] custom-scrollbar md:max-h-[100px] 2xl:max-h-[9rem]">
               {styles.map((style) => (
                 <button
                   key={style._id}
@@ -367,11 +392,11 @@ function Products() {
               ))}
             </div>
           </div>
-
+          <hr className="text-gray mb-8" />
           {/* _______________________________ Brands Filter _______________________________ */}
-          <div className="filter-section pb-2 mb-2 border-b border-gray">
+          <div className="filter-section pb-2 mb-2 ">
             <h4 className="my-2 font-semibold text-xl">Brand</h4>
-            <div className="flex flex-col overflow-y-auto space-y-2 max-h-[12rem] custom-scrollbar">
+            <div className="flex flex-col overflow-y-auto space-y-2 max-h-[9rem] custom-scrollbar md:max-h-[100px] 2xl:max-h-[9rem]">
               {brands.map((brand) => (
                 <button
                   key={brand._id}
@@ -393,69 +418,84 @@ function Products() {
           </div>
 
           <button
-            className="apply-filter-btn w-full bg-black  text-white border-none cursor-pointer text-lg rounded-full py-2 px-1 hover:bg-gray hover:text-white font-semibold "
+            className="apply-filter-btn w-full bg-black text-white border-none cursor-pointer 
+            text-lg rounded-full py-2 px-1 hover:bg-gray hover:text-white font-semibold md:mt-[50px]"
             onClick={applyFilters}
           >
             Apply Filter
           </button>
         </div>
       </aside>
-      <div className="grid-pagination flex flex-col items-center space-y-6">
-        <div className="sort-by flex items-center mt-12">
-          <label htmlFor="sort" className="text-lg font-medium">
-            Sort By:{" "}
-          </label>
-          <select
-            id="sort"
-            value={sortCriteria}
-            onChange={handleSortChange}
-            className="py-1 px-2 border border-gray rounded-md"
-          >
-            <option value="">Select...</option>
-            <option value="priceLowToHigh">Price: Low to High</option>
-            <option value="priceHighToLow">Price: High to Low</option>
-            <option value="rating">Rating</option>
-          </select>
-          <div>
-        <button
-          className=""
-          onClick={() => setShowFilters(!showFilters)}
+      <div
+        className="flex flex-col items-center space-y-6 w-full 
+      sm:max-sm:ml-80 md:ml-[240px] "
+      >
+        <div
+          className="flex justify-between w-full mt-2 sm:px-0 
+        md:mt-0 max-[820px]:justify-end "
         >
-          {showFilters}232
-        </button>
-      </div>
+          <div
+            className="flex items-center gap-1 
+          max-[820px]:ml-[20px] lg:ml-[500px] xl:ml-[760px] 2xl:ml-[68rem]"
+          >
+            <label htmlFor="sort" className="text-[16px] font-medium 2xl:text-xl 2xl:font-semibold">
+              Sort By:{" "}
+            </label>
+            <select
+              id="sort"
+              value={sortCriteria}
+              onChange={handleSortChange}
+              className="py-1 px-2 border border-gray rounded-md 2xl:py-2 2xl:px-8"
+            >
+              <option value="">Select...</option>
+              <option value="priceLowToHigh">Price: Low to High</option>
+              <option value="priceHighToLow">Price: High to Low</option>
+              <option value="rating">Rating</option>
+            </select>
+          </div>
+          <div className="">
+            <button
+              className="ml-[60px] w-[30px] h-[30px] bg-[#e4e4e7] border rounded-full md:hidden sm:hidden  lg:hidden"
+              onClick={() => setShowFilters(!showFilters)}
+            >
+              {showFilters}
+              <AdjustmentsVerticalIcon className="h-6 w-7 text-gray-600" />
+            </button>
+          </div>
         </div>
 
         <section
-          className="product-grid grid grid-cols-2 gap-8 w-full "
-          style={{ minHeight: "calc(3 * (300px + 32px))" }} // Adjust based on product card height and gap
+          className="product-grid w-full 2xl:w-[75%]"
+          style={{ minHeight: "calc(3 * (300px + 32px))" }}
         >
-          {currentProducts.length > 0 ? (
-            currentProducts.map((product, index) => (
-              <ProductCard
-                key={index}
-                name={product.name}
-                imageUrl={product.generalImgLink}
-                price={product.price}
-                rating={
-                  product.totalReview === 0
-                    ? 0
-                    : product.totalRating / product.totalReview
-                }
-                salePercentage={product.salePercentage}
-              />
-            ))
-          ) : (
-            <p className="text-center col-span-1">No products found.</p>
-          )}
-          {/* Add placeholders to maintain the grid */}
-          {Array.from({ length: 9 - currentProducts.length }, (_, i) => (
-            <div
-              key={`placeholder-${i}`}
-              className=" rounded bg-gray-200 h-[300px]"
-            ></div>
-          ))}
+          <div
+            className="product-grid grid grid-cols-2 gap-8 w-full sm:grid-cols-2 
+          md:grid-cols-2 lg:grid-cols-3 max-[820px]:grid-cols-2 lg:gap-x-0 xl:grid-cols-3"
+          >
+            {currentProducts.length > 0 ? (
+              currentProducts
+                .slice(0, window.innerWidth <= 970 ? 6 : 9) // Hiển thị 6 sản phẩm cho sm và md, 9 cho lg và xl
+                .map((product, index) => (
+                  <ProductCard
+                    key={index}
+                    id={product._id}
+                    name={product.name}
+                    imageUrl={product.generalImgLink}
+                    price={product.price}
+                    rating={
+                      product.totalReview === 0
+                        ? 0
+                        : product.totalRating / product.totalReview
+                    }
+                    salePercentage={product.salePercentage}
+                  />
+                ))
+            ) : (
+              <p>No products available</p>
+            )}
+          </div>
         </section>
+
         {/* Pagination Component */}
         <div className="pagination-container w-full mt-8">
           <Pagination
