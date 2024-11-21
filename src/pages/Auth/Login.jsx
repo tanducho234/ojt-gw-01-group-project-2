@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const styles = `
   .clip-path-trapezoid-right {
@@ -110,14 +111,13 @@ const Login = () => {
   });
 
   const [errors, setErrors] = useState({
-    email: true,
-    password: true,
+    email: false,
+    password: false,
   });
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const phoneRegex = /^[0-9]{10,11}$/;
-    return emailRegex.test(email) || phoneRegex.test(email);
+    return emailRegex.test(email);
   };
 
   const handleChange = (e) => {
@@ -153,6 +153,7 @@ const Login = () => {
     };
 
     setErrors(newErrors);
+    setShowErrorMessages(true);
 
     if (!Object.values(newErrors).some(error => error)) {
       console.log('Form submitted:', formData);
@@ -239,8 +240,9 @@ const Login = () => {
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Email or Phone Number
-                  {errors.email && <span className="text-red-500 ml-1">*</span>}
+                  Email
+                  <span className="text-red-500 ml-1">*</span>
+                  {errors.email}
                 </label>
                 <input
                   type="text"
@@ -259,7 +261,8 @@ const Login = () => {
               <div>
                 <label className="block text-sm font-medium text-gray-700">
                   Password
-                  {errors.password && <span className="text-red-500 ml-1">*</span>}
+                  <span className="text-red-500 ml-1">*</span>
+                  {errors.password }
                 </label>
                 <input
                   type="password"
@@ -305,9 +308,9 @@ const Login = () => {
 
             <div className="text-sm text-center">
               <span className="text-gray-600">Don't have an account? </span>
-              <a href="#" className="font-medium text-black-600 hover:text-indigo-500">
+              <Link to="/register" className="font-medium text-black-600 hover:text-indigo-500">
                 Register
-              </a>
+              </Link>
             </div>
           </form>
         </div>

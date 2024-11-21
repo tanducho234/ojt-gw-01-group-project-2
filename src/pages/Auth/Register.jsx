@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const styles = `
   .clip-path-trapezoid-right {
@@ -119,6 +120,7 @@ const Register = () => {
     password: true,
     rePassword: true,
   });
+  const [showErrorMessages, setShowErrorMessages] = useState(false);
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -151,6 +153,7 @@ const Register = () => {
       ...prev,
       [name]: validateField(name, value)
     }));
+    setShowErrorMessages(false);
   };
 
   const validateField = (fieldName, value) => {
@@ -174,6 +177,7 @@ const Register = () => {
     };
 
     setErrors(newErrors);
+    setShowErrorMessages(true);
 
     if (!Object.values(newErrors).some(error => error)) {
       console.log('Form submitted:', formData);
@@ -261,7 +265,7 @@ const Register = () => {
               <div>
                 <label className="block text-sm font-medium text-gray-700">
                   Name
-                  {errors.name && <span className="text-red-500 ml-1">*</span>}
+                  <span className="text-red-500 ml-1">*</span>
                 </label>
                 <input
                   type="text"
@@ -269,15 +273,18 @@ const Register = () => {
                   value={formData.name}
                   onChange={handleChange}
                   className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 ${
-                    errors.name ? 'border-red-500' : ''
+                    showErrorMessages && errors.name ? 'border-red-500' : ''
                   }`}
                 />
+                {showErrorMessages && errors.name && (
+                  <p className="mt-1 text-sm text-red-500">Name is required</p>
+                )}
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700">
                   Email or Phone Number
-                  {errors.email && <span className="text-red-500 ml-1">*</span>}
+                  <span className="text-red-500 ml-1">*</span>
                 </label>
                 <input
                   type="email"
@@ -285,10 +292,10 @@ const Register = () => {
                   value={formData.email}
                   onChange={handleChange}
                   className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 ${
-                    errors.email ? 'border-red-500' : ''
+                    showErrorMessages && errors.email ? 'border-red-500' : ''
                   }`}
                 />
-                {errors.email && (
+                {showErrorMessages && errors.email && (
                   <p className="mt-1 text-sm text-red-500">Please enter a valid email address</p>
                 )}
               </div>
@@ -296,7 +303,7 @@ const Register = () => {
               <div>
                 <label className="block text-sm font-medium text-gray-700">
                   Password
-                  {errors.password && <span className="text-red-500 ml-1">*</span>}
+                  <span className="text-red-500 ml-1">*</span>
                 </label>
                 <input
                   type="password"
@@ -304,10 +311,10 @@ const Register = () => {
                   value={formData.password}
                   onChange={handleChange}
                   className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 ${
-                    errors.password ? 'border-red-500' : ''
+                    showErrorMessages && errors.password ? 'border-red-500' : ''
                   }`}
                 />
-                {errors.password && (
+                {showErrorMessages && errors.password && (
                   <p className="mt-1 text-sm text-red-500">Password must be at least 8 characters long</p>
                 )}
               </div>
@@ -315,7 +322,7 @@ const Register = () => {
               <div>
                 <label className="block text-sm font-medium text-gray-700">
                   Re-enter Password
-                  {errors.rePassword && <span className="text-red-500 ml-1">*</span>}
+                  <span className="text-red-500 ml-1">*</span>
                 </label>
                 <input
                   type="password"
@@ -323,10 +330,10 @@ const Register = () => {
                   value={formData.rePassword}
                   onChange={handleChange}
                   className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 ${
-                    errors.rePassword ? 'border-red-500' : ''
+                    showErrorMessages && errors.rePassword ? 'border-red-500' : ''
                   }`}
                 />
-                {errors.rePassword && (
+                {showErrorMessages && errors.rePassword && (
                   <p className="mt-1 text-sm text-red-500">Passwords do not match</p>
                 )}
               </div>
@@ -341,9 +348,9 @@ const Register = () => {
 
             <div className="text-sm text-center">
               <span className="text-gray-600">Already have an account? </span>
-              <a href="#" className="font-medium text-gray-600 hover:text-indigo-500">
+              <Link to="/login" className="font-medium text-black-600 hover:text-indigo-500">
                 Log In
-              </a>
+              </Link>
             </div>
           </form>
         </div>
