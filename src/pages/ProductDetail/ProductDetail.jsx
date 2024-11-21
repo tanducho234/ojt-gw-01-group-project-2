@@ -1,94 +1,49 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import axios from "axios";
+
 import Review from "../../components/Review/Review";
-import { Tabs, Tab, Box } from '@mui/material';
 
 const ProductDetail = () => {
-  const product = {
-    id: "1",
-    name: "Summer Floral Dress",
-    category: "Dress",
-    price: 39.99,
-    salePercentage: 20,
-    colors: ["Red", "Blue", "Green", "Pink", "Black"],
-    size: ["S", "M", "L", "XL"],
-    dress_style: "Casual",
-    img_url: "https://placehold.co/295x298",
-    desc: "Absolutely love this dress! The fit is perfect, and the colors are so vibrant. Definitely my new go-to summer dress!",
-    rating: 3,
-    reviews: [
-      {
-        reviewer: "Alice W.",
-        date: "2024-08-01",
-        star: 5,
-        feedback:
-          "Absolutely love this dress! The fit is perfect, and the colors are so vibrant. Definitely my new go-to summer dress!",
-      },
-      {
-        reviewer: "John D.",
-        date: "2024-08-10",
-        star: 4,
-        feedback:
-          "Great dress! The fabric feels nice, but I wish it came in more sizes. I had to go a size up, but still happy with the purchase.",
-      },
-      {
-        reviewer: "Samantha R.",
-        date: "2024-08-15",
-        star: 3,
-        feedback:
-          "The dress is cute, but I found the material a bit thinner than I expected. It's still comfortable, just not as high quality as I hoped.",
-      },
-      {
-        reviewer: "Rachel P.",
-        date: "2024-08-20",
-        star: 2,
-        feedback:
-          "I was really excited about this dress, but it didn't fit as well as I thought. The sizing seems off, and it's a bit too short for me.",
-      },
-      {
-        reviewer: "Rachel P.",
-        date: "2024-08-20",
-        star: 2,
-        feedback:
-          "I was really excited about this dress, butexcited about this dresexcited about this dress, butexcited about this dress, butexcited about this dress, buts, butexcited about this dress, butexcited about this dress, but it didn't fit as well as I thought. The sizing seems off, and it's a bit too short for me.",
-      },
-      {
-        reviewer: "Megan S.",
-        date: "2024-09-01",
-        star: 4,
-        feedback:
-          "Really happy with my purchase. The dress is comfy and looks great for casual outings.",
-      },
-      
-    ],
-  };
-  const { id } = useParams();
-
-  const [selectedColor, setSelectedColor] = useState(product.colors[0]);
+  const { id } = useParams(); // Get the product id from the URL
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [selectedColor, setSelectedColor] = useState("");
   const [selectedSize, setSelectedSize] = useState(null);
   const [quantity, setQuantity] = useState(1);
-  const [activeTab, setActiveTab] = useState(0);
-
-  const handleTabChange = (event, newValue) => {
-    setActiveTab(newValue);
-  };
-
-  const stars = Array.from({ length: 5 }, (_, index) =>
-    index < Math.floor(product.rating) ? "★" : "☆"
-  );
-
+  useEffect(() => {
+    // Fetch product data using axios
+    axios
+      .get(
+        `https://ojt-gw-01-final-project-back-end.vercel.app/api/products/${id}`
+      )
+      .then((response) => {
+        setProduct(response.data);
+        console.log("asdasdasdasd", response.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError("Error fetching product data.");
+        setLoading(false);
+      });
+  }, [id]);
+  // Handle loading state
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
+  // Handle default product values in case product is not yet loaded
+  if (!product) return <div>No product found</div>;
+  // const stars = Array.from({ length: 5 }, (_, index) =>
+  //   index < Math.floor(product.rating) ? "★" : "☆"
+  // );
   const salePrice =
     product.salePercentage > 0
       ? Number(product.price * (1 - product.salePercentage / 100))
           .toFixed(2)
           .replace(/\.00$/, "")
       : product.price;
-
   const increment = () => setQuantity((prev) => prev + 1);
   const decrement = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
-
-  const sizes = product.size;
-  const colors = product.colors;
   const handleColorSelect = (color) => {
     setSelectedColor(color);
   };
@@ -103,49 +58,114 @@ const ProductDetail = () => {
   };
   return (
     <div>
-      <Tabs
-        value={activeTab}
-        onChange={handleTabChange}
-        indicatorColor="primary"
-        textColor="primary"
-        centered
-      >
-        <Tab label="Details" />
-        <Tab label="Reviews" />
-      </Tabs>
-
-      <div>
-        {activeTab === 0 && (
-          <Box sx={{ padding: 2 }}>
-            <h2>Product Details</h2>
-            <p>Here are the details of the product...</p>
-          </Box>
-        )}
-        {activeTab === 1 && (
-        <div className="review-container">
-        {product.reviews.length > 0 ? (
-          product.reviews.map((review, index) => (
-            <Review key={index} review={review} />
-          ))
-        ) : (
-          <p>No reviews yet.</p>
-        )}
-      </div>
-        )}
-      </div>
-      {/* Các phần khác của sản phẩm */}
-      <div className="product-description">
-        {/* Phần Mô tả sản phẩm */}
-        
-        <div className="description-section">
-     
+      <nav className="breadcrumb">
+        <a href="/">Home</a>
+        <span className="separator">{">"}</span>
+        <a href="/shop">Shop</a>
+        <span className="separator">{">"}</span>
+        <a href="/shop/men">Men</a>
+        <span className="separator">{">"}</span>
+        <span className="active">{product.category}</span>
+      </nav>
+      <div className="product-detail-container">
+        <div className="product-images">
+          <div className="small-images">
+            <img src={product.generalImgLink} alt="Product Thumbnail" />
+            {/* You can add more images if available */}
+          </div>
+          <div className="big-image">
+            <img src={product.generalImgLink} alt="Product" />
+          </div>
         </div>
-
-        {/* Phần Đánh giá (Reviews) */}
-       
+        <div className="product-details">
+          <h1>{product.name}</h1>
+          {/* <div className="product-rating">
+            {stars.join(" ")} <span>{rating}/5</span>
+          </div> */}
+          <div className="product-price">
+            <span className="real-price">${salePrice}</span>
+            {product.salePercentage > 0 && (
+              <span className="original-price">${product.price}</span>
+            )}
+            {product.salePercentage > 0 && (
+              <span className="sale-percentage">{product.salePercentage}%</span>
+            )}
+          </div>
+          <div className="product-desc">{product.description}</div>
+          <div className="color-selector">
+            <p>Select Color</p>
+            {product.colors.map((item) => (
+              <div
+                key={item}
+                className={`color-option ${
+                  selectedColor === item.color ? "selected" : ""
+                }`}
+                style={{ backgroundColor: item.color.toLowerCase() }}
+                onClick={() => handleColorSelect(item.color)}
+              >
+                {selectedColor === item.color && "✓"}
+              </div>
+            ))}
+          </div>
+          <div className="size-selector">
+            <p>Choose Size</p>
+            {["S","M","L","XL"].map((sizeOption) => (
+              <div
+                key={sizeOption}
+                className={`size-option ${
+                  selectedSize === sizeOption ? "selected" : ""
+                }`}
+                onClick={() => handleSizeSelect(sizeOption)}
+              >
+                {getSizeLabel(sizeOption)}
+              </div>
+            ))}
+          </div>
+          <div className="quantity-section">
+            <div className="quantity-selector">
+              <button className="quantity-button-decrement" onClick={decrement}>
+                -
+              </button>
+              <span className="quantity">{quantity}</span>
+              <button className="quantity-button-increment" onClick={increment}>
+                +
+              </button>
+            </div>
+            <button
+              className="add-to-cart-button"
+              onClick={() => {
+                if (!selectedSize) {
+                  alert("Please select a size");
+                  return;
+                }
+                // TODO: Implement add to cart functionality
+                alert(
+                  `Added ${quantity} ${product.name} in ${selectedColor} color, size ${selectedSize} to cart`
+                );
+              }}
+            >
+              Add to Cart
+            </button>
+          </div>
+        </div>
+      </div>
+      <div className="product-description">
+        <div className="tab-nav">
+          <div className="tab-button-2">Description</div>
+          <div className="tab-button">Rating & Reviews</div>
+          <div className="tab-button-2">FAQs</div>
+        </div>
+        {/* <div className="review-container">
+          {reviews.length > 0 ? (
+            reviews.map((review, index) => (
+              <Review key={index} review={review} />
+            ))
+          ) : (
+            <p>No reviews yet.</p>
+          )}
+        </div> */}
       </div>
     </div>
   );
 };
-
 export default ProductDetail;

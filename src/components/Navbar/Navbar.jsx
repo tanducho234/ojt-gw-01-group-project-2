@@ -70,7 +70,8 @@ const Navbar = () => {
         <div className="hidden md:flex flex-1 mx-8 max-w-lg relative">
           <input
             type="text"
-            className="w-full pl-4 pr-12 py-2 border rounded-full focus:ring-2 focus:ring-blue-500 bg-gray-100 shadow-md text-sm"
+            className="w-full pl-4 pr-12 py-2 border-none rounded-full bg-gray-100 text-sm focus:outline-none"
+
             placeholder="Search for products..."
           />
           <span className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-600">
@@ -88,17 +89,17 @@ const Navbar = () => {
             <img
               src="../../assets/images/stores.png"
               alt="Cart"
-              className="w-6 h-6"
+              className="w-8 h-8"
             />
             <span className="absolute -top-2 -right-2 flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full">
-              3
+              10
             </span>
           </a>
           <a href="/login">
             <img
               src="../../assets/images/users.png"
               alt="User"
-              className="w-6 h-6"
+              className="w-8 h-8"
             />
           </a>
           {/* Mobile Menu Button */}
