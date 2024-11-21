@@ -8,6 +8,13 @@ const styles = `
   .clip-path-trapezoid-left {
     clip-path: polygon(0 4%, 100% 0, 100% 100%, 0 96%);
   }
+      /* Responsive margin for image container */
+  @media (min-width: 1024px) {
+    .image-container-margin {
+      margin-left: 20px;
+      width: 58%; /* Increased from 50% */
+    }
+  }
 
   @keyframes scrollUp {
     0% {
@@ -103,8 +110,8 @@ const Login = () => {
   });
 
   const [errors, setErrors] = useState({
-    email: false,
-    password: false,
+    email: true,
+    password: true,
   });
 
   const validateEmail = (email) => {
@@ -156,7 +163,7 @@ const Login = () => {
     <div className="min-h-screen lg:flex">
       <style>{styles}</style>
       {/* Images Section */}
-      <div className="lg:w-1/2 relative overflow-hidden mobile-image-container">
+      <div className="lg:w-1/2 bg-white-100 relative overflow-hidden mobile-image-container image-container-margin">
         <div className="absolute inset-0 flex">
           {/* Column 1 - Moving down */}
           <div className="w-1/2 relative overflow-hidden">

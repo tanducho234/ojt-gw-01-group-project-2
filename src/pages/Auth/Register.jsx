@@ -9,6 +9,12 @@ const styles = `
     clip-path: polygon(0 4%, 100% 0, 100% 100%, 0 96%);
   }
 
+    /* Responsive margin for image container */
+  @media (min-width: 1024px) {
+    .image-container-margin {
+      margin-left: 20px;
+    }
+  }
   /* Custom animation styles with responsive durations */
   @keyframes scrollUp {
     0% {
@@ -74,7 +80,7 @@ const styles = `
       backdrop-filter: blur(8px);
     }
 }
-        .login-section {
+        .register-section {
     position: relative;
     overflow: hidden;
     height: 100%;
@@ -88,7 +94,7 @@ const styles = `
   }
 `;
 
-const Login = () => {
+const Register = () => {
   const images = [
     '/assets/images/reg1.png',
     '/assets/images/reg2.png',
@@ -108,8 +114,10 @@ const Login = () => {
   });
 
   const [errors, setErrors] = useState({
-    email: false,
-    password: false,
+    name: true,
+    email: true,
+    password: true,
+    rePassword: true,
   });
 
   const validateEmail = (email) => {
@@ -124,16 +132,16 @@ const Login = () => {
       [name]: value
     }));
 
-    const validateField = (fieldName, value, allValues) => {
+    const validateField = (fieldName, value) => {
       switch (fieldName) {
+        case 'name':
+          return value.trim().length === 0;
         case 'email':
           return !validateEmail(value);
         case 'password':
           return value.length < 8;
         case 'rePassword':
-          return value !== allValues.password;
-        case 'name':
-          return value.length === 0;
+          return value !== formData.password;
         default:
           return false;
       }
@@ -159,10 +167,10 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const newErrors = {
-      name: validateField('name', formData.name, formData),
-      email: validateField('email', formData.email, formData),
-      password: validateField('password', formData.password, formData),
-      rePassword: validateField('rePassword', formData.rePassword, formData),
+      name: formData.name.trim().length === 0,
+      email: !validateEmail(formData.email),
+      password: formData.password.length < 8,
+      rePassword: formData.rePassword !== formData.password,
     };
 
     setErrors(newErrors);
@@ -176,7 +184,7 @@ const Login = () => {
     <div className="min-h-screen lg:flex relative">
       <style>{styles}</style>
       {/* Images section - visible on both desktop and mobile */}
-      <div className="lg:w-1/2 bg-white-100 relative overflow-hidden mobile-image-container">
+      <div className="lg:w-1/2 bg-white-100 relative overflow-hidden mobile-image-container image-container-margin">
         <div className="absolute inset-0 flex">
           {/* Column 1 - Moving down */}
           <div className="w-1/2 relative overflow-hidden">
@@ -187,7 +195,7 @@ const Login = () => {
                     <div key={`down-1-${index}`} className="p-2">
                       <img 
                         src={src} 
-                        alt={`Login ${index + 1}`} 
+                        alt={`Register ${index + 1}`} 
                         className="w-full rounded-lg shadow-lg clip-path-trapezoid-left transform hover:scale-105 transition duration-300" 
                       />
                     </div>
@@ -196,7 +204,7 @@ const Login = () => {
                     <div key={`down-2-${index}`} className="p-2">
                       <img 
                         src={src} 
-                        alt={`Login ${index + 1}`} 
+                        alt={`Register ${index + 1}`} 
                         className="w-full rounded-lg shadow-lg clip-path-trapezoid-left transform hover:scale-105 transition duration-300" 
                       />
                     </div>
@@ -215,7 +223,7 @@ const Login = () => {
                     <div key={`up-1-${index}`} className="p-2">
                       <img 
                         src={src} 
-                        alt={`Login ${index + 5}`} 
+                        alt={`Register ${index + 5}`} 
                         className="w-full rounded-lg shadow-lg clip-path-trapezoid-right transform hover:scale-105 transition duration-300" 
                       />
                     </div>
@@ -224,7 +232,7 @@ const Login = () => {
                     <div key={`up-2-${index}`} className="p-2">
                       <img 
                         src={src} 
-                        alt={`Login ${index + 5}`} 
+                        alt={`Register ${index + 5}`} 
                         className="w-full rounded-lg shadow-lg clip-path-trapezoid-right transform hover:scale-105 transition duration-300" 
                       />
                     </div>
@@ -344,4 +352,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
