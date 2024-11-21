@@ -286,7 +286,7 @@ function Home() {
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-5 my-6 md:my-10 w-full max-w-7xl">
           {newArrivals.map((product, index) => (
-            <ProductCard key={index} product={product} />
+            <ProductCard key={index} product={product} root="/products" />
           ))}
         </div>
         <button className="px-4 md:px-6 py-2 md:py-3 bg-transparent border-2 border-black rounded cursor-pointer transition-all duration-300 hover:bg-black hover:text-white hover:shadow-lg transform hover:-translate-y-1 text-sm md:text-base">

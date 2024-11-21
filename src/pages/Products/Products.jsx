@@ -477,17 +477,9 @@ function Products() {
                 .slice(0, window.innerWidth <= 970 ? 6 : 9) // Hiển thị 6 sản phẩm cho sm và md, 9 cho lg và xl
                 .map((product, index) => (
                   <ProductCard
-                    key={index}
-                    id={product._id}
-                    name={product.name}
-                    imageUrl={product.generalImgLink}
-                    price={product.price}
-                    rating={
-                      product.totalReview === 0
-                        ? 0
-                        : product.totalRating / product.totalReview
-                    }
-                    salePercentage={product.salePercentage}
+                  key={index}
+                  product={product}
+                
                   />
                 ))
             ) : (

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom"; // Import useLocation from react-router-dom
 import "./Navbar.css";
+import { FaCartShopping, FaCircleUser } from "react-icons/fa6";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -19,7 +20,7 @@ const Navbar = () => {
         {/* Logo */}
         <a href="/" className="flex items-center space-x-2">
           <img
-            src="/public/assets/images/Logofast.png"
+            src="/assets/images/Logofast.png"
             alt="Shop Logo"
             className="h-8 w-auto"
           />
@@ -36,20 +37,17 @@ const Navbar = () => {
               <div className="absolute hidden group-hover:block bg-white shadow-lg rounded-lg py-2 z-10 top-full left-0 w-48">
                 <a
                   href="/products"
-                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                >
+                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
                   All Products
                 </a>
                 <a
                   href="#"
-                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                >
+                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
                   New Arrivals
                 </a>
                 <a
                   href="#"
-                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                >
+                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
                   Best Sellers
                 </a>
               </div>
@@ -77,7 +75,6 @@ const Navbar = () => {
           <input
             type="text"
             className="w-full pl-4 pr-12 py-2 border-none rounded-full bg-gray-100 text-sm focus:outline-none"
-
             placeholder="Search for products..."
           />
           <span className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-600">
@@ -92,27 +89,27 @@ const Navbar = () => {
         {/* User Actions */}
         <div className="flex items-center space-x-4">
           <a href="/cart" className="relative">
-            <img
+            {/* <img
               src="../../assets/images/stores.png"
               alt="Cart"
               className="w-8 h-8"
-            />
+            /> */}
+            <FaCartShopping size={25} />
             <span className="absolute -top-2 -right-2 flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full">
               10
             </span>
           </a>
-          <a href="/login">
+          {/* <a href="/login">
             <img
               src="../../assets/images/users.png"
               alt="User"
               className="w-8 h-8"
             />
-          </a>
-          {/* Mobile Menu Button */}
+          </a> */}
+          <FaCircleUser size={25} />{" "}
           <button
             className="lg:hidden text-gray-600 focus:outline-none"
-            onClick={toggleMobileMenu}
-          >
+            onClick={toggleMobileMenu}>
             ☰
           </button>
         </div>
@@ -125,32 +122,28 @@ const Navbar = () => {
             <li>
               <a
                 href="#"
-                className="block text-gray-700 hover:bg-gray-100 px-4 py-2 rounded"
-              >
+                className="block text-gray-700 hover:bg-gray-100 px-4 py-2 rounded">
                 Shop
               </a>
             </li>
             <li>
               <a
                 href="#"
-                className="block text-gray-700 hover:bg-gray-100 px-4 py-2 rounded"
-              >
+                className="block text-gray-700 hover:bg-gray-100 px-4 py-2 rounded">
                 On Sale
               </a>
             </li>
             <li>
               <a
                 href="#"
-                className="block text-gray-700 hover:bg-gray-100 px-4 py-2 rounded"
-              >
+                className="block text-gray-700 hover:bg-gray-100 px-4 py-2 rounded">
                 New Arrivals
               </a>
             </li>
             <li>
               <a
                 href="#"
-                className="block text-gray-700 hover:bg-gray-100 px-4 py-2 rounded"
-              >
+                className="block text-gray-700 hover:bg-gray-100 px-4 py-2 rounded">
                 Brands
               </a>
             </li>

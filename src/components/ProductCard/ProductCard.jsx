@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-function ProductCard({ product }) {
+function ProductCard({ product,root=null }) {
   const rating =
     product.totalReview > 0 ? product.totalRating / product.totalReview : 0;
   const fullStars = Math.floor(rating);
@@ -17,7 +17,7 @@ function ProductCard({ product }) {
 
   return (
     <Link
-      to={`${id}`}
+    to={root ? `${root}/${product._id}` : `${product._id}`}
       className=" w-full flex flex-col items-center text-left mx-auto"
     >
       <img
@@ -66,7 +66,7 @@ function ProductCard({ product }) {
           {/* Giá trị rating */}
           {product.totalReview > 0 && (
             <span className="text-black text-[12px] ml-2 md:text-[14px]">
-              {rating}/{maxRating}
+              {rating}/{5}
             </span>
           )}
         </div>

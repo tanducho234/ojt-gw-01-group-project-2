@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import Review from "../../components/Review/Review";
-import axios from "axios";
 import StarRating from "../../components/StarRating";
 import Breadcrumb from "../../components/BreadCrumb";
 
