@@ -23,12 +23,22 @@ function App() {
     <AuthProvider>
       <Navbar />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/about" element={<AboutUs />} />
-        {/* <Route path="/login" element={<Login />} /> */}
-        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="*" element={<h1>404 - Page Not Found</h1>} />{" "}
+        {/* <Route
+          path=""
+          element={<ProtectedRouteHome />}
+          children={[
+            {
+              path: "home",
+              element: <Home />,
+            },
+          ]}
+        /> */}
+                <Route path="/" element={<Home />} />
 
+        <Route path="/home" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/admin/login" element={<AdminLogin />} />
         {/* <Route path="/admin/login" element={<Login />} /> */}
         <Route path="/products" element={<Products />} />
         <Route path="/products/:id" element={<ProductDetail />} />
@@ -57,7 +67,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/admin/dashboard"
           element={
