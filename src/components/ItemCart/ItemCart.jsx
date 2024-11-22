@@ -43,7 +43,7 @@ const CartItem = ({ item, onRemove, onQuantityChange }) => {
         <div className="flex flex-col ml-4 items-center justify-between flex-1">
           {/* Remove Button */}
           <button
-            onClick={() => onRemove(item._id)}
+            onClick={() => onRemove(item)}
             className="absolute top-2 right-2 bg-red-500 text-black p-2 rounded-full shadow-md hover:bg-red-600"
           >
             <svg

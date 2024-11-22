@@ -12,9 +12,9 @@
   "dependencies": {
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
+    "@heroicons/react": "^2.2.0",
     "@mui/icons-material": "^6.1.7",
     "@mui/material": "^6.1.7",
-    "@heroicons/react": "^2.2.0",
     "axios": "^1.7.7",
     "lodash.debounce": "^4.0.8",
     "nouislider": "^15.8.1",

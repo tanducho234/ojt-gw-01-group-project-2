@@ -26,22 +26,45 @@ const Cart = () => {
   };
 
   useEffect(() => {
-    fetchCartData();
+    fetchCartData();       
   }, []);
 
-  const handleRemove = (id) => {
-    setCartItems(cartItems.filter((item) => item.productId !== id));
+  const onRemove = async (item) => {
+    console.log("cartitem", cartItems);
+    setCartItems((prevItems) => prevItems.filter((cartItem) => cartItem.productId !== item.productId));
+    console.log("after delete", cartItems);
+    try {
+      const url = "https://ojt-gw-01-final-project-back-end.vercel.app/api/carts/remove";
+      const body = {
+        productId: item.productId,
+        color: item.color, 
+        size: item.size,
+      };
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const response = await axios.delete(url, {
+        data: body,
+        ...config,
+      });
+
+      alert("Item has been successfully removed from your cart!");
+    } catch (error) {
+      console.log("error");      
+      alert("An error occurred while removing the item from your cart. Please try again!");
+    }
   };
 
   const handleQuantityChange = (id, quantity) => {
     setCartItems(
       cartItems.map((item) =>
-        item.id === id ? { ...item, quantity } : item
+        item.productId  === id ? { ...item, quantity } : item
       )
     );
   };
 
-  // Tính tổng giá của giỏ hàng
   const totalAmount = cartItems
     .reduce(
       (total, item) => total + item.price * item.quantity,
@@ -58,7 +81,7 @@ const Cart = () => {
             <CartItem
               key={index}
               item={item}
-              onRemove={handleRemove}
+              onRemove={onRemove}
               onQuantityChange={handleQuantityChange}
             />
           ))}
