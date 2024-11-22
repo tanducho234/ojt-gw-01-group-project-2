@@ -5,11 +5,11 @@ const ItemCheckout = ({ item }) => {
     <div className="flex items-center p-4 border-b border-gray-200">
       <div className="relative w-24 h-24">
         <img
-          src={item.imageUrl}
+          src={item.imgLink}
           alt={item.name}
           className="w-full h-full object-cover rounded-lg"
         />
-        <span className="absolute top-1 right-1 bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+        <span className="absolute top-1 right-1 bg-black text-white text-xs font-bold px-2 py-1 rounded-full">
           {item.quantity}
         </span>
       </div>

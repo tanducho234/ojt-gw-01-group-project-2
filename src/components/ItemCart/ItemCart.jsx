@@ -6,14 +6,14 @@ const CartItem = ({ item, onRemove, onQuantityChange }) => {
   const handleIncrease = () => {
     const newQuantity = quantity + 1;
     setQuantity(newQuantity);
-    onQuantityChange(item.id, newQuantity);
+    onQuantityChange(item._id, newQuantity);
   };
 
   const handleDecrease = () => {
     if (quantity > 1) {
       const newQuantity = quantity - 1;
       setQuantity(newQuantity);
-      onQuantityChange(item.id, newQuantity);
+      onQuantityChange(item._id, newQuantity);
     }
   };
 
@@ -24,7 +24,7 @@ const CartItem = ({ item, onRemove, onQuantityChange }) => {
       {/* Image Section */}
       <div className="md:w-1/4 w-1/2 flex-shrink-0 mb-4 sm:mb-0">
         <img
-          src={item.image}
+          src={item.imgLink}
           alt={item.name}
           className="object-cover rounded-md w-full h-full"
         />
@@ -43,8 +43,8 @@ const CartItem = ({ item, onRemove, onQuantityChange }) => {
         <div className="flex flex-col ml-4 items-center justify-between flex-1">
           {/* Remove Button */}
           <button
-            onClick={() => onRemove(item.id)}
-            className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full shadow-md hover:bg-red-600"
+            onClick={() => onRemove(item._id)}
+            className="absolute top-2 right-2 bg-red-500 text-black p-2 rounded-full shadow-md hover:bg-red-600"
           >
             <svg
               className="h-5 w-5"
@@ -65,7 +65,7 @@ const CartItem = ({ item, onRemove, onQuantityChange }) => {
           <div className="flex items-center justify-evenly bg-gray-100 px-3 py-2 min-w-[160px] rounded-full shadow-sm mt-auto">
             <button onClick={handleDecrease}>
               <svg
-                className="h-5 w-5 text-sky-500 hover:text-sky-600"
+                className="h-5 w-5 text-black-500 hover:text-gray-600"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -74,14 +74,14 @@ const CartItem = ({ item, onRemove, onQuantityChange }) => {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth="2"
-                  d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                  d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
             </button>
             <span className="text-lg font-semibold">{quantity}</span>
             <button onClick={handleIncrease}>
               <svg
-                className="h-5 w-5 text-sky-500 hover:text-sky-600"
+                className="h-5 w-5 text-black-500 hover:text-gray-600"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
