@@ -237,7 +237,7 @@ const Checkout = () => {
             <div className="space-y-4">
               <button
                 onClick={() => setIsAddressModalOpen(true)}
-                className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
+                className="w-full bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-600"
               >
                 Select or Add Shipping Address
               </button>
@@ -282,7 +282,7 @@ const Checkout = () => {
                   onClick={() => setShippingMethod(method)}
                   className={`lg:flex-1 py-2 px-4 rounded-lg text-white font-semibold w-full ${
                     shippingMethod === method
-                      ? "bg-blue-500"
+                      ? "bg-black"
                       : "bg-gray-300 hover:bg-gray-400"
                   }`}
                 >
@@ -319,7 +319,7 @@ const Checkout = () => {
               </select>
               <button
                 onClick={handleApplyDiscount}
-                className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+                className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-600"
               >
                 Apply
               </button>
@@ -394,7 +394,7 @@ const Checkout = () => {
           <div className="bg-white shadow rounded-lg p-4">
             <h2 className="text-xl font-semibold mb-4">Order Confirmation</h2>
             <button
-              className="w-full bg-green-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-600"
+              className="w-full bg-black text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-600"
               disabled={!selectedAddress || !paymentMethod}
             >
               Confirm Order (${calculateTotal().toFixed(2)})
@@ -425,7 +425,7 @@ const Checkout = () => {
               <div className="flex justify-between">
                 <button
                   onClick={handleAddNewAddress}
-                  className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg mt-4 hover:bg-blue-600"
+                  className="w-full bg-black text-white py-2 px-4 rounded-lg mt-4 hover:bg-blue-600"
                 >
                   Add New Address
                 </button>

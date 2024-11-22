@@ -116,7 +116,6 @@ const Login = () => {
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const phoneRegex = /^[0-9]{10,11}$/;
     return emailRegex.test(email) || phoneRegex.test(email);
   };
 
@@ -231,7 +230,7 @@ const Login = () => {
               Login to Your Account
             </h2>
             <p className="mt-2 text-sm text-gray-600">
-              Enter your email or phone number and password
+              Enter your email and password
             </p>
           </div>
 
@@ -239,7 +238,7 @@ const Login = () => {
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Email or Phone Number
+                  Email
                   {errors.email && <span className="text-red-500 ml-1">*</span>}
                 </label>
                 <input
