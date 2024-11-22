@@ -15,8 +15,8 @@ const Cart = () => {
         "https://ojt-gw-01-final-project-back-end.vercel.app/api/carts",
         {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
       setCartItems(response.data || []); // Lấy danh sách sản phẩm từ `products`
@@ -35,25 +35,30 @@ const Cart = () => {
 
   const handleQuantityChange = (id, quantity) => {
     setCartItems(
-      cartItems.map((item) =>
-        item.id === id ? { ...item, quantity } : item
-      )
+      cartItems.map((item) => (item.id === id ? { ...item, quantity } : item))
     );
   };
 
   // Tính tổng giá của giỏ hàng
   const totalAmount = cartItems
-    .reduce(
-      (total, item) => total + item.price * item.quantity,
-      0
-    )
+    .reduce((total, item) => total + item.price * item.quantity, 0)
     .toFixed(2);
 
   return (
-    <div className="max-w-6xl mx-auto mt-10 flex flex-col lg:flex-row gap-6">
-      <div className="flex-1 lg:max-w-2/3">
-        <h1 className="text-2xl font-bold mb-5">Your Cart</h1>
-        <div className="space-y-4">
+    <div className="w-full p-4 flex flex-col lg:flex-row lg:justify-between gap-4">
+      {/* Cart Items Section */}
+      <div className="flex-1">
+        <h1
+          className="text-3xl text-center font-roboto font-bold mb-5 
+             text-gray-800 bg-white p-4 rounded-lg shadow-md 
+              sm:w-full lg:w-full 2xl:w-full"
+        >
+          Your Cart
+        </h1>
+        <div
+          className="space-y-6 w-full max-h-[35rem] overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-200
+            lg:w-full"
+        >
           {cartItems.map((item, index) => (
             <CartItem
               key={index}
@@ -65,15 +70,19 @@ const Cart = () => {
         </div>
       </div>
 
-      {/* Right Section: Total Amount Details */}
-      <div className="w-full lg:w-1/3 bg-gray-100 p-4 rounded-lg shadow-md">
-        <h2 className="text-xl font-semibold mb-4">Summary</h2>
+      {/* Summary Section */}
+      <div className="w-full lg:w-[30%] bg-gray-100 p-4 rounded-lg shadow-md">
+        <h2 className="text-xl font-semibold mb-4 md:text-2xl lg:text-3xl">
+          Summary
+        </h2>
         {/* List of Items in Cart */}
         <div className="space-y-2 mb-4">
           {cartItems.map((item, index) => (
-            <div key={index} className="flex justify-between">
-              <span className="text-sm">{item.name}</span>
-              <span className="text-sm text-gray-600">
+            <div key={index} className="flex justify-between ">
+              <span className="text-sm font-roboto w-[15rem] flex-wrap italic sm:text-base md:text-lg lg:text-sm">
+                {item.name}
+              </span>
+              <span className="text-sm font-roboto text-gray-600 sm:text-base md:text-lg lg:text-sm">
                 ${item.price} x {item.quantity}
               </span>
             </div>
@@ -81,14 +90,23 @@ const Cart = () => {
         </div>
 
         {/* Total Amount */}
-        <div className="flex justify-between items-center mb-2">
-          <span className="text-lg font-medium">Total</span>
-          <span className="text-lg font-bold text-gray-800">${totalAmount}</span>
+        <div className="flex justify-between items-center mb-2 ">
+          <span className="text-lg font-medium sm:text-xl md:text-2xl">
+            Total
+          </span>
+          <span className="text-lg font-bold text-gray-800 sm:text-xl md:text-2xl">
+            ${totalAmount}
+          </span>
         </div>
 
         {/* Checkout Button */}
         <Link to="/checkout">
-          <button className="w-full bg-black text-white p-3 rounded-md mt-4 hover:bg-gray-600">
+          <button
+            className="w-full bg-black text-white font-mono border-none
+              cursor-pointer text-lg rounded-full py-2 px-1 hover:bg-gray
+               hover:text-white
+               font-semibold md:mt-[2rem] md:text-[1.5rem] "
+          >
             Checkout
           </button>
         </Link>
