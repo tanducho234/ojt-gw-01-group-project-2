@@ -170,7 +170,7 @@ function Products() {
             "https://ojt-gw-01-final-project-back-end.vercel.app/api/brands"
           ),
           axios.get(
-            "https://ojt-gw-01-final-project-back-end.vercel.app/api/products"
+            "https://ojt-gw-01-final-project-back-end.vercel.app/api/products"  
           ),
         ]);
 
