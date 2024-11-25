@@ -17,11 +17,13 @@ import { AuthProvider } from "./hooks/useAuth";
 import { AdminRoute } from "./utils/AdminRoute";
 import { Dashboard } from "./pages/Admin/Dashboard";
 import { AdminLogin } from "./pages/Admin/Login";
+import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
   return (
     <AuthProvider>
       <Navbar />
+      <ScrollToTop/>
       <Routes>
         <Route path="*" element={<h1>404 - Page Not Found</h1>} />{" "}
         {/* <Route
@@ -37,6 +39,8 @@ function App() {
                 <Route path="/" element={<Home />} />
 
         <Route path="/home" element={<Home />} />
+        <Route path="/about" element={<AboutUs />} />
+
         <Route path="/login" element={<Login />} />
         <Route path="/admin/login" element={<AdminLogin />} />
         {/* <Route path="/admin/login" element={<Login />} /> */}
