@@ -3,42 +3,45 @@ import axios from "axios";
 import CartItem from "../../components/ItemCart/ItemCart";
 import { useAuth } from "../../hooks/useAuth";
 import { Link } from "react-router-dom";
-import "../Cart/Cart.css"
+import "../Cart/Cart.css";
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const { token } = useAuth();
 
   // Fetch cart data from API
-  const fetchCartData = async () => {
-    try {
-      const response = await axios.get(
-        "https://ojt-gw-01-final-project-back-end.vercel.app/api/carts",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setCartItems(response.data || []); // Lấy danh sách sản phẩm từ `products`
-    } catch (error) {
-      console.error("Failed to fetch cart data:", error);
-    }
-  };
 
   useEffect(() => {
-    fetchCartData();       
-  }, []);
+    const fetchCartData = async () => {
+      try {
+        const response = await axios.get(
+          "https://ojt-gw-01-final-project-back-end.vercel.app/api/carts",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setCartItems(response.data || []); // Lấy danh sách sản phẩm từ `products`
+      } catch (error) {
+        console.error("Failed to fetch cart data:", error);
+      }
+    };
+    fetchCartData();
+  }, [token]);
 
   const onRemove = async (item) => {
     console.log("cartitem", cartItems);
-    setCartItems((prevItems) => prevItems.filter((cartItem) => cartItem.productId !== item.productId));
+    setCartItems((prevItems) =>
+      prevItems.filter((cartItem) => cartItem.productId !== item.productId)
+    );
     console.log("after delete", cartItems);
     try {
-      const url = "https://ojt-gw-01-final-project-back-end.vercel.app/api/carts/remove";
+      const url =
+        "https://ojt-gw-01-final-project-back-end.vercel.app/api/carts/remove";
       const body = {
         productId: item.productId,
-        color: item.color, 
+        color: item.color,
         size: item.size,
       };
       const config = {
@@ -53,8 +56,10 @@ const Cart = () => {
 
       alert("Item has been successfully removed from your cart!");
     } catch (error) {
-      console.log("error");      
-      alert("An error occurred while removing the item from your cart. Please try again!");
+      console.log("error");
+      alert(
+        "An error occurred while removing the item from your cart. Please try again!"
+      );
     }
   };
 
@@ -75,13 +80,10 @@ const Cart = () => {
         <h1
           className="text-3xl text-center font-roboto font-bold mb-5 
              text-gray-800 bg-white p-4 rounded-lg shadow-md 
-              sm:w-full lg:w-full 2xl:w-full"
-        >
+              sm:w-full lg:w-full 2xl:w-full">
           Your Cart
         </h1>
-        <div
-          className="space-y-6 w-full h-[35rem] overflow-y-auto custom-scrollbar lg:w-full 2xl:h-[48rem] 2xl:w-[60rem] 2xl:ml-[10rem]"
-        >
+        <div className="space-y-6 w-full h-[35rem] overflow-y-auto custom-scrollbar lg:w-full 2xl:h-[48rem] 2xl:w-[60rem] 2xl:ml-[10rem]">
           {cartItems.map((item, index) => (
             <CartItem
               key={index}
@@ -128,8 +130,7 @@ const Cart = () => {
             className="w-full bg-black text-white font-mono border-none
               cursor-pointer text-lg rounded-full py-2 px-1 hover:bg-gray
                hover:text-white
-               font-semibold md:mt-[2rem] md:text-[1.5rem] "
-          >
+               font-semibold md:mt-[2rem] md:text-[1.5rem] ">
             Checkout
           </button>
         </Link>

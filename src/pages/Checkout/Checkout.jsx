@@ -35,37 +35,38 @@ const Checkout = () => {
     }
   };
 
-  const fetchDiscounts = async () => {
-    try {
-      const response = await axios.get(
-        "https://ojt-gw-01-final-project-back-end.vercel.app/api/vouchers/"
-      );
-      setDiscounts(response.data);
-    } catch (error) {
-      console.error("Failed to fetch discounts:", error);
-    }
-  };
-
-  const fetchCartItems = async () => {
-    try {
-      const response = await axios.get(
-        "https://ojt-gw-01-final-project-back-end.vercel.app/api/carts",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setCartItems(response.data || []);
-    } catch (error) {
-      console.error("Failed to fetch cart data:", error);
-    }
-  };
-
+  
   useEffect(() => {
+    const fetchDiscounts = async () => {
+      try {
+        const response = await axios.get(
+          "https://ojt-gw-01-final-project-back-end.vercel.app/api/vouchers/"
+        );
+        setDiscounts(response.data);
+      } catch (error) {
+        console.error("Failed to fetch discounts:", error);
+      }
+    };
+  
+    const fetchCartItems = async () => {
+      try {
+        const response = await axios.get(
+          "https://ojt-gw-01-final-project-back-end.vercel.app/api/carts",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setCartItems(response.data || []);
+      } catch (error) {
+        console.error("Failed to fetch cart data:", error);
+      }
+    };
+  
     fetchCartItems();
     fetchDiscounts();
-  }, []);
+  }, [token]);
 
   const [showAll, setShowAll] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState(null);

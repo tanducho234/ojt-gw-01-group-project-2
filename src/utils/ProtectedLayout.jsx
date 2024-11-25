@@ -4,9 +4,9 @@ import Navbar from "../components/Navbar/Navbar";
 import Footer from "../components/Footer/Footer";
 
 export const ProtectedLayout = () => {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
 
-  if (!user) {
+  if (!user || !token) {
     return <Navigate to="/login" />;
   }
 
