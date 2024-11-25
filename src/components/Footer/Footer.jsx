@@ -226,15 +226,15 @@ const Footer = () => {
             Lashes © 2024, All Rights Reserved
           </span>
           <div className="flex items-center gap-4">
-            <img src="/assets/images/Visa.png" alt="Visa" className="h-12" />
-            <img src="/assets/images/Badge.png" alt="Badge" className="h-12" />
+            <img src="/assets/images/Visa.png" alt="Visa" className="h-10" />
+            <img src="/assets/images/Badge.png" alt="Badge" className="h-10" />
             <img
               src="/assets/images/GooglePay.png"
               alt="Google Pay"
-              className="h-12"
+              className="h-10"
             />
-            <img src="/assets/images/Pay.png" alt="VNPay" className="h-12" />
-            <img src="/assets/images/VNPAY.png" alt="VNPay" className="h-12" />
+            <img src="/assets/images/Pay.png" alt="VNPay" className="h-10" />
+            <img src="/assets/images/VNPAY.png" alt="VNPay" className="h-10" />
           </div>
         </div>
       </div>
