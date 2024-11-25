@@ -29,7 +29,7 @@ function Products() {
   const [filteredProducts, setFilteredProducts] = useState(products);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [productsPerPage, setProductsPerPage] = useState(9); // Number of products per page
+  const [productsPerPage, setProductsPerPage] = useState(12); // Number of products per page
   // Calculate total pages
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
   const [sortCriteria, setSortCriteria] = useState("");
@@ -134,11 +134,11 @@ function Products() {
   };
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth <= 640) {
+      if (window.innerWidth <= 970) {
         // sm
-        setProductsPerPage(6); // Show 6 products per page on small screens
+        setProductsPerPage(12); // Show 6 products per page on small screens
       } else {
-        setProductsPerPage(9); // Show 9 products per page on larger screens
+        setProductsPerPage(12); // Show 9 products per page on larger screens
       }
     };
 
@@ -203,7 +203,7 @@ function Products() {
     <div className="flex w-full flex-wrap p-5">
       <aside
         className={`absolute z-20 mt-[60px] bg-white  border rounded-t-lg top-0 left-0 rounded-2xl shadow-2xl shadow-gray h-[1250px] 
-           p-3 transition-transform duration-300  md:h-[1200px] 2xl:h-[1300px] ${
+           p-3 transition-transform duration-300 max-[540px]:h-[80rem] md:h-[1200px] 2xl:h-[1300px] ${
              showFilters ? "translate-x-0" : "-translate-x-full"
            } sm:translate-x-0 sm:block max-[375px]:w-full max-[414px]:w-full max-[430px]:w-full md:w-60 max-[820px]:w-60 2xl:w-80`}
       >
@@ -222,7 +222,7 @@ function Products() {
 
           {/* _______________________________ Categories Filter _______________________________ */}
           <div className="filter-section pb-2 mb-2 ">
-          <h4 className="my-2 font-semibold text-xl">Category</h4>
+            <h4 className="my-2 font-semibold text-xl">Category</h4>
             <div className="category-options mt-4 rounded-xl ">
               <div className="flex flex-col overflow-y-auto space-y-2 max-h-[9rem] custom-scrollbar md:max-h-[100px] 2xl:max-h-[9rem] ">
                 {categories.map((category) => (
@@ -419,7 +419,7 @@ function Products() {
 
           <button
             className="apply-filter-btn w-full bg-black text-white border-none cursor-pointer 
-            text-lg rounded-full py-2 px-1 hover:bg-gray hover:text-white font-semibold md:mt-[50px]"
+            text-lg rounded-full py-2 px-1 hover:bg-gray hover:text-white font-semibold md:mt-[20px]"
             onClick={applyFilters}
           >
             Apply Filter
@@ -438,14 +438,17 @@ function Products() {
             className="flex items-center gap-1 
           max-[820px]:ml-[20px] lg:ml-[500px] xl:ml-[760px] 2xl:ml-[68rem]"
           >
-            <label htmlFor="sort" className="text-[16px] font-medium 2xl:text-xl 2xl:font-semibold">
+            <label
+              htmlFor="sort"
+              className="text-[16px] font-medium 2xl:text-xl 2xl:font-semibold"
+            >
               Sort By:{" "}
             </label>
             <select
               id="sort"
               value={sortCriteria}
               onChange={handleSortChange}
-              className="py-1 px-2 border border-gray rounded-md 2xl:py-2 2xl:px-8"
+              className="py-1 pr-8 border border-gray rounded-md 2xl:py-2 2xl:px-8"
             >
               <option value="">Select...</option>
               <option value="priceLowToHigh">Price: Low to High</option>
@@ -474,13 +477,9 @@ function Products() {
           >
             {currentProducts.length > 0 ? (
               currentProducts
-                .slice(0, window.innerWidth <= 970 ? 6 : 9) // Hiển thị 6 sản phẩm cho sm và md, 9 cho lg và xl
+                .slice(0, window.innerWidth <= 970 ? 6 : 12) // Hiển thị 6 sản phẩm cho sm và md, 9 cho lg và xl
                 .map((product, index) => (
-                  <ProductCard
-                  key={index}
-                  product={product}
-                
-                  />
+                  <ProductCard key={index} product={product} />
                 ))
             ) : (
               <p>No products available</p>

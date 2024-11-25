@@ -12,81 +12,45 @@ import Login from "./pages/Auth/Login";
 
 import AboutUs from "./pages/About/About";
 import Profile from "./pages/Profile/Profile";
-import { ProtectedRoute } from "./utils/ProtectedRoute";
 import { AuthProvider } from "./hooks/useAuth";
 import { FetchDataProvider } from "./hooks/useFetchData";
-import { AdminRoute } from "./utils/AdminRoute";
+import { AddProduct } from "./pages/Admin/AddProduct";
 import { Dashboard } from "./pages/Admin/Dashboard";
 import { AdminLogin } from "./pages/Admin/Login";
-import { AddProduct } from "./pages/Admin/AddProduct";
-
+import ScrollToTop from "./components/ScrollToTop";
+import { ProtectedLayout } from "./utils/ProtectedLayout";
+import { HomeLayout } from "./utils/HomeLayout";
+import { AdminLayout } from "./utils/AdminLayout";
 function App() {
   return (
     <AuthProvider>
-      <FetchDataProvider>
-        <Navbar />
-        <Routes>
-          <Route path="*" element={<h1>404 - Page Not Found</h1>} />{" "}
-          {/* <Route
-          path=""
-          element={<ProtectedRouteHome />}
-          children={[
-            {
-              path: "home",
-              element: <Home />,
-            },
-          ]}
-        /> */}
-          <Route path="/" element={<Home />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/admin/login" element={<AdminLogin />} />
-          {/* <Route path="/admin/login" element={<Login />} /> */}
-          <Route path="/products" element={<Products />} />
-          <Route path="/products/:id" element={<ProductDetail />} />
-          <Route path="/register" element={<Register />} />
-          <Route
-            path="/cart"
-            element={
-              <ProtectedRoute>
-                <Cart />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/checkout"
-            element={
-              <ProtectedRoute>
-                <Checkout />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="/admin/products/add" element={<AddProduct />} />
-          <Route
-            path="/admin"
-            element={
-              <AdminRoute>
-                <Dashboard />
-              </AdminRoute>
-            }>
-            <Route path="dashboard" element={<Dashboard />} />
-            {/* <Route path="products" element={<AdminProducts />} />
-          <Route path="orders" element={<AdminOrders />} />
-          <Route path="customers" element={<AdminCustomers />} />
-          <Route path="settings" element={<AdminSettings />} /> */}
-          </Route>
-          {/* <Route path="/admin/products" element={<AdminRoute></AdminRoute>} /> */}
-        </Routes>
-        <Footer />
-      </FetchDataProvider>
+      <ScrollToTop />
+      <Routes>
+        <Route path="*" element={<h1>404 - Page Not Found</h1>} />{" "}
+        {/* default layout */}
+        <Route path="/" element={<HomeLayout />}>
+          <Route path="" element={<Home />} />
+          <Route path="home" element={<Home />} />
+          <Route path="about" element={<AboutUs />} />
+          <Route path="login" element={<Login />} />
+          <Route path="products" element={<Products />} />
+          <Route path="products/:id" element={<ProductDetail />} />
+          <Route path="register" element={<Register />} />
+        </Route>
+        <Route path="/admin/login" element={<AdminLogin />} />
+        {/* Authenticated user layout */}{" "}
+        <Route path="/" element={<ProtectedLayout />}>
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/cart" element={<Cart />} />
+        </Route>
+        {/* Admin layout */}
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route path="" element={<Dashboard />} />
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="products/add" element={<AddProduct />} />
+        </Route>
+      </Routes>
     </AuthProvider>
   );
 }
