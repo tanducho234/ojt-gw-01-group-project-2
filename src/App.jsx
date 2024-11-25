@@ -13,13 +13,14 @@ import Login from "./pages/Auth/Login";
 import AboutUs from "./pages/About/About";
 import Profile from "./pages/Profile/Profile";
 import { AuthProvider } from "./hooks/useAuth";
+import { FetchDataProvider } from "./hooks/useFetchData";
+import { AddProduct } from "./pages/Admin/AddProduct";
 import { Dashboard } from "./pages/Admin/Dashboard";
 import { AdminLogin } from "./pages/Admin/Login";
 import ScrollToTop from "./components/ScrollToTop";
 import { ProtectedLayout } from "./utils/ProtectedLayout";
 import { HomeLayout } from "./utils/HomeLayout";
 import { AdminLayout } from "./utils/AdminLayout";
-
 function App() {
   return (
     <AuthProvider>
@@ -47,7 +48,8 @@ function App() {
         <Route path="/admin" element={<AdminLayout />}>
           <Route path="" element={<Dashboard />} />
           <Route path="dashboard" element={<Dashboard />} />
-        </Route>{" "}
+          <Route path="products/add" element={<AddProduct />} />
+        </Route>
       </Routes>
     </AuthProvider>
   );
