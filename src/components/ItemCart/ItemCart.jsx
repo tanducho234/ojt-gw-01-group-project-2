@@ -64,12 +64,10 @@ const CartItem = ({ item, onRemove, onQuantityChange }) => {
           <p className="text-xs font-roboto text-gray-600 
           sm:text-sm 2xl:text-xl">Color: {item.color}</p>
         </div>
-
         {/* Giá sản phẩm */}
         <p className="text-sm font-bold text-gray-800 
         sm:text-base 2xl:text-xl">${totalPrice}</p>
       </div>
-
       {/* Quantity Controls ở góc dưới phải */}
       <div className="absolute bottom-8 right-3 flex items-center gap-2">
         <button onClick={handleDecrease} className="p-1 bg-gray-200 rounded-full">

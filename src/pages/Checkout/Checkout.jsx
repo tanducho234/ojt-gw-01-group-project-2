@@ -1,104 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useAuth } from "../../hooks/useAuth";
 import ItemCheckout from "../../components/ItemCheckout/ItemCheckout";
 import ShippingAddress from "../../components/ShippingAddress/ShippingAddress";
 
 const Checkout = () => {
-  const cartItems = [
-    {
-      id: 1,
-      imageUrl: "https://via.placeholder.com/100",
-      name: "Basic T-Shirt",
-      size: "M",
-      color: "White",
-      quantity: 2,
-      price: "15.00",
-    },
-    {
-      id: 2,
-      imageUrl: "https://via.placeholder.com/100",
-      name: "Jeans",
-      size: "32",
-      color: "Blue",
-      quantity: 1,
-      price: "25.00",
-    },
-    {
-      id: 3,
-      imageUrl: "https://via.placeholder.com/100",
-      name: "Jeans",
-      size: "32",
-      color: "Blue",
-      quantity: 1,
-      price: "25.00",
-    },
-    {
-      id: 4,
-      imageUrl: "https://via.placeholder.com/100",
-      name: "Jeans",
-      size: "32",
-      color: "Blue",
-      quantity: 1,
-      price: "25.00",
-    },
-    {
-      id: 5,
-      imageUrl: "https://via.placeholder.com/100",
-      name: "Jeans",
-      size: "32",
-      color: "Blue",
-      quantity: 1,
-      price: "25.00",
-    },
-    {
-      id: 6,
-      imageUrl: "https://via.placeholder.com/100",
-      name: "Jeans",
-      size: "32",
-      color: "Blue",
-      quantity: 1,
-      price: "25.00",
-    },
-  ];
-
-  const discounts = [
-    {
-      _id: "67356534e73a195a4e736eea",
-      code: "SALE10$",
-      type: "public",
-      discountAmount: 10,
-      discountPercentage: 0,
-      minOrderValue: 50,
-      isActive: true,
-    },
-    {
-      _id: "67356534e73a195a4e736eed",
-      code: "SALE15$",
-      type: "public",
-      discountAmount: 0,
-      discountPercentage: 15,
-      minOrderValue: 50,
-      isActive: true,
-    },
-    {
-      _id: "67356a42b889683851011ac5",
-      code: "SALE30%",
-      type: "public",
-      discountAmount: 0,
-      discountPercentage: 30,
-      minOrderValue: 75,
-      isActive: true,
-    },
-    {
-      _id: "673581d4b889683851011acb",
-      code: "SALE20%",
-      type: "public",
-      discountAmount: 0,
-      discountPercentage: 20,
-      minOrderValue: 100,
-      isActive: true,
-    },
-  ];
-
+  const { token } = useAuth();
+  const [cartItems, setCartItems] = useState([]);
+  const [discounts, setDiscounts] = useState([]);
   const [addresses, setAddresses] = useState([
     {
       id: 1,
@@ -114,12 +23,56 @@ const Checkout = () => {
     },
   ]);
 
+  const checkDiscountValidity = async (discountCode) => {
+    const url = `https://ojt-gw-01-final-project-back-end.vercel.app/api/vouchers/check/${discountCode}`;
+    try {
+      const response = await axios.get(url);
+      const data = response.data;
+      return data.canUse;
+    } catch (error) {
+      console.error("Error while checking discount validity:", error);
+      return false;
+    }
+  };
+
+  const fetchDiscounts = async () => {
+    try {
+      const response = await axios.get(
+        "https://ojt-gw-01-final-project-back-end.vercel.app/api/vouchers/"
+      );
+      setDiscounts(response.data);
+    } catch (error) {
+      console.error("Failed to fetch discounts:", error);
+    }
+  };
+
+  const fetchCartItems = async () => {
+    try {
+      const response = await axios.get(
+        "https://ojt-gw-01-final-project-back-end.vercel.app/api/carts",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setCartItems(response.data || []);
+    } catch (error) {
+      console.error("Failed to fetch cart data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCartItems();
+    fetchDiscounts();
+  }, []);
+
   const [showAll, setShowAll] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [discountCode, setDiscountCode] = useState("");
   const [appliedDiscount, setAppliedDiscount] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState("");
-  const [shippingMethod, setShippingMethod] = useState("basic");
+  const [shippingMethod, setShippingMethod] = useState("standard");
 
   // Modal control
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
@@ -130,46 +83,51 @@ const Checkout = () => {
   });
 
   const shippingCosts = {
-    economy: 2.0,
-    basic: 3.5,
-    express: 5.0,
+    standard: 2.0,
+    expedited: 3.5,
+    international: 5.0,
   };
 
   const handleAddressSelect = (addressId) => {
     setSelectedAddress(addressId);
-    setIsAddressModalOpen(false); // Close the modal after selection
+    setIsAddressModalOpen(false);
   };
 
-  const handleApplyDiscount = () => {
-    const selectedDiscount = discounts.find(
-      (discount) => discount.code === discountCode && discount.isActive
-    );
+  const handleApplyDiscount = async () => {
+    const isValid = await checkDiscountValidity(discountCode);
 
-    if (selectedDiscount) {
-      const subtotal = calculateSubtotal();
+    if (isValid) {
+      const selectedDiscount = discounts.find(
+        (discount) => discount.code === discountCode && discount.isActive
+      );
 
-      // Check minOrderValue condition
-      if (subtotal >= selectedDiscount.minOrderValue) {
-        if (selectedDiscount.discountAmount > 0) {
-          setAppliedDiscount({
-            type: "amount",
-            value: selectedDiscount.discountAmount,
-          });
-        } else if (selectedDiscount.discountPercentage > 0) {
-          setAppliedDiscount({
-            type: "percentage",
-            value: selectedDiscount.discountPercentage,
-          });
+      if (selectedDiscount) {
+        const subtotal = calculateSubtotal();
+
+        if (subtotal >= selectedDiscount.minOrderValue) {
+          if (selectedDiscount.discountAmount > 0) {
+            setAppliedDiscount({
+              type: "amount",
+              value: selectedDiscount.discountAmount,
+            });
+          } else if (selectedDiscount.discountPercentage > 0) {
+            setAppliedDiscount({
+              type: "percentage",
+              value: selectedDiscount.discountPercentage,
+            });
+          }
+        } else {
+          alert(
+            `Order must have a minimum value of $${selectedDiscount.minOrderValue.toFixed(
+              2
+            )} to apply this discount.`
+          );
         }
       } else {
-        alert(
-          `Order must have a minimum value of $${selectedDiscount.minOrderValue.toFixed(
-            2
-          )} to apply this discount.`
-        );
+        alert("Invalid discount code or expired!");
       }
     } else {
-      alert("Invalid discount code or expired!");
+      alert("Discount code cannot be used!");
     }
   };
 
@@ -216,15 +174,15 @@ const Checkout = () => {
     <div className="max-w-6xl mx-auto p-6 space-y-6">
       <h1 className="text-3xl font-bold text-center">Checkout</h1>
 
-      <div className="flex flex-col md:flex-row gap-6">
+      <div className="flex flex-col  md:flex-row gap-6">
         {/* Left Column */}
         <div className="flex-1 space-y-6">
           {/* Cart Items Section */}
           <div className="bg-white shadow rounded-lg p-4">
             <h2 className="text-xl font-semibold mb-4">Cart Items</h2>
-            <div className="space-y-4 max-h-96 overflow-y-auto">
-              {cartItems.map((item) => (
-                <ItemCheckout key={item.id} item={item} />
+            <div className="space-y-4 h-screen overflow-y-auto">
+              {cartItems.map((item, index) => (
+                <ItemCheckout key={index} item={item} />
               ))}
             </div>
           </div>
@@ -276,7 +234,7 @@ const Checkout = () => {
           <div className="bg-white shadow rounded-lg p-4">
             <h2 className="text-xl font-semibold mb-4">Shipping Method</h2>
             <div className="flex gap-2 flex-wrap">
-              {["economy", "basic", "express"].map((method) => (
+              {["standard", "expedited", "international"].map((method) => (
                 <button
                   key={method}
                   onClick={() => setShippingMethod(method)}
@@ -286,11 +244,11 @@ const Checkout = () => {
                       : "bg-gray-300 hover:bg-gray-400"
                   }`}
                 >
-                  {method === "economy"
-                    ? "Economy ($2.00)"
-                    : method === "basic"
-                    ? "Basic ($3.50)"
-                    : "Express ($5.00)"}
+                  {method === "standard"
+                    ? "Standard  ($2.00)"
+                    : method === "expedited"
+                    ? "Expedited  ($3.50)"
+                    : "International ($5.00)"}
                 </button>
               ))}
             </div>
@@ -300,23 +258,29 @@ const Checkout = () => {
           <div className="bg-white shadow rounded-lg p-4">
             <h2 className="text-xl font-semibold mb-4">Discount Code</h2>
             <div className="flex gap-2">
-              <select
-                value={discountCode}
-                onChange={(e) => setDiscountCode(e.target.value)}
-                className="flex-1 border border-gray-300 rounded-lg px-4 py-2 w-1/2"
-              >
-                <option value="">Select a Discount Code</option>
-                {discounts
-                  .filter((discount) => discount.isActive)
-                  .map((discount) => (
-                    <option key={discount._id} value={discount.code}>
-                      {discount.code} -{" "}
-                      {discount.discountAmount > 0
-                        ? `$${discount.discountAmount.toFixed(2)}`
-                        : `${discount.discountPercentage}%`}
-                    </option>
-                  ))}
-              </select>
+              {/* Input field with datalist */}
+              <div className="flex-1 relative">
+                <input
+                  type="text"
+                  value={discountCode}
+                  onChange={(e) => setDiscountCode(e.target.value)}
+                  list="available-discounts"
+                  placeholder="Enter or select a discount code"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2"
+                />
+                <datalist id="available-discounts">
+                  {discounts
+                    .filter((discount) => discount.isActive)
+                    .map((discount) => (
+                      <option key={discount._id} value={discount.code}>
+                        {discount.code} -{" "}
+                        {discount.discountAmount > 0
+                          ? `$${discount.discountAmount.toFixed(2)}`
+                          : `${discount.discountPercentage}%`}
+                      </option>
+                    ))}
+                </datalist>
+              </div>
               <button
                 onClick={handleApplyDiscount}
                 className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-600"
