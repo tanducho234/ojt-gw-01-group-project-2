@@ -1,5 +1,29 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+const registerUser = async (data) => {
+  try {
+    const response = await axios.post(
+      "https://ojt-gw-01-final-project-back-end.vercel.app/api/auth/register",
+      {
+        email: data.email,
+        password: data.password,
+        fullName: data.name,
+      }
+    );
+    console.log("Registration Successful:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Registration Failed:",
+      error.response?.data || error.message
+    );
+    throw error.response?.data || error.message;
+  }
+};
 
 const styles = `
   .clip-path-trapezoid-right {
@@ -96,22 +120,24 @@ const styles = `
 `;
 
 const Register = () => {
+  const navigate = useNavigate();
+
   const images = [
-    '/assets/images/reg1.png',
-    '/assets/images/reg2.png',
-    '/assets/images/reg3.png',
-    '/assets/images/reg1.png',
-    '/assets/images/reg2.png',
-    '/assets/images/reg3.png',
-    '/assets/images/reg1.png',
-    '/assets/images/reg2.png',
+    "/assets/images/reg1.png",
+    "/assets/images/reg2.png",
+    "/assets/images/reg3.png",
+    "/assets/images/reg1.png",
+    "/assets/images/reg2.png",
+    "/assets/images/reg3.png",
+    "/assets/images/reg1.png",
+    "/assets/images/reg2.png",
   ];
 
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    rePassword: '',
+    name: "",
+    email: "",
+    password: "",
+    rePassword: "",
   });
 
   const [errors, setErrors] = useState({
@@ -126,49 +152,50 @@ const Register = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
-  
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
 
     const validateField = (fieldName, value) => {
       switch (fieldName) {
-        case 'name':
+        case "name":
           return value.trim().length === 0;
-        case 'email':
+        case "email":
           return !validateEmail(value);
-        case 'password':
+        case "password":
           return value.length < 8;
-        case 'rePassword':
+        case "rePassword":
           return value !== formData.password;
         default:
           return false;
       }
     };
 
-    setErrors(prev => ({
+    setErrors((prev) => ({
       ...prev,
-      [name]: validateField(name, value)
+      [name]: validateField(name, value),
     }));
     setShowErrorMessages(false);
   };
 
   const validateField = (fieldName, value) => {
     switch (fieldName) {
-      case 'email':
+      case "email":
         return !validateEmail(value);
-      case 'password':
+      case "password":
         return value.length < 8;
       default:
         return false;
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     const newErrors = {
       name: formData.name.trim().length === 0,
       email: !validateEmail(formData.email),
@@ -179,14 +206,42 @@ const Register = () => {
     setErrors(newErrors);
     setShowErrorMessages(true);
 
-    if (!Object.values(newErrors).some(error => error)) {
-      console.log('Form submitted:', formData);
+    if (!Object.values(newErrors).some((error) => error)) {
+      await toast.promise(
+        registerUser({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+        })
+          .then(() => {
+            toast.success("Registration Successful! 🎉");
+            navigate("/login");
+          })
+          .catch((error) => {
+            console.error("Failed to register user:", error);
+            throw new Error(
+              error.response?.data?.message || "Registration failed."
+            );
+          }),
+        {
+          pending: "Registering your account...",
+          success: "Registration successful! 🎉",
+          error: {
+            render({ data }) {
+              return (
+                data?.response?.data?.message || "Failed to register user."
+              );
+            },
+          },
+        }
+      );
     }
   };
 
   return (
     <div className="min-h-screen lg:flex relative">
       <style>{styles}</style>
+      <ToastContainer />
       {/* Images section - visible on both desktop and mobile */}
       <div className="lg:w-1/2 bg-white-100 relative overflow-hidden mobile-image-container image-container-margin">
         <div className="absolute inset-0 flex">
@@ -197,19 +252,19 @@ const Register = () => {
                 <div className="flex flex-col">
                   {images.slice(0, 4).map((src, index) => (
                     <div key={`down-1-${index}`} className="p-2">
-                      <img 
-                        src={src} 
-                        alt={`Register ${index + 1}`} 
-                        className="w-full rounded-lg shadow-lg clip-path-trapezoid-left transform hover:scale-105 transition duration-300" 
+                      <img
+                        src={src}
+                        alt={`Register ${index + 1}`}
+                        className="w-full rounded-lg shadow-lg clip-path-trapezoid-left transform hover:scale-105 transition duration-300"
                       />
                     </div>
                   ))}
                   {images.slice(0, 4).map((src, index) => (
                     <div key={`down-2-${index}`} className="p-2">
-                      <img 
-                        src={src} 
-                        alt={`Register ${index + 1}`} 
-                        className="w-full rounded-lg shadow-lg clip-path-trapezoid-left transform hover:scale-105 transition duration-300" 
+                      <img
+                        src={src}
+                        alt={`Register ${index + 1}`}
+                        className="w-full rounded-lg shadow-lg clip-path-trapezoid-left transform hover:scale-105 transition duration-300"
                       />
                     </div>
                   ))}
@@ -225,19 +280,19 @@ const Register = () => {
                 <div className="flex flex-col">
                   {images.slice(4, 8).map((src, index) => (
                     <div key={`up-1-${index}`} className="p-2">
-                      <img 
-                        src={src} 
-                        alt={`Register ${index + 5}`} 
-                        className="w-full rounded-lg shadow-lg clip-path-trapezoid-right transform hover:scale-105 transition duration-300" 
+                      <img
+                        src={src}
+                        alt={`Register ${index + 5}`}
+                        className="w-full rounded-lg shadow-lg clip-path-trapezoid-right transform hover:scale-105 transition duration-300"
                       />
                     </div>
                   ))}
                   {images.slice(4, 8).map((src, index) => (
                     <div key={`up-2-${index}`} className="p-2">
-                      <img 
-                        src={src} 
-                        alt={`Register ${index + 5}`} 
-                        className="w-full rounded-lg shadow-lg clip-path-trapezoid-right transform hover:scale-105 transition duration-300" 
+                      <img
+                        src={src}
+                        alt={`Register ${index + 5}`}
+                        className="w-full rounded-lg shadow-lg clip-path-trapezoid-right transform hover:scale-105 transition duration-300"
                       />
                     </div>
                   ))}
@@ -273,7 +328,7 @@ const Register = () => {
                   value={formData.name}
                   onChange={handleChange}
                   className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 ${
-                    showErrorMessages && errors.name ? 'border-red-500' : ''
+                    showErrorMessages && errors.name ? "border-red-500" : ""
                   }`}
                 />
                 {showErrorMessages && errors.name && (
@@ -283,7 +338,7 @@ const Register = () => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Email or Phone Number
+                  Email
                   <span className="text-red-500 ml-1">*</span>
                 </label>
                 <input
@@ -292,11 +347,13 @@ const Register = () => {
                   value={formData.email}
                   onChange={handleChange}
                   className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 ${
-                    showErrorMessages && errors.email ? 'border-red-500' : ''
+                    showErrorMessages && errors.email ? "border-red-500" : ""
                   }`}
                 />
                 {showErrorMessages && errors.email && (
-                  <p className="mt-1 text-sm text-red-500">Please enter a valid email address</p>
+                  <p className="mt-1 text-sm text-red-500">
+                    Please enter a valid email address
+                  </p>
                 )}
               </div>
 
@@ -311,11 +368,13 @@ const Register = () => {
                   value={formData.password}
                   onChange={handleChange}
                   className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 ${
-                    showErrorMessages && errors.password ? 'border-red-500' : ''
+                    showErrorMessages && errors.password ? "border-red-500" : ""
                   }`}
                 />
                 {showErrorMessages && errors.password && (
-                  <p className="mt-1 text-sm text-red-500">Password must be at least 8 characters long</p>
+                  <p className="mt-1 text-sm text-red-500">
+                    Password must be at least 8 characters long
+                  </p>
                 )}
               </div>
 
@@ -330,11 +389,15 @@ const Register = () => {
                   value={formData.rePassword}
                   onChange={handleChange}
                   className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 ${
-                    showErrorMessages && errors.rePassword ? 'border-red-500' : ''
+                    showErrorMessages && errors.rePassword
+                      ? "border-red-500"
+                      : ""
                   }`}
                 />
                 {showErrorMessages && errors.rePassword && (
-                  <p className="mt-1 text-sm text-red-500">Passwords do not match</p>
+                  <p className="mt-1 text-sm text-red-500">
+                    Passwords do not match
+                  </p>
                 )}
               </div>
             </div>
@@ -348,7 +411,10 @@ const Register = () => {
 
             <div className="text-sm text-center">
               <span className="text-gray-600">Already have an account? </span>
-              <Link to="/login" className="font-medium text-black-600 hover:text-indigo-500">
+              <Link
+                to="/login"
+                className="font-medium text-black-600 hover:text-indigo-500"
+              >
                 Log In
               </Link>
             </div>

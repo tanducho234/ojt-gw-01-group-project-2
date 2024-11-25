@@ -6,6 +6,9 @@ import StarRating from "../../components/StarRating";
 import Breadcrumb from "../../components/BreadCrumb";
 import { useAuth } from "../../hooks/useAuth";
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const LoadingSpinner = () => (
   <div className="flex justify-center items-center h-screen">
     <div className="border-t-4 border-blue-500 border-solid w-16 h-16 rounded-full animate-spin"></div>
@@ -148,7 +151,8 @@ const ProductDetail = () => {
       });
   
       if (response.status === 200) {
-        alert('Product added to cart successfully!');
+        toast.success("This is a toast notification !", {theme:"grey"});
+        // alert('Product added to cart successfully!');
       } else {
         alert('Failed to add product to cart. Please try again.');
       }
@@ -329,6 +333,7 @@ const ProductDetail = () => {
                 >
                   Add to Cart
                 </button>
+                <ToastContainer />
               </div>
             </div>
           </div>
