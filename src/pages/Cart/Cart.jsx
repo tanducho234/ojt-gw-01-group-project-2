@@ -3,6 +3,7 @@ import axios from "axios";
 import CartItem from "../../components/ItemCart/ItemCart";
 import { useAuth } from "../../hooks/useAuth";
 import { Link } from "react-router-dom";
+import "../Cart/Cart.css"
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -56,8 +57,7 @@ const Cart = () => {
           Your Cart
         </h1>
         <div
-          className="space-y-6 w-full max-h-[35rem] overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-200
-            lg:w-full"
+          className="space-y-6 w-full h-[35rem] overflow-y-auto custom-scrollbar lg:w-full 2xl:h-[48rem] 2xl:w-[60rem] 2xl:ml-[10rem]"
         >
           {cartItems.map((item, index) => (
             <CartItem
@@ -79,7 +79,7 @@ const Cart = () => {
         <div className="space-y-2 mb-4">
           {cartItems.map((item, index) => (
             <div key={index} className="flex justify-between ">
-              <span className="text-sm font-roboto w-[15rem] flex-wrap italic sm:text-base md:text-lg lg:text-sm">
+              <span className="text-sm font-roboto w-[15rem] flex-wrap italic sm:text-base md:text-lg lg:text-sm lg:w-[12rem] lg:truncate">
                 {item.name}
               </span>
               <span className="text-sm font-roboto text-gray-600 sm:text-base md:text-lg lg:text-sm">
