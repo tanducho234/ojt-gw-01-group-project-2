@@ -232,7 +232,7 @@ const Login = () => {
               Login to Your Account
             </h2>
             <p className="mt-2 text-sm text-gray-600">
-              Enter your email or phone number and password
+              Enter your email and password
             </p>
           </div>
 
