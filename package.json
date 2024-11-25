@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@tailwindcss/forms": "^0.5.9",
+    "@tailwindcss/line-clamp": "^0.4.4",
     "axios": "^1.7.7",
     "lodash.debounce": "^4.0.8",
     "nouislider": "^15.8.1",
