@@ -66,8 +66,8 @@ const Footer = () => {
               />
             </a>
             <p className="text-sm text-gray-600">
-              We have clothes that suit your style and which you're proud to
-              wear. From women to men.
+              We have clothes that suit your style and <br></br> which you're proud to
+              wear. From <br></br>women to men.
             </p>
             <div className="flex items-center gap-4 md:gap-6">
               {/* Social Media Icons */}
