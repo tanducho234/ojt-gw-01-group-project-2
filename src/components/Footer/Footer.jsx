@@ -1,13 +1,6 @@
 import React from "react";
 import "./Footer.css";
-import { useLocation } from "react-router-dom";
-
 const Footer = () => {
-  const location = useLocation(); // Get the current location
-  // Check if the current path is '/admin' to hide the Navbar
-  if (location.pathname.startsWith("/admin")) {
-    return null; // Don't render the Navbar when the route starts with /admin
-  }
   return (
     <footer className="bg-gray-100 text-gray-800">
       {/* Newsletter Section */}
@@ -66,8 +59,8 @@ const Footer = () => {
               />
             </a>
             <p className="text-sm text-gray-600">
-              We have clothes that suit your style and which you're proud to
-              wear. From women to men.
+              We have clothes that suit your style and <br></br> which you're proud to
+              wear. From <br></br>women to men.
             </p>
             <div className="flex items-center gap-4 md:gap-6">
               {/* Social Media Icons */}

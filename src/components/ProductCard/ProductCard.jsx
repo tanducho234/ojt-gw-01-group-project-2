@@ -27,7 +27,7 @@ function ProductCard({ product,root=null }) {
         transition-transform duration-500 hover:scale-110 hover:shadow-lx md:w-[200px] md:h-[202px] max-[820px]:w-[210px] max-[820px]:h-[212px] lg:w-[230px] lg:h-[232px] xl:w-[290px] xl:h-[292px] 2xl:w-[340px] 2xl:h-[342px]"
       />
       <div className="mt-3">
-        <h3 className="font-bold text-[18px] font-sans mt-2 mb-2 md:text-[22px] xl:text-[24px]">
+        <h3 className="font-bold font-roboto truncate w-[10rem] text-[18px] mt-2 mb-2 md:text-[22px] md:w-[13rem] xl:text-[24px] 2xl:w-[20rem]">
           {product.name}
         </h3>
         <div className="text-yellow-500 text-[16px] mb-2 flex items-center md:text[20px] xl:text-[22px]">

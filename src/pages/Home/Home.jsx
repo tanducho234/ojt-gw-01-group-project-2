@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Review from "../../components/Review/Review";
 import axios from "axios";
 import ProductCard from "../../components/ProductCard/ProductCard";
+import { Link } from "react-router-dom";
 
 function Home() {
   const [counts, setCounts] = useState({
@@ -79,6 +80,7 @@ function Home() {
 
   // Check if device is mobile
   useEffect(() => {
+    
     fetchRandomTopReviews();
     fetchAndSortProducts();
 
@@ -289,9 +291,9 @@ function Home() {
             <ProductCard key={index} product={product} root="/products" />
           ))}
         </div>
-        <button className="px-4 md:px-6 py-2 md:py-3 bg-transparent border-2 border-black rounded cursor-pointer transition-all duration-300 hover:bg-black hover:text-white hover:shadow-lg transform hover:-translate-y-1 text-sm md:text-base">
+        <Link to="/products?sort=createAt&order=desc" className="px-4 md:px-6 py-2 md:py-3 bg-transparent border-2 border-black rounded cursor-pointer transition-all duration-300 hover:bg-black hover:text-white hover:shadow-lg transform hover:-translate-y-1 text-sm md:text-base">
           View All
-        </button>
+        </Link>
       </section>
 
       <div className="w-full md:w-[1180px] border-t border-black/10 mx-auto"></div>
@@ -305,9 +307,12 @@ function Home() {
             <ProductCard key={index} product={product} />
           ))}
         </div>
-        <button className="px-4 md:px-6 py-2 md:py-3 bg-transparent border-2 border-black rounded cursor-pointer transition-all duration-300 hover:bg-black hover:text-white hover:shadow-lg transform hover:-translate-y-1 text-sm md:text-base">
+        <Link
+          to="/products?sort=soldQuantity&order=desc"
+          className="px-4 md:px-6 py-2 md:py-3 bg-transparent border-2 border-black rounded cursor-pointer transition-all duration-300 hover:bg-black hover:text-white hover:shadow-lg transform hover:-translate-y-1 text-sm md:text-base"
+        >
           View All
-        </button>
+        </Link>
       </section>
 
       <section className="py-6 md:py-8 px-3 md:px-4 bg-gray-100 rounded-2xl max-w-[1200px] mx-auto text-center transform transition-all duration-300 hover:shadow-xl">
