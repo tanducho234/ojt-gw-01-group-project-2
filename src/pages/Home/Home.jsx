@@ -4,7 +4,7 @@ import axios from "axios";
 import ProductCard from "../../components/ProductCard/ProductCard";
 import { Link } from "react-router-dom";
 
-function Home() {
+function Home({ customerReviews = [] }) {
   const [counts, setCounts] = useState({
     brands: 0,
     products: 0,
@@ -14,6 +14,39 @@ function Home() {
   const [reviews, setReviews] = useState([]);
   const [newArrivals, setNewArrivals] = useState([]);
   const [topSelling, setTopSelling] = useState([]);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+  const [autoScrollEnabled, setAutoScrollEnabled] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+  
+  const brandContainerRef = useRef(null);
+  const reviewContainerRef = useRef(null);
+  const scrollRef = useRef(0);
+
+  const targetCounts = {
+    brands: 200,
+    products: 2000,
+    customers: 30000,
+  };
+
+  const brands = ["Versace", "Vector", "Gucci", "Prada", "Calvin_Klein"];
+
+  const handleReviewScroll = (direction) => {
+    const container = reviewContainerRef.current;
+    if (!container) return;
+
+    const scrollAmount = 300;
+    const maxScroll = container.scrollWidth - container.clientWidth;
+    const newScrollLeft = direction === 'left' 
+      ? Math.max(0, container.scrollLeft - scrollAmount)
+      : Math.min(maxScroll, container.scrollLeft + scrollAmount);
+
+    container.scrollTo({
+      left: newScrollLeft,
+      behavior: "smooth"
+    });
+  };
 
   const fetchRandomTopReviews = async () => {
     try {
@@ -22,8 +55,7 @@ function Home() {
       );
 
       if (response.status === 200) {
-        const data = response.data;
-        setReviews(data); // Assuming `setReviews` is a state setter function
+        setReviews(response.data);
       } else {
         console.error("Failed to fetch reviews with status:", response.status);
       }
@@ -40,45 +72,23 @@ function Home() {
 
       if (response.status === 200) {
         const products = response.data;
-
-        // Sort products by createdAt (new arrivals)
+        
         const sortedByDate = [...products]
           .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
           .slice(0, 4);
 
-        // Sort products by soldQuantity (top selling)
         const sortedBySales = [...products]
           .sort((a, b) => b.soldQuantity - a.soldQuantity)
           .slice(0, 4);
 
-        // Update states
         setNewArrivals(sortedByDate);
         setTopSelling(sortedBySales);
-      } else {
-        console.error("Failed to fetch products");
       }
     } catch (error) {
       console.error("Error fetching products:", error);
     }
   };
 
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
-  const [autoScrollEnabled, setAutoScrollEnabled] = useState(true);
-  const [isMobile, setIsMobile] = useState(false);
-  const brandContainerRef = useRef(null);
-  const scrollRef = useRef(0);
-
-  const targetCounts = {
-    brands: 200,
-    products: 2000,
-    customers: 30000,
-  };
-
-  const brands = ["Versace", "Vector", "Gucci", "Prada", "Calvin_Klein"];
-
-  // Check if device is mobile
   useEffect(() => {
     
     fetchRandomTopReviews();
@@ -122,7 +132,7 @@ function Home() {
       Object.values(counters).forEach(clearInterval);
     };
   }, []);
-
+  // Auto scroll effect for brands
   useEffect(() => {
     let scrollInterval;
     const container = brandContainerRef.current;
@@ -149,9 +159,9 @@ function Home() {
     };
   }, [autoScrollEnabled, isDragging]);
 
+  // Drag handlers
   const handleDragStart = (e) => {
     if (isMobile) {
-      // Handle touch events
       if (e.type === "touchstart") {
         setIsDragging(true);
         setAutoScrollEnabled(false);
@@ -160,7 +170,6 @@ function Home() {
         scrollRef.current = brandContainerRef.current.scrollLeft;
       }
     } else {
-      // Handle mouse events
       setIsDragging(true);
       setAutoScrollEnabled(false);
       setStartX(e.pageX - brandContainerRef.current.offsetLeft);
@@ -202,10 +211,6 @@ function Home() {
       container.scrollLeft = newScrollLeft;
       scrollRef.current = newScrollLeft;
     }
-  };
-
-  const renderStars = (rating) => {
-    return "★".repeat(Math.floor(rating)) + "☆".repeat(5 - Math.floor(rating));
   };
 
   return (
@@ -335,20 +340,40 @@ function Home() {
         </div>
       </section>
 
-      <section className="py-8 md:py-16 px-3 md:px-5 bg-gray-50 transform transition-all duration-300">
-        <h2 className="text-2xl md:text-4xl font-bold text-center transform transition-all duration-300 hover:scale-105">
+      <section className="py-8 md:py-16 px-3 md:px-5 bg-gray-50 transition-transform duration-300">
+        <h2 className="text-2xl md:text-4xl font-bold text-center transition-transform duration-300 hover:scale-105">
           OUR HAPPY CUSTOMERS
         </h2>
-        <div className="mt-6 md:mt-10 flex gap-4 md:gap-5 overflow-x-auto hide-scrollbar mobile-touch-scroll">
-          {reviews.length > 0 ? (
-            reviews.map((review, index) => (
-              <Review key={index} review={review} />
-            ))
-          ) : (
-            <p className="text-center text-gray-500 w-full">
-              Loading reviews...
-            </p>
-          )}
+
+        <div className="relative mt-6 md:mt-10">
+          <button
+            onClick={() => handleReviewScroll('left')}
+            className="absolute top-1/2 left-0 -translate-y-1/2 bg-gray-300 hover:bg-gray-400 text-white rounded-full w-10 h-10 flex items-center justify-center shadow-md focus:outline-none z-10"
+          >
+            &lt;
+          </button>
+
+          <div
+            ref={reviewContainerRef}
+            className="flex gap-4 md:gap-5 overflow-x-auto hide-scrollbar px-12 scroll-smooth"
+          >
+            {reviews.length > 0 ? (
+              reviews.map((review, index) => (
+                <Review key={index} review={review} />
+              ))
+            ) : (
+              <p className="text-center text-gray-500 w-full">
+                Loading reviews...
+              </p>
+            )}
+          </div>
+
+          <button
+            onClick={() => handleReviewScroll('right')}
+            className="absolute top-1/2 right-0 -translate-y-1/2 bg-gray-300 hover:bg-gray-400 text-white rounded-full w-10 h-10 flex items-center justify-center shadow-md focus:outline-none z-10"
+          >
+            &gt;
+          </button>
         </div>
       </section>
     </div>
