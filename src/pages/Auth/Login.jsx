@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const styles = `
   .clip-path-trapezoid-right {
@@ -7,6 +8,13 @@ const styles = `
   
   .clip-path-trapezoid-left {
     clip-path: polygon(0 4%, 100% 0, 100% 100%, 0 96%);
+  }
+      /* Responsive margin for image container */
+  @media (min-width: 1024px) {
+    .image-container-margin {
+      margin-left: 20px;
+      width: 58%; /* Increased from 50% */
+    }
   }
 
   @keyframes scrollUp {
@@ -109,8 +117,7 @@ const Login = () => {
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const phoneRegex = /^[0-9]{10,11}$/;
-    return emailRegex.test(email) || phoneRegex.test(email);
+    return emailRegex.test(email);
   };
 
   const handleChange = (e) => {
@@ -146,6 +153,7 @@ const Login = () => {
     };
 
     setErrors(newErrors);
+    setShowErrorMessages(true);
 
     if (!Object.values(newErrors).some(error => error)) {
       console.log('Form submitted:', formData);
@@ -156,7 +164,7 @@ const Login = () => {
     <div className="min-h-screen lg:flex">
       <style>{styles}</style>
       {/* Images Section */}
-      <div className="lg:w-1/2 relative overflow-hidden mobile-image-container">
+      <div className="lg:w-1/2 bg-white-100 relative overflow-hidden mobile-image-container image-container-margin">
         <div className="absolute inset-0 flex">
           {/* Column 1 - Moving down */}
           <div className="w-1/2 relative overflow-hidden">
@@ -224,7 +232,7 @@ const Login = () => {
               Login to Your Account
             </h2>
             <p className="mt-2 text-sm text-gray-600">
-              Enter your email or phone number and password
+              Enter your email and password
             </p>
           </div>
 
@@ -232,8 +240,9 @@ const Login = () => {
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Email or Phone Number
-                  {errors.email && <span className="text-red-500 ml-1">*</span>}
+                  Email
+                  <span className="text-red-500 ml-1">*</span>
+                  {errors.email}
                 </label>
                 <input
                   type="text"
@@ -252,7 +261,8 @@ const Login = () => {
               <div>
                 <label className="block text-sm font-medium text-gray-700">
                   Password
-                  {errors.password && <span className="text-red-500 ml-1">*</span>}
+                  <span className="text-red-500 ml-1">*</span>
+                  {errors.password }
                 </label>
                 <input
                   type="password"
@@ -298,9 +308,9 @@ const Login = () => {
 
             <div className="text-sm text-center">
               <span className="text-gray-600">Don't have an account? </span>
-              <a href="#" className="font-medium text-black-600 hover:text-indigo-500">
+              <Link to="/register" className="font-medium text-black-600 hover:text-indigo-500">
                 Register
-              </a>
+              </Link>
             </div>
           </form>
         </div>

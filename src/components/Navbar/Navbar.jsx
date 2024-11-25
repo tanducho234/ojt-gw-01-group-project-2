@@ -1,94 +1,140 @@
 import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom"; // Import useLocation from react-router-dom
-import "./Navbar.css";
+import { Link } from "react-router-dom"; // Import useLocation from react-router-dom
+import { FaCartShopping, FaCircleUser } from "react-icons/fa6";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!isMobileMenuOpen);
   };
-  const location = useLocation(); // Get the current location
-  // Check if the current path is '/admin' to hide the Navbar
-  if (location.pathname.startsWith("/admin")) {
-    return null; // Don't render the Navbar when the route starts with /admin
-  }
-
   return (
-    <header className="shop-header">
-      {/* Logo */}
-      <button className="shop-header__mobile-btn" onClick={toggleMobileMenu}>
-        ☰
-      </button>
-      <Link to="/" className="shop-header__logo">
-        SHOP.CO
-      </Link>
+    <header className="bg-white shadow-md sticky top-0 z-50">
+      <div className="container mx-auto px-4 py-3 flex justify-between items-center">
+        {/* Logo */}
+        <Link to="/" className="flex items-center space-x-2">
+          <img
+            src="/assets/images/Logofast.png"
+            alt="Shop Logo"
+            className="h-15 w-auto"
+          />
+        </Link>
 
-      {/* Navigation */}
-      <nav className="shop-header__nav">
-        <ul
-          className={`shop-header__nav-items ${
-            isMobileMenuOpen ? "active" : ""
-          }`}>
-          {/* <Link to="/checkout">abc</Link> */}
-
-          <li className="shop-header__dropdown">
-            <Link to="#" className="shop-header__nav-link">
-              Shop
-            </Link>
-            <div className="shop-header__dropdown-content">
-              <Link to="/products" className="shop-header__dropdown-link">
-                All Products
-              </Link>
-              <Link to="/about" className="shop-header__dropdown-link">
-                About Us
-              </Link>
-              <Link to="#" className="shop-header__dropdown-link">
+        {/* Desktop Navigation */}
+        <nav className="hidden lg:flex items-center space-x-8">
+          <ul className="flex items-center space-x-6">
+            <li>
+              <Link
+                to="/products?sort=createAt&order=desc"
+                className="text-gray-600 hover:text-black transition"
+              >
                 New Arrivals
               </Link>
-              <Link to="#" className="shop-header__dropdown-link">
-                Best Sellers
+            </li>
+            <li>
+              <Link
+                to="/products?sort=salePercentage&order=desc"
+                className="text-gray-600 hover:text-black transition"
+              >
+                On Sale
               </Link>
-            </div>
-          </li>
-          <li>
-            <Link to="#" className="shop-header__nav-link">
-              On Sale
-            </Link>
-          </li>
-          <li>
-            <Link to="#" className="shop-header__nav-link">
-              New Arrivals
-            </Link>
-          </li>
-          <li>
-            <Link to="#" className="shop-header__nav-link">
-              Brands
-            </Link>
-          </li>
-        </ul>
-      </nav>
+            </li>
 
-      {/* Search Bar */}
-      <div className="shop-header__search">
-        <input
-          type="text"
-          className="shop-header__search-input"
-          placeholder="Search for products..."
-        />
-        <span className="shop-header__search-icon">
-          <img src="../../assets/images/search.png" alt="Search Icon" />
-        </span>
+            <li>
+              <Link
+                to="about"
+                className="text-gray-600 hover:text-black transition"
+              >
+                About Us
+              </Link>
+            </li>
+          </ul>
+        </nav>
+
+        {/* Search Bar */}
+        <div className="hidden md:flex flex-1 mx-40 max-w-lg relative">
+          <input
+            type="text"
+            className="w-full pl-4 pr-12 py-2 border-none rounded-full bg-gray-100 text-sm focus:outline-none focus:ring-0 focus:shadow-none"
+            placeholder="Search for products..."
+          />
+          <span className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-600">
+            <img
+              src="../../assets/images/search.png"
+              alt="Search"
+              className="w-5 h-5"
+            />
+          </span>
+        </div>
+
+        {/* User Actions */}
+        <div className="flex items-center space-x-4">
+          <Link to="/cart" className="relative">
+            {/* <img
+              src="../../assets/images/stores.png"
+              alt="Cart"
+              className="w-8 h-8"
+            /> */}
+            <FaCartShopping size={25} />
+            <span className="absolute -top-2 -right-2 flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full">
+              10
+            </span>
+          </Link>
+          {/* <Link to="/login">
+            <img
+              src="../../assets/images/users.png"
+              alt="User"
+              className="w-8 h-8"
+            />
+          </Link> */}
+          <FaCircleUser size={25} />{" "}
+          <button
+            className="lg:hidden text-gray-600 focus:outline-none"
+            onClick={toggleMobileMenu}
+          >
+            ☰
+          </button>
+        </div>
       </div>
 
-      {/* User Actions */}
-      <div className="shop-header__actions">
-        <Link to="/cart" className="shop-header__icon">
-          <img src="../../assets/images/stores.png" alt="Cart" />
-        </Link>
-        <Link to="/login" className="shop-header__icon">
-          <img src="../../assets/images/users.png" alt="Login" />
-        </Link>
-      </div>
+      {/* Mobile Menu */}
+      {isMobileMenuOpen && (
+        <div className="lg:hidden bg-white shadow-md">
+          <ul className="px-4 py-2 space-y-2">
+            <li>
+              <Link
+                to="#"
+                className="block text-gray-700 hover:bg-gray-100 px-4 py-2 rounded"
+              >
+                Shop
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/products?sort=salePercentage&order=desc"
+                className="block text-gray-700 hover:bg-gray-100 px-4 py-2 rounded"
+              >
+                On Sale
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/products?sort=createAt&order=desc"
+                className="block text-gray-700 hover:bg-gray-100 px-4 py-2 rounded"
+              >
+                New Arrivals
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="about"
+                className="block text-gray-700 hover:bg-gray-100 px-4 py-2 rounded"
+              >
+                About Us
+              </Link>
+            </li>
+          </ul>
+        </div>
+      )}
     </header>
   );
 };

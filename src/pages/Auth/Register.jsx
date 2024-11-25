@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const styles = `
   .clip-path-trapezoid-right {
@@ -9,6 +10,12 @@ const styles = `
     clip-path: polygon(0 4%, 100% 0, 100% 100%, 0 96%);
   }
 
+    /* Responsive margin for image container */
+  @media (min-width: 1024px) {
+    .image-container-margin {
+      margin-left: 20px;
+    }
+  }
   /* Custom animation styles with responsive durations */
   @keyframes scrollUp {
     0% {
@@ -74,7 +81,7 @@ const styles = `
       backdrop-filter: blur(8px);
     }
 }
-        .login-section {
+        .register-section {
     position: relative;
     overflow: hidden;
     height: 100%;
@@ -88,7 +95,7 @@ const styles = `
   }
 `;
 
-const Login = () => {
+const Register = () => {
   const images = [
     '/assets/images/reg1.png',
     '/assets/images/reg2.png',
@@ -108,9 +115,12 @@ const Login = () => {
   });
 
   const [errors, setErrors] = useState({
-    email: false,
-    password: false,
+    name: true,
+    email: true,
+    password: true,
+    rePassword: true,
   });
+  const [showErrorMessages, setShowErrorMessages] = useState(false);
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -124,16 +134,16 @@ const Login = () => {
       [name]: value
     }));
 
-    const validateField = (fieldName, value, allValues) => {
+    const validateField = (fieldName, value) => {
       switch (fieldName) {
+        case 'name':
+          return value.trim().length === 0;
         case 'email':
           return !validateEmail(value);
         case 'password':
           return value.length < 8;
         case 'rePassword':
-          return value !== allValues.password;
-        case 'name':
-          return value.length === 0;
+          return value !== formData.password;
         default:
           return false;
       }
@@ -143,6 +153,7 @@ const Login = () => {
       ...prev,
       [name]: validateField(name, value)
     }));
+    setShowErrorMessages(false);
   };
 
   const validateField = (fieldName, value) => {
@@ -159,13 +170,14 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const newErrors = {
-      name: validateField('name', formData.name, formData),
-      email: validateField('email', formData.email, formData),
-      password: validateField('password', formData.password, formData),
-      rePassword: validateField('rePassword', formData.rePassword, formData),
+      name: formData.name.trim().length === 0,
+      email: !validateEmail(formData.email),
+      password: formData.password.length < 8,
+      rePassword: formData.rePassword !== formData.password,
     };
 
     setErrors(newErrors);
+    setShowErrorMessages(true);
 
     if (!Object.values(newErrors).some(error => error)) {
       console.log('Form submitted:', formData);
@@ -176,7 +188,7 @@ const Login = () => {
     <div className="min-h-screen lg:flex relative">
       <style>{styles}</style>
       {/* Images section - visible on both desktop and mobile */}
-      <div className="lg:w-1/2 bg-white-100 relative overflow-hidden mobile-image-container">
+      <div className="lg:w-1/2 bg-white-100 relative overflow-hidden mobile-image-container image-container-margin">
         <div className="absolute inset-0 flex">
           {/* Column 1 - Moving down */}
           <div className="w-1/2 relative overflow-hidden">
@@ -187,7 +199,7 @@ const Login = () => {
                     <div key={`down-1-${index}`} className="p-2">
                       <img 
                         src={src} 
-                        alt={`Login ${index + 1}`} 
+                        alt={`Register ${index + 1}`} 
                         className="w-full rounded-lg shadow-lg clip-path-trapezoid-left transform hover:scale-105 transition duration-300" 
                       />
                     </div>
@@ -196,7 +208,7 @@ const Login = () => {
                     <div key={`down-2-${index}`} className="p-2">
                       <img 
                         src={src} 
-                        alt={`Login ${index + 1}`} 
+                        alt={`Register ${index + 1}`} 
                         className="w-full rounded-lg shadow-lg clip-path-trapezoid-left transform hover:scale-105 transition duration-300" 
                       />
                     </div>
@@ -215,7 +227,7 @@ const Login = () => {
                     <div key={`up-1-${index}`} className="p-2">
                       <img 
                         src={src} 
-                        alt={`Login ${index + 5}`} 
+                        alt={`Register ${index + 5}`} 
                         className="w-full rounded-lg shadow-lg clip-path-trapezoid-right transform hover:scale-105 transition duration-300" 
                       />
                     </div>
@@ -224,7 +236,7 @@ const Login = () => {
                     <div key={`up-2-${index}`} className="p-2">
                       <img 
                         src={src} 
-                        alt={`Login ${index + 5}`} 
+                        alt={`Register ${index + 5}`} 
                         className="w-full rounded-lg shadow-lg clip-path-trapezoid-right transform hover:scale-105 transition duration-300" 
                       />
                     </div>
@@ -253,7 +265,7 @@ const Login = () => {
               <div>
                 <label className="block text-sm font-medium text-gray-700">
                   Name
-                  {errors.name && <span className="text-red-500 ml-1">*</span>}
+                  <span className="text-red-500 ml-1">*</span>
                 </label>
                 <input
                   type="text"
@@ -261,15 +273,18 @@ const Login = () => {
                   value={formData.name}
                   onChange={handleChange}
                   className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 ${
-                    errors.name ? 'border-red-500' : ''
+                    showErrorMessages && errors.name ? 'border-red-500' : ''
                   }`}
                 />
+                {showErrorMessages && errors.name && (
+                  <p className="mt-1 text-sm text-red-500">Name is required</p>
+                )}
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700">
                   Email or Phone Number
-                  {errors.email && <span className="text-red-500 ml-1">*</span>}
+                  <span className="text-red-500 ml-1">*</span>
                 </label>
                 <input
                   type="email"
@@ -277,10 +292,10 @@ const Login = () => {
                   value={formData.email}
                   onChange={handleChange}
                   className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 ${
-                    errors.email ? 'border-red-500' : ''
+                    showErrorMessages && errors.email ? 'border-red-500' : ''
                   }`}
                 />
-                {errors.email && (
+                {showErrorMessages && errors.email && (
                   <p className="mt-1 text-sm text-red-500">Please enter a valid email address</p>
                 )}
               </div>
@@ -288,7 +303,7 @@ const Login = () => {
               <div>
                 <label className="block text-sm font-medium text-gray-700">
                   Password
-                  {errors.password && <span className="text-red-500 ml-1">*</span>}
+                  <span className="text-red-500 ml-1">*</span>
                 </label>
                 <input
                   type="password"
@@ -296,10 +311,10 @@ const Login = () => {
                   value={formData.password}
                   onChange={handleChange}
                   className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 ${
-                    errors.password ? 'border-red-500' : ''
+                    showErrorMessages && errors.password ? 'border-red-500' : ''
                   }`}
                 />
-                {errors.password && (
+                {showErrorMessages && errors.password && (
                   <p className="mt-1 text-sm text-red-500">Password must be at least 8 characters long</p>
                 )}
               </div>
@@ -307,7 +322,7 @@ const Login = () => {
               <div>
                 <label className="block text-sm font-medium text-gray-700">
                   Re-enter Password
-                  {errors.rePassword && <span className="text-red-500 ml-1">*</span>}
+                  <span className="text-red-500 ml-1">*</span>
                 </label>
                 <input
                   type="password"
@@ -315,10 +330,10 @@ const Login = () => {
                   value={formData.rePassword}
                   onChange={handleChange}
                   className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 ${
-                    errors.rePassword ? 'border-red-500' : ''
+                    showErrorMessages && errors.rePassword ? 'border-red-500' : ''
                   }`}
                 />
-                {errors.rePassword && (
+                {showErrorMessages && errors.rePassword && (
                   <p className="mt-1 text-sm text-red-500">Passwords do not match</p>
                 )}
               </div>
@@ -333,9 +348,9 @@ const Login = () => {
 
             <div className="text-sm text-center">
               <span className="text-gray-600">Already have an account? </span>
-              <a href="#" className="font-medium text-gray-600 hover:text-indigo-500">
+              <Link to="/login" className="font-medium text-black-600 hover:text-indigo-500">
                 Log In
-              </a>
+              </Link>
             </div>
           </form>
         </div>
@@ -344,4 +359,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

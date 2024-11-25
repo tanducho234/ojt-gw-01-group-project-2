@@ -2,70 +2,125 @@ import React from "react";
 
 const AboutUs = () => {
   return (
-    <div className="about-us-page">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 p-8 max-w-screen-xl mx-auto">
-        {/* Left Column */}
-        <div className="col-span-1 flex flex-col justify-center">
-          <h1 className="text-4xl font-bold mb-6">ABOUT US</h1>
-          <p className="text-lg mb-6">
-            Lashes – where fashion meets dynamism. Born from a burning passion
-            for fashion, Lashes is dedicated to bringing you the most
-            exceptional shopping experience.
-          </p>
-          <button className="px-6 py-2 bg-black text-white rounded-full hover:bg-gray-800">
-            Explore
-          </button>
+    <div className="bg-white">
+      <div className="max-w-[1800px] mx-auto px-4">
+        {/* Top Section */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 mb-4 md:mb-6">
+          <div className="col-span-1 md:col-span-6">
+            <img
+              src="https://res.cloudinary.com/do9ekj0zm/image/upload/v1732245936/final_ojt_images/i4rrif8g6yl6iym1avch.png"
+              alt="Fashion detail top"
+              className="w-full h-[200px] md:h-[300px] object-cover grayscale"
+            />
+          </div>
+          <div className="col-span-1 md:col-span-6">
+            <img
+              src="https://res.cloudinary.com/do9ekj0zm/image/upload/v1732245936/final_ojt_images/i4rrif8g6yl6iym1avch.png"
+              alt="Fashion model"
+              className="w-full h-[250px] md:h-[400px] object-cover grayscale"
+            />
+          </div>
         </div>
 
-        {/* Right Column: Image Grid */}
-        <div className="col-span-2 grid grid-cols-2 gap-4">
-          <img
-            src="https://via.placeholder.com/300x300"
-            alt="Fashion 1"
-            className="w-full h-full object-cover"
-          />
-          <img
-            src="https://via.placeholder.com/300x300"
-            alt="Fashion 2"
-            className="w-full h-full object-cover"
-          />
-          <img
-            src="https://via.placeholder.com/300x300"
-            alt="Fashion 3"
-            className="w-full h-full object-cover"
-          />
-          <img
-            src="https://via.placeholder.com/300x300"
-            alt="Fashion 4"
-            className="w-full h-full object-cover"
-          />
-        </div>
-      </div>
-
-      {/* Bottom Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8 max-w-screen-xl mx-auto mt-10">
-        <div className="grid grid-cols-2 gap-4">
-          <img
-            src="https://via.placeholder.com/300x300"
-            alt="Fashion 5"
-            className="w-full h-full object-cover"
-          />
-          <img
-            src="https://via.placeholder.com/300x300"
-            alt="Fashion 6"
-            className="w-full h-full object-cover"
-          />
+        {/* About Section */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 mb-4 md:mb-6">
+          <div className="col-span-1 md:col-span-4 order-2 md:order-1">
+            <div className="text-center md:text-left">
+              <h2 className="text-4xl md:text-6xl font-bold mb-4">ABOUT US</h2>
+              <p className="text-xl md:text-3xl text-gray-600 mb-6 leading-relaxed">
+                Lashes - where fashion meets
+                <br className="hidden md:block" />
+                dynamism. Born from a burning
+                <br className="hidden md:block" />
+                passion for fashion, Lashes is
+                <br className="hidden md:block" />
+                dedicated to bringing you the most
+                <br className="hidden md:block" />
+                exceptional shopping experience.
+              </p>
+              <button className="px-6 py-1.5 bg-black text-white text-sm rounded-full">
+                Explore
+              </button>
+            </div>
+          </div>
+          <div className="col-span-1 md:col-span-8 flex justify-center md:justify-end order-1 md:order-2">
+            <img
+              src="https://res.cloudinary.com/do9ekj0zm/image/upload/v1732245936/final_ojt_images/i4rrif8g6yl6iym1avch.png"
+              alt="Fashion detail"
+              className="w-full md:w-[875px] h-[300px] md:h-[400px] object-cover grayscale"
+            />
+          </div>
         </div>
 
-        <div className="flex flex-col justify-center">
-          <p className="text-lg mb-6">
-            With youthful, bold designs and premium materials, Lashes empowers
-            you to confidently express your unique style.
-          </p>
-          <p className="text-lg">
-            Our mission is to inspire and connect people through fashion,
-            ensuring you shine in every situation.
-          </p>
+        {/* White Pants and Hat Section */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 mb-4 md:mb-6">
+          <div className="col-span-1 md:col-span-6">
+            <img
+              src="https://res.cloudinary.com/do9ekj0zm/image/upload/v1732245936/final_ojt_images/i4rrif8g6yl6iym1avch.png"
+              alt="White pants"
+              className="w-full h-[300px] md:h-[500px] object-cover grayscale"
+            />
+          </div>
+          <div className="col-span-1 md:col-span-6">
+            <img
+              src="https://res.cloudinary.com/do9ekj0zm/image/upload/v1732245936/final_ojt_images/i4rrif8g6yl6iym1avch.png"
+              alt="Model with hat"
+              className="w-full h-[300px] md:h-[500px] object-cover grayscale"
+            />
+          </div>
+        </div>
+
+        {/* Large Hat and Text Section */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 mb-4 md:mb-6">
+          <div className="col-span-1 md:col-span-6 ml-0 md:-ml-24">
+            <img
+              src="https://res.cloudinary.com/do9ekj0zm/image/upload/v1732245936/final_ojt_images/i4rrif8g6yl6iym1avch.png"
+              alt="Model with large hat"
+              className="w-full h-[400px] md:h-[600px] object-cover grayscale"
+            />
+          </div>
+          <div className="col-span-1 md:col-span-6 flex flex-col justify-center px-4 md:pl-12">
+            <div className="max-w-full md:max-w-[400px] text-center md:text-left">
+              <p className="text-xl md:text-3xl text-gray-600 mb-6 leading-relaxed">
+                With youthful, bold designs 
+                <br className="hidden md:block" />
+                and premium materials, 
+                <br className="hidden md:block" />
+                Lashes empowers you to 
+                <br className="hidden md:block" />
+                confidently express your unique style.
+              </p>
+              <p className="text-xl md:text-3xl text-gray-600 leading-relaxed">
+                Our mission is to inspire 
+                <br className="hidden md:block" />
+                and connect people 
+                <br className="hidden md:block" />
+                through fashion, ensuring 
+                <br className="hidden md:block" />
+                you shine in every 
+                <br className="hidden md:block" />
+                situation.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Images Section */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 mb-8 md:mb-12">
+          <div className="col-span-1 md:col-span-6">
+            <img
+              src="https://res.cloudinary.com/do9ekj0zm/image/upload/v1732245936/final_ojt_images/i4rrif8g6yl6iym1avch.png"
+              alt="Model in dress"
+              className="w-full h-[300px] md:h-[500px] pb-1 object-cover grayscale"
+            />
+          </div>
+          <div className="col-span-1 md:col-span-6 mt-0 md:-mt-8">
+            <img
+              src="https://res.cloudinary.com/do9ekj0zm/image/upload/v1732245936/final_ojt_images/i4rrif8g6yl6iym1avch.png"
+              alt="Model in black"
+              className="w-full h-[300px] md:h-[530px] object-cover grayscale"
+            />
+          </div>
         </div>
       </div>
     </div>
