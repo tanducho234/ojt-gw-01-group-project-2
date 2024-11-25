@@ -1,0 +1,28 @@
+/* Tùy chỉnh thanh cuộn */
+.scrollbar-custom::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  .scrollbar-custom::-webkit-scrollbar-track {
+    background: transparent; /* Track trong suốt */
+  }
+  
+  .scrollbar-custom::-webkit-scrollbar-thumb {
+    background: #888; /* Màu của thanh cuộn */
+    border-radius: 10px; /* Góc tròn cho thanh cuộn */
+  }
+  
+  .scrollbar-custom::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Màu khi hover */
+  }
+  
+  /* Tùy chỉnh để thanh cuộn chỉ hiển thị khi cuộn */
+  .scrollbar-custom {
+    scrollbar-width: thin;  /* Dáng thanh cuộn mỏng */
+    scrollbar-color: #888 transparent; /* Màu của thanh cuộn */
+  }
+  
+  .scrollbar-custom::-webkit-scrollbar-button {
+    display: none; /* Ẩn các nút cuộn lên và xuống */
+  }

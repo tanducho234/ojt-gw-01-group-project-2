@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 
 const styles = `
   .clip-path-trapezoid-right {
@@ -111,13 +110,13 @@ const Login = () => {
   });
 
   const [errors, setErrors] = useState({
-    email: false,
-    password: false,
+    email: true,
+    password: true,
   });
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+    return emailRegex.test(email) || phoneRegex.test(email);
   };
 
   const handleChange = (e) => {
@@ -153,7 +152,6 @@ const Login = () => {
     };
 
     setErrors(newErrors);
-    setShowErrorMessages(true);
 
     if (!Object.values(newErrors).some(error => error)) {
       console.log('Form submitted:', formData);
@@ -241,8 +239,7 @@ const Login = () => {
               <div>
                 <label className="block text-sm font-medium text-gray-700">
                   Email
-                  <span className="text-red-500 ml-1">*</span>
-                  {errors.email}
+                  {errors.email && <span className="text-red-500 ml-1">*</span>}
                 </label>
                 <input
                   type="text"
@@ -261,8 +258,7 @@ const Login = () => {
               <div>
                 <label className="block text-sm font-medium text-gray-700">
                   Password
-                  <span className="text-red-500 ml-1">*</span>
-                  {errors.password }
+                  {errors.password && <span className="text-red-500 ml-1">*</span>}
                 </label>
                 <input
                   type="password"
@@ -308,9 +304,9 @@ const Login = () => {
 
             <div className="text-sm text-center">
               <span className="text-gray-600">Don't have an account? </span>
-              <Link to="/register" className="font-medium text-black-600 hover:text-indigo-500">
+              <a href="#" className="font-medium text-black-600 hover:text-indigo-500">
                 Register
-              </Link>
+              </a>
             </div>
           </form>
         </div>
