@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom"; // Import useLocation from react-router-dom
+import { Link } from "react-router-dom"; // Import useLocation from react-router-dom
 import { FaCartShopping, FaCircleUser } from "react-icons/fa6";
 
 const Navbar = () => {
@@ -7,12 +7,6 @@ const Navbar = () => {
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!isMobileMenuOpen);
   };
-  const location = useLocation(); // Get the current location
-  // Check if the current path is '/admin' to hide the Navbar
-  if (location.pathname.startsWith("/admin")) {
-    return null; // Don't render the Navbar when the route starts with /admin
-  }
-
   return (
     <header className="bg-white shadow-md sticky top-0 z-50">
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
