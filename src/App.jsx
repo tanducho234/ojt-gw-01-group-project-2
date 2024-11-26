@@ -18,6 +18,8 @@ import { AdminRoute } from "./utils/AdminRoute";
 import { Dashboard } from "./pages/Admin/Dashboard";
 import { AdminLogin } from "./pages/Admin/Login";
 import ScrollToTop from "./components/ScrollToTop";
+import SideBar from "./components/SideBar/SideBar"
+
 
 function App() {
   return (
@@ -39,6 +41,7 @@ function App() {
                 <Route path="/" element={<Home />} />
 
         <Route path="/home" element={<Home />} />
+        <Route path="/sidebar" element={<SideBar />} />
         <Route path="/about" element={<AboutUs />} />
 
         <Route path="/login" element={<Login />} />
