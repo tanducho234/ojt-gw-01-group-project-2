@@ -83,9 +83,9 @@ const Checkout = () => {
   });
 
   const shippingCosts = {
-    standard: 2.0,
-    expedited: 3.5,
-    international: 5.0,
+    economy: 2.0,
+    standard: 3.5,
+    express: 5.0,
   };
 
   const handleAddressSelect = (addressId) => {
@@ -234,7 +234,7 @@ const Checkout = () => {
           <div className="bg-white shadow rounded-lg p-4">
             <h2 className="text-xl font-semibold mb-4">Shipping Method</h2>
             <div className="flex gap-2 flex-wrap">
-              {["standard", "expedited", "international"].map((method) => (
+              {["economy", "standard", "express"].map((method) => (
                 <button
                   key={method}
                   onClick={() => setShippingMethod(method)}
@@ -244,11 +244,11 @@ const Checkout = () => {
                       : "bg-gray-300 hover:bg-gray-400"
                   }`}
                 >
-                  {method === "standard"
-                    ? "Standard  ($2.00)"
-                    : method === "expedited"
-                    ? "Expedited  ($3.50)"
-                    : "International ($5.00)"}
+                  {method === "economy"
+                    ? "Economy  ($2.00)"
+                    : method === "standard"
+                    ? "Standard  ($3.50)"
+                    : "Express ($5.00)"}
                 </button>
               ))}
             </div>
