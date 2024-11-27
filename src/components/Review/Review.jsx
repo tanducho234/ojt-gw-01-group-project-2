@@ -4,7 +4,7 @@ const Review = ({ review }) => {
   const [showFull, setShowFull] = useState(false); // Trạng thái hiển thị đầy đủ nội dung
 
   return (
-    <div className="relative">
+    <div className="relative mb-2 mt-2">
       {/* Review Card */}
       <div className="bg-white p-6 rounded-xl shadow-sm w-[400px] min-h-[240px] mx-auto">
         {/* Rating stars */}
