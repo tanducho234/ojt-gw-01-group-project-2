@@ -12,7 +12,6 @@ const LoadingSpinner = () => (
   </div>
 );
 
-
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const { token } = useAuth();
@@ -20,8 +19,7 @@ const Cart = () => {
 
   // Fetch cart data from API
 
-
-  useEffect(async () => {
+  useEffect(() => {
     const fetchCartData = async () => {
       try {
         const response = await axios.get(
@@ -39,7 +37,7 @@ const Cart = () => {
       }
     };
 
-    await fetchCartData();
+    fetchCartData();
   }, []);
 
   const onRemove = async (item) => {
@@ -138,8 +136,7 @@ const Cart = () => {
                 <h1
                   className="text-3xl text-center font-roboto font-bold mb-5 
             text-gray-800 bg-white p-4 rounded-lg shadow-md 
-            sm:w-full lg:w-full 2xl:w-full"
-                >
+            sm:w-full lg:w-full 2xl:w-full">
                   Your Cart
                 </h1>
                 <div className="space-y-6 w-full h-[35rem] overflow-y-auto custom-scrollbar lg:w-full 2xl:h-[48rem] 2xl:w-[60rem] 2xl:ml-[10rem]">
@@ -189,8 +186,7 @@ const Cart = () => {
                     className="w-full bg-black text-white font-mono border-none
               cursor-pointer text-lg rounded-full py-2 px-1 hover:bg-gray
               hover:text-white
-              font-semibold md:mt-[2rem] md:text-[1.5rem]"
-                  >
+              font-semibold md:mt-[2rem] md:text-[1.5rem]">
                     Checkout
                   </button>
                 </Link>

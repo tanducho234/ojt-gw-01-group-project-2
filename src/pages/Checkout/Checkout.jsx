@@ -5,7 +5,8 @@ import ItemCheckout from "../../components/ItemCheckout/ItemCheckout";
 import ShippingAddress from "../../components/ShippingAddress/ShippingAddress";
 import { Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
-import { message } from "antd";
+import { Button, message, Popconfirm } from 'antd';
+
 
 const LoadingSpinner = () => (
   <div className="flex justify-center items-center h-screen">
@@ -14,13 +15,13 @@ const LoadingSpinner = () => (
 );
 
 const Checkout = () => {
-  const { token } = useAuth();  
+  const { token } = useAuth();
   const [loading, setLoading] = useState(true);
   const [cartItems, setCartItems] = useState([]);
   const [discounts, setDiscounts] = useState([]);
   const [addresses, setAddresses] = useState([]);
 
-  useEffect(async () => {
+  useEffect(() => {
     const fetchDiscounts = async () => {
       try {
         const response = await axios.get(
@@ -31,7 +32,7 @@ const Checkout = () => {
         console.error("Failed to fetch discounts:", error);
       }
     };
-  
+
     const fetchUserAddresses = async () => {
       try {
         const response = await axios.get(
@@ -48,7 +49,7 @@ const Checkout = () => {
         alert("Unable to fetch addresses. Please try again later.");
       }
     };
-  
+
     const fetchCartItems = async () => {
       try {
         const response = await axios.get(
@@ -60,15 +61,15 @@ const Checkout = () => {
           }
         );
         setCartItems(response.data || []);
+        setLoading(false);
       } catch (error) {
         console.error("Failed to fetch cart data:", error);
       }
     };
-    
-    await fetchCartItems();
-    await fetchDiscounts();
-    await fetchUserAddresses();
-    setLoading(false);
+
+    fetchCartItems();
+    fetchDiscounts();
+    fetchUserAddresses();
   }, []);
 
   const [showAll, setShowAll] = useState(false);
@@ -223,7 +224,7 @@ const Checkout = () => {
     return subtotal - discount + shippingCost;
   };
 
-  const handleConfirmOrder = () => {
+  const handleConfirmOrder = async () => {
     console.log("Order confirmed!");
 
     // Find the selected shipping address
@@ -286,7 +287,7 @@ const Checkout = () => {
     console.log("Order Details:", orderDetails);
 
     // Send the order details to your backend to process the order
-    axios
+    await axios
       .post(
         "https://ojt-gw-01-final-project-back-end.vercel.app/api/order-details",
         orderDetails,
@@ -318,315 +319,327 @@ const Checkout = () => {
       });
   };
 
-  return (  
+  return (
     <>
-    {loading ? (
-      <LoadingSpinner />
-    ) : (  
-    <div className="max-w-6xl mx-auto p-6 space-y-6">
-      <ToastContainer />
-      <h1 className="text-3xl font-bold text-center">Checkout</h1>
-      {cartItems.length === 0 ? (
-        <div className="text-center space-y-4">
-          <p className="text-lg font-semibold text-red-600">
-            Your cart is empty. Please add some items to proceed with checkout.
-          </p>
-          <Link
-            to="/products"
-            className="bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-600"
-          >
-            Go to shopping
-          </Link>
-        </div>
+      {loading ? (
+        <LoadingSpinner />
       ) : (
-        <div className="flex flex-col  md:flex-row gap-6">
-          {/* Left Column */}
-          <div className="flex-1 space-y-6">
-            {/* Cart Items Section */}
-            <div className="bg-white shadow rounded-lg p-4">
-              <h2 className="text-xl font-semibold mb-4">Cart Items</h2>
-              <div className="space-y-4 h-screen overflow-y-auto">
-                {cartItems.map((item, index) => (
-                  <ItemCheckout key={index} item={item} />
-                ))}
-              </div>
+        <div className="max-w-6xl mx-auto p-6 space-y-6">
+          <ToastContainer />
+          <h1 className="text-3xl font-bold text-center">Checkout</h1>
+          {cartItems.length === 0 ? (
+            <div className="text-center space-y-4">
+              <p className="text-lg font-semibold text-red-600">
+                Your cart is empty. Please add some items to proceed with
+                checkout.
+              </p>
+              <Link
+                to="/products"
+                className="bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-600">
+                Go to shopping
+              </Link>
             </div>
-          </div>
-
-          {/* Right Column */}
-          <div className="flex-1 space-y-6">
-            <div className="bg-white shadow rounded-lg p-4">
-              <h2 className="text-xl font-semibold mb-4">Shipping Address</h2>
-              <div className="space-y-4">
-                <button
-                  onClick={() => setIsAddressModalOpen(true)}
-                  className="w-full bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-600"
-                >
-                  Select or Add Shipping Address
-                </button>
-                {selectedAddress && (
-                  <div className="mt-4 p-4 border border-gray-300 rounded-lg bg-gray-50">
-                    <h3 className="text-lg font-semibold">
-                      Selected Shipping Address
-                    </h3>
-                    <p className="mt-2">
-                      <span className="font-semibold">Name:</span>{" "}
-                      {
-                        addresses.find((addr) => addr._id === selectedAddress)
-                          ?.recipientName
-                      }
-                    </p>
-                    <p>
-                      <span className="font-semibold">Phone:</span>{" "}
-                      {
-                        addresses.find((addr) => addr._id === selectedAddress)
-                          ?.phoneNumber
-                      }
-                    </p>
-                    <p>
-                      <span className="font-semibold">Address:</span>{" "}
-                      {
-                        addresses.find((addr) => addr._id === selectedAddress)
-                          ?.address
-                      }
-                    </p>
+          ) : (
+            <div className="flex flex-col  md:flex-row gap-6">
+              {/* Left Column */}
+              <div className="flex-1 space-y-6">
+                {/* Cart Items Section */}
+                <div className="bg-white shadow rounded-lg p-4">
+                  <h2 className="text-xl font-semibold mb-4">Cart Items</h2>
+                  <div className="space-y-4 h-screen overflow-y-auto">
+                    {cartItems.map((item, index) => (
+                      <ItemCheckout key={index} item={item} />
+                    ))}
                   </div>
-                )}
-              </div>
-            </div>
-
-            {/* Shipping Method Section */}
-            <div className="bg-white shadow rounded-lg p-4">
-              <h2 className="text-xl font-semibold mb-4">Shipping Method</h2>
-              <div className="flex gap-2 flex-wrap">
-                {["economy", "standard", "express"].map((method) => (
-                  <button
-                    key={method}
-                    onClick={() => setShippingMethod(method)}
-                    className={`lg:flex-1 py-2 px-4 rounded-lg text-white font-semibold w-full ${
-                      shippingMethod === method
-                        ? "bg-black"
-                        : "bg-gray-300 hover:bg-gray-400"
-                    }`}
-                  >
-                    {method === "economy"
-                      ? "Economy  ($2.00)"
-                      : method === "standard"
-                      ? "Standard  ($3.50)"
-                      : "Express ($5.00)"}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Discount Section */}
-            <div className="bg-white shadow rounded-lg p-4">
-              <h2 className="text-xl font-semibold mb-4">Discount Code</h2>
-              <div className="flex gap-2">
-                {/* Input field with datalist */}
-                <div className="flex-1 relative">
-                  <input
-                    type="text"
-                    value={discountCode}
-                    onChange={(e) => setDiscountCode(e.target.value)}
-                    list="available-discounts"
-                    placeholder="Enter or select a discount code"
-                    className="w-full border border-gray-300 rounded-lg px-4 py-2"
-                  />
-                  <datalist id="available-discounts">
-                    {discounts
-                      .filter((discount) => discount.isActive)
-                      .map((discount) => (
-                        <option key={discount._id} value={discount.code}>
-                          {discount.discountAmount > 0
-                            ? `$${discount.discountAmount.toFixed(2)}`
-                            : `${discount.discountPercentage}%`}{" "}
-                          - (Min Order: ${discount.minOrderValue.toFixed(2)})
-                        </option>
-                      ))}
-                  </datalist>
                 </div>
-                <button
-                  onClick={handleApplyDiscount}
-                  className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-600"
-                >
-                  Apply
-                </button>
               </div>
-              {appliedDiscount && (
-                <p className="mt-2 text-green-600">
-                  Applied Discount:{" "}
-                  {appliedDiscount.type === "amount"
-                    ? `$${appliedDiscount.value.toFixed(2)}`
-                    : `${appliedDiscount.value}%`}
-                </p>
-              )}
-            </div>
 
-            {/* Summary Section */}
-            <div className="bg-white shadow rounded-lg p-4">
-              <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
-              <div className="space-y-2 text-lg">
-                <div className="flex justify-between">
-                  <span>Subtotal:</span>
-                  <span>${calculateSubtotal().toFixed(2)}</span>
+              {/* Right Column */}
+              <div className="flex-1 space-y-6">
+                <div className="bg-white shadow rounded-lg p-4">
+                  <h2 className="text-xl font-semibold mb-4">
+                    Shipping Address
+                  </h2>
+                  <div className="space-y-4">
+                    <button
+                      onClick={() => setIsAddressModalOpen(true)}
+                      className="w-full bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-600">
+                      Select or Add Shipping Address
+                    </button>
+                    {selectedAddress && (
+                      <div className="mt-4 p-4 border border-gray-300 rounded-lg bg-gray-50">
+                        <h3 className="text-lg font-semibold">
+                          Selected Shipping Address
+                        </h3>
+                        <p className="mt-2">
+                          <span className="font-semibold">Name:</span>{" "}
+                          {
+                            addresses.find(
+                              (addr) => addr._id === selectedAddress
+                            )?.recipientName
+                          }
+                        </p>
+                        <p>
+                          <span className="font-semibold">Phone:</span>{" "}
+                          {
+                            addresses.find(
+                              (addr) => addr._id === selectedAddress
+                            )?.phoneNumber
+                          }
+                        </p>
+                        <p>
+                          <span className="font-semibold">Address:</span>{" "}
+                          {
+                            addresses.find(
+                              (addr) => addr._id === selectedAddress
+                            )?.address
+                          }
+                        </p>
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <div className="flex justify-between">
-                  <span>Shipping Cost:</span>
-                  <span>${shippingCosts[shippingMethod].toFixed(2)}</span>
+
+                {/* Shipping Method Section */}
+                <div className="bg-white shadow rounded-lg p-4">
+                  <h2 className="text-xl font-semibold mb-4">
+                    Shipping Method
+                  </h2>
+                  <div className="flex gap-2 flex-wrap">
+                    {["economy", "standard", "express"].map((method) => (
+                      <button
+                        key={method}
+                        onClick={() => setShippingMethod(method)}
+                        className={`lg:flex-1 py-2 px-4 rounded-lg text-white font-semibold w-full ${
+                          shippingMethod === method
+                            ? "bg-black"
+                            : "bg-gray-300 hover:bg-gray-400"
+                        }`}>
+                        {method === "economy"
+                          ? "Economy  ($2.00)"
+                          : method === "standard"
+                          ? "Standard  ($3.50)"
+                          : "Express ($5.00)"}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-                {appliedDiscount && (
-                  <div className="flex justify-between">
-                    <span>Discount:</span>
-                    <span>
+
+                {/* Discount Section */}
+                <div className="bg-white shadow rounded-lg p-4">
+                  <h2 className="text-xl font-semibold mb-4">Discount Code</h2>
+                  <div className="flex gap-2">
+                    {/* Input field with datalist */}
+                    <div className="flex-1 relative">
+                      <input
+                        type="text"
+                        value={discountCode}
+                        onChange={(e) => setDiscountCode(e.target.value)}
+                        list="available-discounts"
+                        placeholder="Enter or select a discount code"
+                        className="w-full border border-gray-300 rounded-lg px-4 py-2"
+                      />
+                      <datalist id="available-discounts">
+                        {discounts
+                          .filter((discount) => discount.isActive)
+                          .map((discount) => (
+                            <option key={discount._id} value={discount.code}>
+                              {discount.discountAmount > 0
+                                ? `$${discount.discountAmount.toFixed(2)}`
+                                : `${discount.discountPercentage}%`}{" "}
+                              - (Min Order: ${discount.minOrderValue.toFixed(2)}
+                              )
+                            </option>
+                          ))}
+                      </datalist>
+                    </div>
+                    <button
+                      onClick={handleApplyDiscount}
+                      className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-600">
+                      Apply
+                    </button>
+                  </div>
+                  {appliedDiscount && (
+                    <p className="mt-2 text-green-600">
+                      Applied Discount:{" "}
                       {appliedDiscount.type === "amount"
-                        ? `-$${appliedDiscount.value.toFixed(2)}`
-                        : `-$${(
-                            (calculateSubtotal() * appliedDiscount.value) /
-                            100
-                          ).toFixed(2)}`}
-                    </span>
+                        ? `$${appliedDiscount.value.toFixed(2)}`
+                        : `${appliedDiscount.value}%`}
+                    </p>
+                  )}
+                </div>
+
+                {/* Summary Section */}
+                <div className="bg-white shadow rounded-lg p-4">
+                  <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
+                  <div className="space-y-2 text-lg">
+                    <div className="flex justify-between">
+                      <span>Subtotal:</span>
+                      <span>${calculateSubtotal().toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Shipping Cost:</span>
+                      <span>${shippingCosts[shippingMethod].toFixed(2)}</span>
+                    </div>
+                    {appliedDiscount && (
+                      <div className="flex justify-between">
+                        <span>Discount:</span>
+                        <span>
+                          {appliedDiscount.type === "amount"
+                            ? `-$${appliedDiscount.value.toFixed(2)}`
+                            : `-$${(
+                                (calculateSubtotal() * appliedDiscount.value) /
+                                100
+                              ).toFixed(2)}`}
+                        </span>
+                      </div>
+                    )}
+                    <div className="flex justify-between font-bold">
+                      <span>Total:</span>
+                      <span>${calculateTotal().toFixed(2)}</span>
+                    </div>
                   </div>
-                )}
-                <div className="flex justify-between font-bold">
-                  <span>Total:</span>
-                  <span>${calculateTotal().toFixed(2)}</span>
+                </div>
+
+                {/* Payment Method Section */}
+                <div className="bg-white shadow rounded-lg p-4">
+                  <h2 className="text-xl font-semibold mb-4">Payment Method</h2>
+                  <div className="space-y-2">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="payment"
+                        value="COD"
+                        onChange={(e) => setPaymentMethod(e.target.value)}
+                        className="mr-2"
+                      />
+                      Cash on Delivery (COD)
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="payment"
+                        value="Stripe"
+                        onChange={(e) => setPaymentMethod(e.target.value)}
+                        className="mr-2"
+                      />
+                      Stripe Payment
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="payment"
+                        value="VNPAY"
+                        onChange={(e) => setPaymentMethod(e.target.value)}
+                        className="mr-2"
+                      />
+                      VNPAY Payment
+                    </label>
+                  </div>
+                </div>
+
+                {/* Order Confirmation */}
+                <div className="bg-white shadow rounded-lg p-4">
+                  <h2 className="text-xl font-semibold mb-4">
+                    Order Confirmation
+                  </h2>
+                  <Popconfirm
+                    title="Delete the task"
+                    description="Are you sure to delete this task?"
+                    onConfirm={handleConfirmOrder}
+                    // onCancel={cancel}
+                    okText="Yes"
+                    cancelText="No">
+                    <button
+                      className="w-full bg-black text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-600"
+                      // disabled={!selectedAddress || !paymentMethod}
+                      // onClick={handleConfirmOrder}
+                    >
+                      Confirm Order (${calculateTotal().toFixed(2)})
+                    </button>
+                  </Popconfirm>
                 </div>
               </div>
             </div>
+          )}
+          {/* Modal for Address Selection */}
+          {isAddressModalOpen && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+              <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full max-h-[85vh] overflow-y-auto">
+                <h2 className="text-xl font-semibold mb-4">
+                  Choose or Add Shipping Address
+                </h2>
+                <div className="space-y-4">
+                  {addresses.map((address) => (
+                    <div
+                      key={address._id}
+                      onClick={() => handleAddressSelect(address._id)}
+                      className="p-4 border rounded-lg cursor-pointer hover:bg-gray-100">
+                      <p className="font-semibold">{address.recipientName}</p>
+                      <p>{address.phoneNumber}</p>
+                      <p>{address.address}</p>
+                    </div>
+                  ))}
 
-            {/* Payment Method Section */}
-            <div className="bg-white shadow rounded-lg p-4">
-              <h2 className="text-xl font-semibold mb-4">Payment Method</h2>
-              <div className="space-y-2">
-                <label className="flex items-center">
-                  <input
-                    type="radio"
-                    name="payment"
-                    value="COD"
-                    onChange={(e) => setPaymentMethod(e.target.value)}
-                    className="mr-2"
-                  />
-                  Cash on Delivery (COD)
-                </label>
-                <label className="flex items-center">
-                  <input
-                    type="radio"
-                    name="payment"
-                    value="Stripe"
-                    onChange={(e) => setPaymentMethod(e.target.value)}
-                    className="mr-2"
-                  />
-                  Stripe Payment
-                </label>
-                <label className="flex items-center">
-                  <input
-                    type="radio"
-                    name="payment"
-                    value="VNPAY"
-                    onChange={(e) => setPaymentMethod(e.target.value)}
-                    className="mr-2"
-                  />
-                  VNPAY Payment
-                </label>
-              </div>
-            </div>
+                  {/* Form to Add New Address */}
+                  <div className="space-y-2 border-t pt-4">
+                    <h3 className="text-lg font-semibold">Add New Address</h3>
+                    <input
+                      type="text"
+                      name="recipientName"
+                      value={newAddress.recipientName}
+                      onChange={(e) =>
+                        setNewAddress((prev) => ({
+                          ...prev,
+                          recipientName: e.target.value,
+                        }))
+                      }
+                      placeholder="Recipient Name"
+                      className="w-full border border-gray-300 rounded-lg px-4 py-2"
+                    />
+                    <input
+                      type="text"
+                      name="phoneNumber"
+                      value={newAddress.phoneNumber}
+                      onChange={(e) =>
+                        setNewAddress((prev) => ({
+                          ...prev,
+                          phoneNumber: e.target.value,
+                        }))
+                      }
+                      placeholder="Phone Number"
+                      className="w-full border border-gray-300 rounded-lg px-4 py-2"
+                    />
+                    <textarea
+                      name="address"
+                      value={newAddress.address}
+                      onChange={(e) =>
+                        setNewAddress((prev) => ({
+                          ...prev,
+                          address: e.target.value,
+                        }))
+                      }
+                      placeholder="Full Address"
+                      className="w-full border border-gray-300 rounded-lg px-4 py-2"
+                    />
+                    <button
+                      onClick={handleAddNewAddress}
+                      className="w-full bg-black text-white py-2 px-4 rounded-lg mt-4 hover:bg-blue-600">
+                      Save New Address
+                    </button>
+                  </div>
 
-            {/* Order Confirmation */}
-            <div className="bg-white shadow rounded-lg p-4">
-              <h2 className="text-xl font-semibold mb-4">Order Confirmation</h2>
-              <button
-                className="w-full bg-black text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-600"
-                // disabled={!selectedAddress || !paymentMethod}
-                onClick={handleConfirmOrder}
-              >
-                Confirm Order (${calculateTotal().toFixed(2)})
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-      {/* Modal for Address Selection */}
-      {isAddressModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full max-h-[85vh] overflow-y-auto">
-            <h2 className="text-xl font-semibold mb-4">
-              Choose or Add Shipping Address
-            </h2>
-            <div className="space-y-4">
-              {addresses.map((address) => (
-                <div
-                  key={address._id}
-                  onClick={() => handleAddressSelect(address._id)}
-                  className="p-4 border rounded-lg cursor-pointer hover:bg-gray-100"
-                >
-                  <p className="font-semibold">{address.recipientName}</p>
-                  <p>{address.phoneNumber}</p>
-                  <p>{address.address}</p>
+                  <button
+                    onClick={() => setIsAddressModalOpen(false)}
+                    className="w-full mt-4 text-center text-blue-500 hover:text-blue-700">
+                    Close
+                  </button>
                 </div>
-              ))}
-
-              {/* Form to Add New Address */}
-              <div className="space-y-2 border-t pt-4">
-                <h3 className="text-lg font-semibold">Add New Address</h3>
-                <input
-                  type="text"
-                  name="recipientName"
-                  value={newAddress.recipientName}
-                  onChange={(e) =>
-                    setNewAddress((prev) => ({
-                      ...prev,
-                      recipientName: e.target.value,
-                    }))
-                  }
-                  placeholder="Recipient Name"
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2"
-                />
-                <input
-                  type="text"
-                  name="phoneNumber"
-                  value={newAddress.phoneNumber}
-                  onChange={(e) =>
-                    setNewAddress((prev) => ({
-                      ...prev,
-                      phoneNumber: e.target.value,
-                    }))
-                  }
-                  placeholder="Phone Number"
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2"
-                />
-                <textarea
-                  name="address"
-                  value={newAddress.address}
-                  onChange={(e) =>
-                    setNewAddress((prev) => ({
-                      ...prev,
-                      address: e.target.value,
-                    }))
-                  }
-                  placeholder="Full Address"
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2"
-                />
-                <button
-                  onClick={handleAddNewAddress}
-                  className="w-full bg-black text-white py-2 px-4 rounded-lg mt-4 hover:bg-blue-600"
-                >
-                  Save New Address
-                </button>
               </div>
-
-              <button
-                onClick={() => setIsAddressModalOpen(false)}
-                className="w-full mt-4 text-center text-blue-500 hover:text-blue-700"
-              >
-                Close
-              </button>
             </div>
-          </div>
+          )}
         </div>
       )}
-    </div>
-    )}
     </>
   );
 };
