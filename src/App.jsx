@@ -22,6 +22,8 @@ import SideBar from "./components/SideBar/SideBar"
 import { ProtectedLayout } from "./utils/ProtectedLayout";
 import { HomeLayout } from "./utils/HomeLayout";
 import { AdminLayout } from "./utils/AdminLayout";
+import OrderSuccess from "./pages/Checkout/OrderSuccess";
+import OrderFailed from "./pages/Checkout/OrderFailed";
 function App() {
   return (
     <AuthProvider>
@@ -42,6 +44,8 @@ function App() {
         {/* Authenticated user layout */}{" "}
         <Route path="/" element={<ProtectedLayout />}>
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/checkout/success/:id" element={<OrderSuccess />} />
+          <Route path="/checkout/failed/:id" element={<OrderFailed />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/cart" element={<Cart />} />
         </Route>
