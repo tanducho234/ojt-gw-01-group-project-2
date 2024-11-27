@@ -21,6 +21,9 @@ import { HomeLayout } from "./utils/HomeLayout";
 import { AdminLayout } from "./utils/AdminLayout";
 
 import OrderSummary from "./components/OrderProfileComponent";
+import OrderDetailsComponent from "./components/OrderDetailsComponent";
+
+
 
 function App() {
   return (
@@ -50,6 +53,9 @@ function App() {
           <Route path="" element={<Dashboard />} />
           <Route path="dashboard" element={<Dashboard />} />
         </Route>{" "}
+        <Route path="/OrderSummary" element={<OrderSummary />} />
+        <Route path="/OrderSummary/:orderId" element={<OrderDetailsComponent />} />
+     
       </Routes>
     </AuthProvider>
   );
