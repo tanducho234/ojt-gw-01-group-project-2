@@ -10,14 +10,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.5.1",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@heroicons/react": "^2.2.0",
     "@mui/icons-material": "^6.1.7",
     "@mui/material": "^6.1.7",
-    "antd": "^5.22.2",
     "@tailwindcss/forms": "^0.5.9",
     "@tailwindcss/line-clamp": "^0.4.4",
+    "antd": "^5.22.2",
     "axios": "^1.7.7",
     "lodash.debounce": "^4.0.8",
     "nouislider": "^15.8.1",

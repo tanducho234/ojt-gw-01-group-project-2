@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaCartShopping } from 'react-icons/fa6';
 
-const Sidebar = () => {
+ const Sidebar = () => {
   const [activeItem, setActiveItem] = useState('');
 
   const handleItemClick = (item) => {
@@ -10,7 +10,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="w-64 bg-white text-black h-screen flex flex-col border-r border-gray-300 transition-all duration-300 hover:w-80">
+    <div className="bg-white">
       {/* Header */}
       <div className="flex items-center p-4 border-b border-gray-300">
         <Link to="/" className="flex items-center gap-3">
@@ -72,5 +72,6 @@ const Sidebar = () => {
     </div>
   );
 };
+
 
 export default Sidebar;

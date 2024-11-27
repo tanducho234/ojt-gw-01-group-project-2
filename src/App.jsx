@@ -1,5 +1,10 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import React, { useState } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Outlet,
+} from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
 import Home from "./pages/Home/Home";
@@ -11,24 +16,27 @@ import Register from "./pages/Auth/Register";
 import Login from "./pages/Auth/Login";
 
 import AboutUs from "./pages/About/About";
-import Profile from "./pages/Profile/Profile";
-import { AuthProvider } from "./hooks/useAuth";
+import { AuthProvider, useAuth } from "./hooks/useAuth";
 import { FetchDataProvider } from "./hooks/useFetchData";
 import { AddProduct } from "./pages/Admin/AddProduct";
 import { Dashboard } from "./pages/Admin/Dashboard";
 import { AdminLogin } from "./pages/Admin/Login";
 import ScrollToTop from "./components/ScrollToTop";
-import SideBar from "./components/SideBar/SideBar"
 import { ProtectedLayout } from "./utils/ProtectedLayout";
 import { HomeLayout } from "./utils/HomeLayout";
 import { AdminLayout } from "./utils/AdminLayout";
+import Account from "./pages/Profile/Account/Account";
+import { ProfileLayout } from "./utils/ProfileLayout";
+
+
+
 function App() {
   return (
+    <FetchDataProvider>
     <AuthProvider>
       <ScrollToTop />
       <Routes>
-        <Route path="*" element={<h1>404 - Page Not Found</h1>} />{" "}
-        {/* default layout */}
+        <Route path="*" element={<h1>404 - Page Not Found</h1>} />
         <Route path="/" element={<HomeLayout />}>
           <Route path="" element={<Home />} />
           <Route path="home" element={<Home />} />
@@ -39,10 +47,15 @@ function App() {
           <Route path="register" element={<Register />} />
         </Route>
         <Route path="/admin/login" element={<AdminLogin />} />
-        {/* Authenticated user layout */}{" "}
+        {/* Authenticated user layout */}
         <Route path="/" element={<ProtectedLayout />}>
           <Route path="/checkout" element={<Checkout />} />
-          <Route path="/profile" element={<Profile />} />
+
+          <Route path="/profile" element={<ProfileLayout />}>
+            {/* Nested routes within Profile */}
+            <Route path="account" element={<Account />} />
+            {/* <Route path="settings" element={<AccountSettings />} /> */}
+          </Route>
           <Route path="/cart" element={<Cart />} />
         </Route>
         {/* Admin layout */}
@@ -53,6 +66,7 @@ function App() {
         </Route>
       </Routes>
     </AuthProvider>
+    </FetchDataProvider>
   );
 }
 
