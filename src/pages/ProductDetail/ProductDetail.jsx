@@ -141,7 +141,7 @@ const ProductDetail = () => {
       });
 
       if (response.status === 200) {
-        toast.success("This is a toast notification !", { theme: "grey" });
+        toast.success("Product added to cart successfully!");
         // alert('Product added to cart successfully!');
       } else {
         alert("Failed to add product to cart. Please try again.");
