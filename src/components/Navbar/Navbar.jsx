@@ -1,18 +1,22 @@
 import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom"; // Import useLocation from react-router-dom
-import { FaCartShopping, FaCircleUser } from "react-icons/fa6";
+import { Link } from "react-router-dom"; // Import useLocation from react-router-dom
+import {
+  FaCartShopping,
+  FaCircleUser,
+  FaArrowRightFromBracket,
+} from "react-icons/fa6";
+import { useAuth } from "../../hooks/useAuth";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!isMobileMenuOpen);
   };
-  const location = useLocation(); // Get the current location
-  // Check if the current path is '/admin' to hide the Navbar
-  if (location.pathname.startsWith("/admin")) {
-    return null; // Don't render the Navbar when the route starts with /admin
-  }
+  const { logout, user } = useAuth();
 
+  const handleLogout = () => {
+    logout();
+  };
   return (
     <header className="bg-white shadow-md sticky top-0 z-50">
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
@@ -92,7 +96,21 @@ const Navbar = () => {
               className="w-8 h-8"
             />
           </Link> */}
-          <FaCircleUser size={25} />{" "}
+          {!user && (
+            <Link to="/login">
+              <FaCircleUser size={25} />
+            </Link>
+          )}
+          {user && <FaCircleUser size={25} />}
+
+          {user && (
+            <FaArrowRightFromBracket
+              size={25}
+              onClick={handleLogout}
+              className="cursor-pointer"
+            />
+          )}
+
           <button
             className="lg:hidden text-gray-600 focus:outline-none"
             onClick={toggleMobileMenu}

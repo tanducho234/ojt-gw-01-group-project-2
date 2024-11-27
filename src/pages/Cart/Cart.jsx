@@ -3,6 +3,7 @@ import axios from "axios";
 import CartItem from "../../components/ItemCart/ItemCart";
 import { useAuth } from "../../hooks/useAuth";
 import { Link } from "react-router-dom";
+import "../Cart/Cart.css"
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -26,11 +27,35 @@ const Cart = () => {
   };
 
   useEffect(() => {
-    fetchCartData();
+    fetchCartData();       
   }, []);
 
-  const handleRemove = (id) => {
-    setCartItems(cartItems.filter((item) => item.productId !== id));
+  const onRemove = async (item) => {
+    console.log("cartitem", cartItems);
+    setCartItems((prevItems) => prevItems.filter((cartItem) => cartItem.productId !== item.productId));
+    console.log("after delete", cartItems);
+    try {
+      const url = "https://ojt-gw-01-final-project-back-end.vercel.app/api/carts/remove";
+      const body = {
+        productId: item.productId,
+        color: item.color, 
+        size: item.size,
+      };
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const response = await axios.delete(url, {
+        data: body,
+        ...config,
+      });
+
+      alert("Item has been successfully removed from your cart!");
+    } catch (error) {
+      console.log("error");      
+      alert("An error occurred while removing the item from your cart. Please try again!");
+    }
   };
 
   const handleQuantityChange = (id, quantity) => {
@@ -39,7 +64,6 @@ const Cart = () => {
     );
   };
 
-  // Tính tổng giá của giỏ hàng
   const totalAmount = cartItems
     .reduce((total, item) => total + item.price * item.quantity, 0)
     .toFixed(2);
@@ -56,14 +80,13 @@ const Cart = () => {
           Your Cart
         </h1>
         <div
-          className="space-y-6 w-full max-h-[35rem] overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-200
-            lg:w-full"
+          className="space-y-6 w-full h-[35rem] overflow-y-auto custom-scrollbar lg:w-full 2xl:h-[48rem] 2xl:w-[60rem] 2xl:ml-[10rem]"
         >
           {cartItems.map((item, index) => (
             <CartItem
               key={index}
               item={item}
-              onRemove={handleRemove}
+              onRemove={onRemove}
               onQuantityChange={handleQuantityChange}
             />
           ))}
@@ -79,7 +102,7 @@ const Cart = () => {
         <div className="space-y-2 mb-4">
           {cartItems.map((item, index) => (
             <div key={index} className="flex justify-between ">
-              <span className="text-sm font-roboto w-[15rem] flex-wrap italic sm:text-base md:text-lg lg:text-sm">
+              <span className="text-sm font-roboto w-[15rem] flex-wrap italic sm:text-base md:text-lg lg:text-sm lg:w-[12rem] lg:truncate">
                 {item.name}
               </span>
               <span className="text-sm font-roboto text-gray-600 sm:text-base md:text-lg lg:text-sm">
