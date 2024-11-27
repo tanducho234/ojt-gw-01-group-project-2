@@ -30,12 +30,17 @@ import { ProfileLayout } from "./utils/ProfileLayout";
 
 
 
+import OrderSummary from "./components/OrderProfileComponent";
+import OrderDetailsComponent from "./components/OrderDetailsComponent";
+
+
+
 function App() {
   return (
     <FetchDataProvider>
     <AuthProvider>
       <ScrollToTop />
-      <Routes>
+       <Routes>
         <Route path="*" element={<h1>404 - Page Not Found</h1>} />
         <Route path="/" element={<HomeLayout />}>
           <Route path="" element={<Home />} />
@@ -66,6 +71,9 @@ function App() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="products/add" element={<AddProduct />} />
         </Route>
+        
+        <Route path="/OrderSummary" element={<OrderSummary />} />
+        <Route path="/OrderSummary/:orderId" element={<OrderDetailsComponent />} />
       </Routes>
     </AuthProvider>
     </FetchDataProvider>
