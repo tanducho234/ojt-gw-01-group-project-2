@@ -1,5 +1,5 @@
 import forms from "@tailwindcss/forms";
-
+import scrollbarHide from "tailwind-scrollbar-hide";
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -25,12 +25,12 @@ export default {
           "0%": { transform: "translateY(0)" },
           "100%": { transform: "translateY(100%)" },
         },
-        fontFamily: {
-          roboto: ["Roboto", "sans-serif"],
-          poppins: ["Poppins", "sans-serif"],
-        },
+      },
+      fontFamily: {
+        roboto: ["Roboto", "sans-serif"],
+        poppins: ["Poppins", "sans-serif"],
       },
     },
   },
-  plugins: [forms],
+  plugins: [forms, scrollbarHide],
 };

@@ -9,7 +9,7 @@ import Cart from "./pages/Cart/Cart";
 import Checkout from "./pages/Checkout/Checkout";
 import Register from "./pages/Auth/Register";
 import Login from "./pages/Auth/Login";
-
+import OrdersPage from "./pages/Order/OrdersPage";
 import AboutUs from "./pages/About/About";
 import Profile from "./pages/Profile/Profile";
 import { AuthProvider } from "./hooks/useAuth";
@@ -36,6 +36,7 @@ function App() {
           <Route path="products" element={<Products />} />
           <Route path="products/:id" element={<ProductDetail />} />
           <Route path="register" element={<Register />} />
+          
         </Route>
         <Route path="/admin/login" element={<AdminLogin />} />
         {/* Authenticated user layout */}{" "}
@@ -50,6 +51,7 @@ function App() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="products/add" element={<AddProduct />} />
         </Route>
+        <Route path="order" element={<OrdersPage />} />
       </Routes>
     </AuthProvider>
   );
