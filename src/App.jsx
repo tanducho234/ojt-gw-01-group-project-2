@@ -54,8 +54,10 @@ function App() {
           <Route path="/profile" element={<ProfileLayout />}>
             {/* Nested routes within Profile */}
             <Route path="account" element={<Account />} />
+            
             {/* <Route path="settings" element={<AccountSettings />} /> */}
           </Route>
+          
           <Route path="/cart" element={<Cart />} />
         </Route>
         {/* Admin layout */}

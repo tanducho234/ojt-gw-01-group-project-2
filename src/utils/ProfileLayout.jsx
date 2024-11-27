@@ -10,6 +10,7 @@ import {
   import {  Layout, Menu } from "antd";
 import Account from "../pages/Profile/Account/Account";
 import Order from "../pages/Profile/Order/Order";
+import Reviews from "../pages/Profile/Reviews/Review";
 import React, { useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 const items = [
