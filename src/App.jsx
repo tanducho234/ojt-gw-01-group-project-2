@@ -18,6 +18,7 @@ import { AddProduct } from "./pages/Admin/AddProduct";
 import { Dashboard } from "./pages/Admin/Dashboard";
 import { AdminLogin } from "./pages/Admin/Login";
 import ScrollToTop from "./components/ScrollToTop";
+import SideBar from "./components/SideBar/SideBar"
 import { ProtectedLayout } from "./utils/ProtectedLayout";
 import { HomeLayout } from "./utils/HomeLayout";
 import { AdminLayout } from "./utils/AdminLayout";
