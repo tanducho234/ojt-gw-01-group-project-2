@@ -20,6 +20,8 @@ import { ProtectedLayout } from "./utils/ProtectedLayout";
 import { HomeLayout } from "./utils/HomeLayout";
 import { AdminLayout } from "./utils/AdminLayout";
 
+import OrderSummary from "./components/OrderProfileComponent";
+
 function App() {
   return (
     <AuthProvider>
