@@ -1,11 +1,21 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom"; // Import useLocation from react-router-dom
-import { FaCartShopping, FaCircleUser } from "react-icons/fa6";
+import {
+  FaCartShopping,
+  FaCircleUser,
+  FaArrowRightFromBracket,
+} from "react-icons/fa6";
+import { useAuth } from "../../hooks/useAuth";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!isMobileMenuOpen);
+  };
+  const { logout, user } = useAuth();
+
+  const handleLogout = () => {
+    logout();
   };
   return (
     <header className="bg-white shadow-md sticky top-0 z-50">
@@ -86,7 +96,21 @@ const Navbar = () => {
               className="w-8 h-8"
             />
           </Link> */}
-          <FaCircleUser size={25} />{" "}
+          {!user && (
+            <Link to="/login">
+              <FaCircleUser size={25} />
+            </Link>
+          )}
+          {user && <FaCircleUser size={25} />}
+
+          {user && (
+            <FaArrowRightFromBracket
+              size={25}
+              onClick={handleLogout}
+              className="cursor-pointer"
+            />
+          )}
+
           <button
             className="lg:hidden text-gray-600 focus:outline-none"
             onClick={toggleMobileMenu}

@@ -4,6 +4,10 @@ import axios from "axios";
 import Review from "../../components/Review/Review";
 import StarRating from "../../components/StarRating";
 import Breadcrumb from "../../components/BreadCrumb";
+import { useAuth } from "../../hooks/useAuth";
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const LoadingSpinner = () => (
   <div className="flex justify-center items-center h-screen">
@@ -62,6 +66,8 @@ const ProductDetail = () => {
       },
     ],
   };
+
+  const { token } = useAuth();
   const [loading, setLoading] = useState(true);
 
   const { id } = useParams();
@@ -126,6 +132,36 @@ const ProductDetail = () => {
       });
   }, [id]);
 
+  const handleAddToCart = async (productId, color, size, quantity) => {
+    try {
+      const url = "https://ojt-gw-01-final-project-back-end.vercel.app/api/carts/add";
+      const body = {
+        productId: productId,
+        color: color,
+        size: size,
+        quantity: quantity,
+      };
+      console.log("body", body);
+      
+  
+      const response = await axios.post(url, body, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+  
+      if (response.status === 200) {
+        toast.success("This is a toast notification !", {theme:"grey"});
+        // alert('Product added to cart successfully!');
+      } else {
+        alert('Failed to add product to cart. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error adding product to cart:', error);
+      alert('An error occurred while adding product to cart.');
+    }
+  };
+
   return (
     <>
       {loading ? (
@@ -169,7 +205,11 @@ const ProductDetail = () => {
               <h1 className="text-3xl font-bold flex items-center gap-2">
                 {product?.name || "Product Name Not Available"}
                 <span className="text-sm bg-gray-100 px-2 py-1 rounded-full text-[gray]">
-                {product?.soldQuantity > 0 ? `Sold: ${product?.soldQuantity} unit${product?.soldQuantity > 1 ? 's' : ''}` : "Has Not Been Sold Yet"}
+                  {product?.soldQuantity > 0
+                    ? `Sold: ${product?.soldQuantity} unit${
+                        product?.soldQuantity > 1 ? "s" : ""
+                      }`
+                    : "Has Not Been Sold Yet"}
                 </span>
               </h1>
 
@@ -212,9 +252,20 @@ const ProductDetail = () => {
                       className={`w-9 h-9 rounded-full flex items-center justify-center transition-transform
                     ${selectedColor === item.color ? "scale-110" : ""}
                   `}
-                      style={{ backgroundColor: item.color.toLowerCase() }}>
+                      style={{
+                        backgroundColor: item.color.toLowerCase(),
+                        color:
+                          item.color === "White" || item.color === "Yellow"
+                            ? "black"
+                            : "white", // Change text color based on background
+                        border:
+                          selectedColor === item.color
+                            ? "2px solid black"
+                            : "2px solid gray",
+                      }}
+                    >
                       {selectedColor === item.color && (
-                        <span className="text-white">✓</span>
+                        <span className="">✓</span>
                       )}
                     </button>
                   ))}
@@ -238,7 +289,8 @@ const ProductDetail = () => {
                   selectedSize === size.size
                     ? "bg-black text-white"
                     : "bg-gray-200 hover:bg-gray-300"
-                }`}>
+                }`}
+                          >
                             {size.size}
                           </button>
                         ))
@@ -251,34 +303,37 @@ const ProductDetail = () => {
                 <div className="flex items-center bg-gray-100 rounded-full">
                   <button
                     onClick={decrement}
-                    className="w-14 h-12 flex items-center justify-center text-2xl rounded-l-full hover:bg-gray-200">
+                    className="w-14 h-12 flex items-center justify-center text-2xl rounded-l-full hover:bg-gray-200"
+                  >
                     -
                   </button>
                   <span className="w-14 text-center text-lg">{quantity}</span>
                   <button
                     onClick={increment}
-                    className="w-14 h-12 flex items-center justify-center text-2xl rounded-r-full hover:bg-gray-200">
+                    className="w-14 h-12 flex items-center justify-center text-2xl rounded-r-full hover:bg-gray-200"
+                  >
                     +
                   </button>
                 </div>
                 <button
                   disabled={!selectedColor || !selectedSize}
-                  onClick={() => {
-                    if (!selectedSize) {
-                      alert("Please select a size");
-                      return;
-                    }
-                    alert(
-                      `Added ${quantity} ${product.name} in ${selectedColor} color, size ${selectedSize} to cart`
+                  onClick={() => {                    
+                    handleAddToCart(
+                      product._id,
+                      selectedColor,
+                      selectedSize,
+                      quantity
                     );
                   }}
                   className={`w-[450px] h-12 text-white rounded-full transition-colors border-2 border-gray-300 p-2 ${
                     !selectedColor || !selectedSize
                       ? "bg-gray-400 cursor-not-allowed"
                       : "bg-black hover:bg-gray-800"
-                  }`}>
+                  }`}
+                >
                   Add to Cart
                 </button>
+                <ToastContainer />
               </div>
             </div>
           </div>

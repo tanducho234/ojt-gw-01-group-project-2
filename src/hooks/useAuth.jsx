@@ -6,8 +6,7 @@ import { useLocalStorage } from "./useLocalStorage";
 import axios from "axios";
 const AuthContext = createContext();
 
-
-const URL = "https://ojt-gw-01-final-project-back-end.vercel.app"
+const URL = "https://ojt-gw-01-final-project-back-end.vercel.app";
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useLocalStorage("user", null);
@@ -17,7 +16,7 @@ export const AuthProvider = ({ children }) => {
 
   //add usefect call api to verify token
   useEffect(() => {
-    console.log("AuthContext mounted")
+    console.log("AuthContext mounted");
     const verifyToken = async () => {
       console.log("Token:", token);
       if (token) {
@@ -29,7 +28,7 @@ export const AuthProvider = ({ children }) => {
           });
 
           if (response.data.valid) {
-            console.log("Token is valid:", response.data.user)
+            console.log("Token is valid:", response.data.user);
             // Token is valid, store user info in context
             setUser(response.data.user);
           } else {
@@ -39,26 +38,30 @@ export const AuthProvider = ({ children }) => {
           console.error("Error verifying token:", error);
           logout(); // Handle error and logout
         }
-      }
-      else{
+      } else {
         setUser(null);
-        setToken(null)
+        setToken(null);
       }
     };
     verifyToken();
   }, [token]);
 
   // call this function when you want to authenticate the user
-  const login = async (role,token) => {
-    setUser({role});
+  const login = async (role, token) => {
+    setUser({ role });
     setToken(token);
-    navigate("/admin/dashboard");
+
+    if (role === "user") {
+      navigate("/products");
+    } else {
+      navigate("/admin/dashboard");
+    }
   };
 
   // call this function to sign out logged in user
   const logout = () => {
     setUser(null);
-    setToken(null); 
+    setToken(null);
     navigate("/login", { replace: true });
   };
 
@@ -67,7 +70,7 @@ export const AuthProvider = ({ children }) => {
       user,
       login,
       logout,
-      token
+      token,
     }),
     [user]
   );
