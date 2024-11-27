@@ -85,9 +85,9 @@ const Navbar = () => {
               className="w-8 h-8"
             /> */}
             <FaCartShopping size={25} />
-            <span className="absolute -top-2 -right-2 flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full">
+            {/* <span className="absolute -top-2 -right-2 flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full">
               10
-            </span>
+            </span> */}
           </Link>
           {/* <Link to="/login">
             <img

@@ -7,14 +7,14 @@ const CartItem = ({ item, onRemove, onQuantityChange }) => {
   const handleIncrease = () => {
     const newQuantity = quantity + 1;
     setQuantity(newQuantity);
-    onQuantityChange(item._id, newQuantity);
+    onQuantityChange(item.productId, newQuantity, item.color, item.size);
   };
 
   const handleDecrease = () => {
     if (quantity > 1) {
       const newQuantity = quantity - 1;
       setQuantity(newQuantity);
-      onQuantityChange(item._id, newQuantity);
+      onQuantityChange(item.productId, newQuantity, item.color, item.size);
     }
   };
 
@@ -25,7 +25,7 @@ const CartItem = ({ item, onRemove, onQuantityChange }) => {
     shadow-lg rounded-lg w-full mx-auto p-4 sm:w-[35rem] 2xl:w-full">
       {/* Nút xóa ở góc trên phải */}
       <button
-        onClick={() => onRemove(item._id)}
+        onClick={() => onRemove(item)}
         className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-full shadow-md hover:bg-red-600"
       >
         <svg
