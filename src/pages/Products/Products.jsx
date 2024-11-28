@@ -7,10 +7,15 @@ import "../../index.css";
 import "../../pages/Products/Products.css";
 import axios from "axios";
 import { AdjustmentsVerticalIcon } from "@heroicons/react/24/outline";
+import { useFetchData } from "../../hooks/useFetchData";
+import { useLocation, useNavigate } from "react-router-dom";
 
 // import Breadcrumb from "../../components/BreadCrumb/BreadCrumb";
 
 function Products() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
   // State to hold the filter values
   const [showFilters, setShowFilters] = useState(false);
   const [price, setPrice] = useState([25, 200]);
@@ -22,9 +27,8 @@ function Products() {
   const [selectedDressStyle, setSelectedDressStyle] = useState("");
   const [selectedBrand, setSelectedBrand] = useState(""); // Add state for dress style
 
-  const [categories, setCategories] = useState([]);
-  const [styles, setStyles] = useState([]);
-  const [brands, setBrands] = useState([]);
+  const { categories, styles, brands } = useFetchData();
+
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState(products);
 
@@ -33,25 +37,19 @@ function Products() {
   // Calculate total pages
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
   const [sortCriteria, setSortCriteria] = useState("");
-
+  const [queryString, setQueryString] = useState(window.location.search);
   const handleSortChange = (e) => {
     const selectedSortCriteria = e.target.value;
+    console.log(selectedSortCriteria);
+
+    const searchParams = new URLSearchParams(window.location.search);
+    searchParams.set("sortBy", selectedSortCriteria); // Set the sortby parameter
+    navigate({
+      pathname: location.pathname, // Keep the same path
+      search: `?${searchParams.toString()}`, // Update the query string
+    });
+
     setSortCriteria(selectedSortCriteria); // Update the sort criteria state
-
-    let sortedFiltered = [...filteredProducts]; // Make a copy of the filtered array
-
-    if (selectedSortCriteria === "priceLowToHigh") {
-      sortedFiltered = sortedFiltered.sort((a, b) => a.price - b.price);
-    } else if (selectedSortCriteria === "priceHighToLow") {
-      sortedFiltered = sortedFiltered.sort((a, b) => b.price - a.price);
-    } else if (selectedSortCriteria === "rating") {
-      sortedFiltered = sortedFiltered.sort(
-        (a, b) => b.totalRating - a.totalRating
-      ); // Assuming totalRating is the correct field
-    }
-
-    // Update the filtered state with the sorted results
-    setFilteredProducts(sortedFiltered);
   };
 
   const handleSliderChange = (index, value) => {
@@ -77,59 +75,79 @@ function Products() {
   // Function to handle filter application
   // Function to handle filter application
   const applyFilters = () => {
-    let filtered = products;
+    // let filtered = products;
 
-    // Filter by price range
-    filtered = filtered.filter((product) => {
-      const effectivePrice =
-        product.salePercentage !== 0
-          ? product.price - (product.price * product.salePercentage) / 100
-          : product.price;
+    // // Filter by price range
+    // filtered = filtered.filter((product) => {
+    //   const effectivePrice =
+    //     product.salePercentage !== 0
+    //       ? product.price - (product.price * product.salePercentage) / 100
+    //       : product.price;
 
-      return effectivePrice >= price[0] && effectivePrice <= price[1];
+    //   return effectivePrice >= price[0] && effectivePrice <= price[1];
+    // });
+
+    // // Filter by selected color (if any)
+    // if (selectedColor) {
+    //   filtered = filtered.filter((product) =>
+    //     product.colors.some((colorObj) => colorObj.color === selectedColor)
+    //   );
+    // }
+
+    // // Filter by selected size (if any)
+    // if (selectedSize) {
+    //   filtered = filtered.filter((product) =>
+    //     product.colors.some((color) =>
+    //       color.sizes.some((size) => size.size === selectedSize)
+    //     )
+    //   );
+    // }
+
+    // // Filter by selected category (if any)
+    // if (selectedCategory) {
+    //   filtered = filtered.filter(
+    //     (product) => product.categoryId === selectedCategory
+    //   );
+    // }
+
+    // // Filter by selected dress style (if any)
+    // if (selectedDressStyle) {
+    //   filtered = filtered.filter(
+    //     (product) => product.styleId === selectedDressStyle
+    //   );
+    // }
+
+    // // Filter by selected brand (if any)
+    // if (selectedBrand) {
+    //   filtered = filtered.filter(
+    //     (product) => product.brandId === selectedBrand
+    //   );
+    // }
+
+    // // Update filtered products with the result
+    // setFilteredProducts(filtered);
+
+    const searchParams = new URLSearchParams(window.location.search);
+    console.log("searchParams", searchParams);
+    searchParams.set("price", `${price[0]}-${price[1]}`);
+    searchParams.set("color", selectedColor);
+    searchParams.set("size", selectedSize);
+    searchParams.set("category", selectedCategory);
+    searchParams.set("style", selectedDressStyle);
+    searchParams.set("brand", selectedBrand);
+    console.log("searchParams", searchParams);
+    // window.history.pushState(
+    //   {},
+    //   "",
+    //   `${window.location.pathname}?${searchParams.toString()}`
+    // );
+
+    navigate({
+      pathname: location.pathname, // Keep the same path
+      search: `?${searchParams.toString()}`, // Update the query string
     });
-
-    // Filter by selected color (if any)
-    if (selectedColor) {
-      filtered = filtered.filter((product) =>
-        product.colors.some((colorObj) => colorObj.color === selectedColor)
-      );
-    }
-
-    // Filter by selected size (if any)
-    if (selectedSize) {
-      filtered = filtered.filter((product) =>
-        product.colors.some((color) =>
-          color.sizes.some((size) => size.size === selectedSize)
-        )
-      );
-    }
-
-    // Filter by selected category (if any)
-    if (selectedCategory) {
-      filtered = filtered.filter(
-        (product) => product.categoryId === selectedCategory
-      );
-    }
-
-    // Filter by selected dress style (if any)
-    if (selectedDressStyle) {
-      filtered = filtered.filter(
-        (product) => product.styleId === selectedDressStyle
-      );
-    }
-
-    // Filter by selected brand (if any)
-    if (selectedBrand) {
-      filtered = filtered.filter(
-        (product) => product.brandId === selectedBrand
-      );
-    }
-
-    // Update filtered products with the result
-    setFilteredProducts(filtered);
-
     // Reset to the first page after applying filters
+    // setQueryString(window.location.search);
     setCurrentPage(1);
   };
   useEffect(() => {
@@ -152,31 +170,25 @@ function Products() {
 
   // Function to handle filter changes
   useEffect(() => {
+    console.log("locationchange", location.search);
+    const queryParams = new URLSearchParams(location.search);
+
+    // const queryString = window.location.search;
+    const searchParams = new URLSearchParams(queryParams);
+    const hasSortBy = searchParams.has("sortBy");
+    if (hasSortBy) {
+      const sortByValue = searchParams.get("sortBy");
+      setSortCriteria(sortByValue);
+    }
+
+    // Gọi API sản phẩm với query string đầy đủ
+    // fetchProducts(queryString);
     const fetchData = async () => {
       try {
-        const [
-          categoryResponse,
-          styleResponse,
-          brandResponse,
-          productResponse,
-        ] = await Promise.all([
-          axios.get(
-            "https://ojt-gw-01-final-project-back-end.vercel.app/api/categories"
-          ),
-          axios.get(
-            "https://ojt-gw-01-final-project-back-end.vercel.app/api/styles"
-          ),
-          axios.get(
-            "https://ojt-gw-01-final-project-back-end.vercel.app/api/brands"
-          ),
-          axios.get(
-            "https://ojt-gw-01-final-project-back-end.vercel.app/api/products"  
-          ),
+        const [productResponse] = await Promise.all([
+          axios.get(`https://ojt-gw-01-final-project-back-end.vercel.app/api/products?${queryParams}`),
         ]);
-
-        setCategories(categoryResponse.data);
-        setStyles(styleResponse.data);
-        setBrands(brandResponse.data);
+        console.log("productResponse", productResponse.data);
         setProducts(productResponse.data);
         setFilteredProducts(productResponse.data);
       } catch (error) {
@@ -185,7 +197,7 @@ function Products() {
     };
 
     fetchData();
-  }, []); // Empty dependency array to run only once on component mount
+  }, [location]); // Empty dependency array to run only once on component mount
   // Empty dependency array to run only once on component mount
 
   // Get products for the current page
@@ -197,7 +209,13 @@ function Products() {
   );
 
   // Handle page change
-  const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
 
   return (
     <div className="flex w-full flex-wrap p-5">
@@ -205,16 +223,14 @@ function Products() {
         className={`absolute z-20 mt-[60px] bg-white  border rounded-t-lg top-0 left-0 rounded-2xl shadow-2xl shadow-gray h-[1250px] 
            p-3 transition-transform duration-300 max-[540px]:h-[80rem] md:h-[1200px] 2xl:h-[1300px] ${
              showFilters ? "translate-x-0" : "-translate-x-full"
-           } sm:translate-x-0 sm:block max-[375px]:w-full max-[414px]:w-full max-[430px]:w-full md:w-60 max-[820px]:w-60 2xl:w-80`}
-      >
+           } sm:translate-x-0 sm:block max-[375px]:w-full max-[414px]:w-full max-[430px]:w-full md:w-60 max-[820px]:w-60 2xl:w-80`}>
         {" "}
         <div className=" p-5">
           <div>
             <h3 className="font-bold text-2xl">Filters</h3>
             <button
               className="absolute top-8 right-6 text-[20px] text-gray-500 md:hidden sm:hidden "
-              onClick={() => setShowFilters(false)}
-            >
+              onClick={() => setShowFilters(false)}>
               &times; {/* Close button */}
             </button>
           </div>
@@ -237,8 +253,7 @@ function Products() {
                       setSelectedCategory(
                         selectedCategory === category._id ? "" : category._id
                       )
-                    }
-                  >
+                    }>
                     {category.name}
                   </button>
                 ))}
@@ -267,8 +282,7 @@ function Products() {
                   width: `${
                     ((price[1] - price[0]) / (maxPrice - minPrice)) * 100
                   }%`,
-                }}
-              ></div>
+                }}></div>
 
               {/* Left Slider */}
               <input
@@ -341,8 +355,7 @@ function Products() {
                   }}
                   onClick={() =>
                     setSelectedColor(selectedColor === color ? "" : color)
-                  }
-                >
+                  }>
                   {selectedColor === color ? "✓" : ""}
                 </span>
               ))}
@@ -361,8 +374,7 @@ function Products() {
                   }`}
                   onClick={() =>
                     setSelectedSize(selectedSize === size ? "" : size)
-                  }
-                >
+                  }>
                   {size}
                 </button>
               ))}
@@ -385,8 +397,7 @@ function Products() {
                     setSelectedDressStyle(
                       selectedDressStyle === style._id ? "" : style._id
                     )
-                  }
-                >
+                  }>
                   {style.name}
                 </button>
               ))}
@@ -409,8 +420,7 @@ function Products() {
                     setSelectedBrand(
                       selectedBrand === brand._id ? "" : brand._id
                     )
-                  }
-                >
+                  }>
                   {brand.name}
                 </button>
               ))}
@@ -420,47 +430,45 @@ function Products() {
           <button
             className="apply-filter-btn w-full bg-black text-white border-none cursor-pointer 
             text-lg rounded-full py-2 px-1 hover:bg-gray hover:text-white font-semibold md:mt-[20px]"
-            onClick={applyFilters}
-          >
+            onClick={applyFilters}>
             Apply Filter
           </button>
         </div>
       </aside>
       <div
         className="flex flex-col items-center space-y-6 w-full 
-      sm:max-sm:ml-80 md:ml-[240px] "
-      >
+      sm:max-sm:ml-80 md:ml-[240px] ">
         <div
           className="flex justify-between w-full mt-2 sm:px-0 
-        md:mt-0 max-[820px]:justify-end "
-        >
+        md:mt-0 max-[820px]:justify-end ">
           <div
             className="flex items-center gap-1 
-          max-[820px]:ml-[20px] lg:ml-[500px] xl:ml-[760px] 2xl:ml-[68rem]"
-          >
+          max-[820px]:ml-[20px] lg:ml-[500px] xl:ml-[760px] 2xl:ml-[68rem]">
             <label
               htmlFor="sort"
-              className="text-[16px] font-medium 2xl:text-xl 2xl:font-semibold"
-            >
+              className="text-[16px] font-medium 2xl:text-xl 2xl:font-semibold">
               Sort By:{" "}
             </label>
             <select
               id="sort"
               value={sortCriteria}
               onChange={handleSortChange}
-              className="py-1 pr-8 border border-gray rounded-md 2xl:py-2 2xl:px-8"
-            >
+              className="py-1 pr-8 border border-gray rounded-md 2xl:py-2 2xl:px-8">
               <option value="">Select...</option>
               <option value="priceLowToHigh">Price: Low to High</option>
               <option value="priceHighToLow">Price: High to Low</option>
-              <option value="rating">Rating</option>
+              <option value="createdAtNewToOld">Newest First</option>
+              <option value="createdAtOldToNew">Oldest First</option>
+              <option value="ratingHighToLow">Rating: High to Low</option>
+              <option value="ratingLowToHigh">Rating: Low to High</option>
+              <option value="salePercentage">Sale Percentage</option>
+              <option value="soldQuantity">Sold Quantity</option>
             </select>
           </div>
           <div className="">
             <button
               className="ml-[60px] w-[30px] h-[30px] bg-[#e4e4e7] border rounded-full md:hidden sm:hidden  lg:hidden"
-              onClick={() => setShowFilters(!showFilters)}
-            >
+              onClick={() => setShowFilters(!showFilters)}>
               {showFilters}
               <AdjustmentsVerticalIcon className="h-6 w-7 text-gray-600" />
             </button>
@@ -469,12 +477,10 @@ function Products() {
 
         <section
           className="product-grid w-full 2xl:w-[75%]"
-          style={{ minHeight: "calc(3 * (300px + 32px))" }}
-        >
+          style={{ minHeight: "calc(3 * (300px + 32px))" }}>
           <div
             className="product-grid grid grid-cols-2 gap-8 w-full sm:grid-cols-2 
-          md:grid-cols-2 lg:grid-cols-3 max-[820px]:grid-cols-2 lg:gap-x-0 xl:grid-cols-3"
-          >
+          md:grid-cols-2 lg:grid-cols-3 max-[820px]:grid-cols-2 lg:gap-x-0 xl:grid-cols-3">
             {currentProducts.length > 0 ? (
               currentProducts
                 .slice(0, window.innerWidth <= 970 ? 6 : 12) // Hiển thị 6 sản phẩm cho sm và md, 9 cho lg và xl

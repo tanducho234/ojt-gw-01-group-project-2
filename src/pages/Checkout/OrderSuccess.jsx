@@ -13,8 +13,7 @@ const OrderSuccess = () => {
             src="https://cdnl.iconscout.com/lottie/premium/thumb/successful-money-dollar-sign-transaction-animated-icon-download-in-lottie-json-gif-static-svg-file-formats--payment-success-invoice-loading-pack-user-interface-icons-8157889.mp4"
             autoPlay
             loop
-            muted
-          ></video>
+            muted></video>
 
           <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
             Order Successful!
@@ -33,19 +32,17 @@ const OrderSuccess = () => {
           </div>
 
           <div className="mt-6">
-            <button
-              type="button"
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
+            <Link
+              to={`/profile/orders`}
+              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
               View Order Details
-            </button>
+            </Link>
           </div>
 
           <div className="mt-4">
             <Link
               to="/products"
-              className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
-            >
+              className="text-sm font-medium text-indigo-600 hover:text-indigo-500">
               Continue Shopping
             </Link>
           </div>
