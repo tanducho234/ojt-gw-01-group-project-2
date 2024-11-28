@@ -33,6 +33,7 @@ import OrderSummary from "./components/OrderProfileComponent";
 import OrderDetailsComponent from "./components/OrderDetailsComponent";
 import Order from "./pages/Profile/Order/Order";
 import Review from "./pages/Profile/Reviews/Review";
+
 function App() {
   return (
     <FetchDataProvider>
