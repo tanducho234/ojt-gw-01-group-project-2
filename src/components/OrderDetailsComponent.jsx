@@ -115,12 +115,11 @@ const OrderDetail = () => {
   return (
     <div className="mt-8 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       <Link
-        to="/OrderSummary"
+        to="/profile/orders"
         className="text-gray-600 text-sm flex items-center mb-4"
       >
         <FontAwesomeIcon icon={faChevronLeft} className="mr-2" /> Back to orders
       </Link>
-
       {/* Order Details Title Section */}
       <div className="bg-white border rounded-lg p-6 shadow-md mb-6">
         <div className="flex justify-between items-center mb-4">

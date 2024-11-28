@@ -19,7 +19,7 @@ function Home({ customerReviews = [] }) {
   const [scrollLeft, setScrollLeft] = useState(0);
   const [autoScrollEnabled, setAutoScrollEnabled] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
-  
+
   const brandContainerRef = useRef(null);
   const reviewContainerRef = useRef(null);
   const scrollRef = useRef(0);
@@ -38,13 +38,14 @@ function Home({ customerReviews = [] }) {
 
     const scrollAmount = 300;
     const maxScroll = container.scrollWidth - container.clientWidth;
-    const newScrollLeft = direction === 'left' 
-      ? Math.max(0, container.scrollLeft - scrollAmount)
-      : Math.min(maxScroll, container.scrollLeft + scrollAmount);
+    const newScrollLeft =
+      direction === "left"
+        ? Math.max(0, container.scrollLeft - scrollAmount)
+        : Math.min(maxScroll, container.scrollLeft + scrollAmount);
 
     container.scrollTo({
       left: newScrollLeft,
-      behavior: "smooth"
+      behavior: "smooth",
     });
   };
 
@@ -72,7 +73,7 @@ function Home({ customerReviews = [] }) {
 
       if (response.status === 200) {
         const products = response.data;
-        
+
         const sortedByDate = [...products]
           .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
           .slice(0, 4);
@@ -90,7 +91,6 @@ function Home({ customerReviews = [] }) {
   };
 
   useEffect(() => {
-    
     fetchRandomTopReviews();
     fetchAndSortProducts();
 
@@ -271,8 +271,7 @@ function Home({ customerReviews = [] }) {
           onMouseMove={handleDragMove}
           onTouchStart={handleDragStart}
           onTouchEnd={handleDragEnd}
-          onTouchMove={handleDragMove}
-        >
+          onTouchMove={handleDragMove}>
           <div className="flex gap-16 md:gap-36 min-w-max">
             {[...brands, ...brands, ...brands].map((brand, index) => (
               <img
@@ -296,7 +295,9 @@ function Home({ customerReviews = [] }) {
             <ProductCard key={index} product={product} root="/products" />
           ))}
         </div>
-        <Link to="/products?sort=createAt&order=desc" className="px-4 md:px-6 py-2 md:py-3 bg-transparent border-2 border-black rounded cursor-pointer transition-all duration-300 hover:bg-black hover:text-white hover:shadow-lg transform hover:-translate-y-1 text-sm md:text-base">
+        <Link
+          to="/products?sortBy=createdAtNewToOld"
+          className="px-4 md:px-6 py-2 md:py-3 bg-transparent border-2 border-black rounded cursor-pointer transition-all duration-300 hover:bg-black hover:text-white hover:shadow-lg transform hover:-translate-y-1 text-sm md:text-base">
           View All
         </Link>
       </section>
@@ -309,13 +310,12 @@ function Home({ customerReviews = [] }) {
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-5 my-6 md:my-10 w-full max-w-7xl">
           {topSelling.map((product, index) => (
-            <ProductCard key={index} product={product} />
+            <ProductCard key={index} product={product}  root="/products" />
           ))}
         </div>
         <Link
-          to="/products?sort=soldQuantity&order=desc"
-          className="px-4 md:px-6 py-2 md:py-3 bg-transparent border-2 border-black rounded cursor-pointer transition-all duration-300 hover:bg-black hover:text-white hover:shadow-lg transform hover:-translate-y-1 text-sm md:text-base"
-        >
+          to="/products?sortBy=soldQuantity"
+          className="px-4 md:px-6 py-2 md:py-3 bg-transparent border-2 border-black rounded cursor-pointer transition-all duration-300 hover:bg-black hover:text-white hover:shadow-lg transform hover:-translate-y-1 text-sm md:text-base">
           View All
         </Link>
       </section>
@@ -328,8 +328,7 @@ function Home({ customerReviews = [] }) {
           {["Casual", "Formal", "Party", "GYM"].map((style) => (
             <div
               key={style}
-              className="bg-transparent transform transition-all duration-500 hover:scale-105 hover:shadow-lg"
-            >
+              className="bg-transparent transform transition-all duration-500 hover:scale-105 hover:shadow-lg">
               <img
                 src={`/images/${style}.png`}
                 alt={`${style} Style`}
@@ -347,16 +346,14 @@ function Home({ customerReviews = [] }) {
 
         <div className="relative mt-6 md:mt-10">
           <button
-            onClick={() => handleReviewScroll('left')}
-            className="absolute top-1/2 left-0 -translate-y-1/2 bg-gray-300 hover:bg-gray-400 text-white rounded-full w-10 h-10 flex items-center justify-center shadow-md focus:outline-none z-10"
-          >
+            onClick={() => handleReviewScroll("left")}
+            className="absolute top-1/2 left-0 -translate-y-1/2 bg-gray-300 hover:bg-gray-400 text-white rounded-full w-10 h-10 flex items-center justify-center shadow-md focus:outline-none z-10">
             &lt;
           </button>
 
           <div
             ref={reviewContainerRef}
-            className="flex gap-4 md:gap-5 overflow-x-auto hide-scrollbar px-12 scroll-smooth"
-          >
+            className="flex gap-4 md:gap-5 overflow-x-auto hide-scrollbar px-12 scroll-smooth">
             {reviews.length > 0 ? (
               reviews.map((review, index) => (
                 <Review key={index} review={review} />
@@ -369,9 +366,8 @@ function Home({ customerReviews = [] }) {
           </div>
 
           <button
-            onClick={() => handleReviewScroll('right')}
-            className="absolute top-1/2 right-0 -translate-y-1/2 bg-gray-300 hover:bg-gray-400 text-white rounded-full w-10 h-10 flex items-center justify-center shadow-md focus:outline-none z-10"
-          >
+            onClick={() => handleReviewScroll("right")}
+            className="absolute top-1/2 right-0 -translate-y-1/2 bg-gray-300 hover:bg-gray-400 text-white rounded-full w-10 h-10 flex items-center justify-center shadow-md focus:outline-none z-10">
             &gt;
           </button>
         </div>

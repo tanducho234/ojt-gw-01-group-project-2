@@ -112,7 +112,7 @@ const OrderSummary = () => {
           {/* Footer */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-6 pt-6 border-t">
             <Link
-              to={`/OrderSummary/${order._id}`}
+              to={`${order._id}`}
               state={{ order }}
               className="text-black font-medium text-sm sm:text-base mb-2 sm:mb-0"
             >
