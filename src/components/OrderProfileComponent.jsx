@@ -6,7 +6,7 @@ import axios from "axios";
 import { useAuth } from "../hooks/useAuth";
 
 const OrderSummary = () => {
-    const { token } = useAuth();
+  const { token } = useAuth();
 
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -27,7 +27,7 @@ const OrderSummary = () => {
         setLoading(false);
       } catch (err) {
         setError("Failed to fetch orders");
-        setLoading(false);
+        setLoading(true);
       }
     };
 
@@ -82,7 +82,10 @@ const OrderSummary = () => {
           {/* Product Items */}
           <div className="space-y-4 sm:space-y-6">
             {order.products.map((item, index) => (
-              <div className="flex items-start sm:items-center" key={item.productId}>
+              <div
+                className="flex items-start sm:items-center"
+                key={item.productId}
+              >
                 <img
                   src={item.imgLink}
                   alt={item.name}
