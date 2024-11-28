@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import Review from "../../components/Review/Review";
 import StarRating from "../../components/StarRating";
-import Breadcrumb from "../../components/BreadCrumb";
 import { useAuth } from "../../hooks/useAuth";
+import { Tabs } from "antd";
 
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Account from "../Profile/Account/Account";
+import { HomeOutlined, ProductOutlined, ShoppingCartOutlined } from "@ant-design/icons";
+import { Breadcrumb } from "antd";
 
 const LoadingSpinner = () => (
   <div className="flex justify-center items-center h-screen">
@@ -16,57 +19,6 @@ const LoadingSpinner = () => (
 );
 
 const ProductDetail = () => {
-  const product2 = {
-    id: "1",
-    name: "Summer Floral Dress",
-    category: "Dress",
-    price: 39.99,
-    salePercentage: 20,
-    colors: ["Red", "Blue", "Green", "Pink", "Black"],
-    size: ["S", "M", "L", "XL"],
-    dress_style: "Casual",
-    img_url: "https://placehold.co/295x298",
-    desc: "Absolutely love this dress! The fit is perfect, and the colors are so vibrant. Definitely my new go-to summer dress!",
-    rating: 3,
-    reviews: [
-      {
-        reviewer: "Alice W.",
-        date: "2024-08-01",
-        star: 5,
-        feedback:
-          "Absolutely love this dress! The fit is perfect, and the colors are so vibrant. Definitely my new go-to summer dress!",
-      },
-      {
-        reviewer: "John D.",
-        date: "2024-08-10",
-        star: 4,
-        feedback:
-          "Great dress! The fabric feels nice, but I wish it came in more sizes. I had to go a size up, but still happy with the purchase.",
-      },
-      {
-        reviewer: "Samantha R.",
-        date: "2024-08-15",
-        star: 3,
-        feedback:
-          "The dress is cute, but I found the material a bit thinner than I expected. It's still comfortable, just not as high quality as I hoped.",
-      },
-      {
-        reviewer: "Rachel P.",
-        date: "2024-08-20",
-        star: 2,
-        feedback:
-          "I was really excited about this dress, but it didn't fit as well as I thought. The sizing seems off, and it's a bit too short for me.",
-      },
-      {
-        reviewer: "Megan S.",
-        date: "2024-09-01",
-        star: 4,
-        feedback:
-          "Really happy with my purchase. The dress is comfy and looks great for casual outings.",
-      },
-    ],
-  };
-
   const { token } = useAuth();
   const [loading, setLoading] = useState(true);
 
@@ -76,20 +28,45 @@ const ProductDetail = () => {
   const [quantity, setQuantity] = useState(1);
   const [product, setProduct] = useState({});
   const [salePrice, setSalePrice] = useState(0);
-  const stars = Array.from({ length: 5 }, (_, index) =>
-    index < Math.floor(product2.rating) ? "★" : "☆"
-  );
+  const [reviews, setReview] = useState([]);
+
+  const items = [
+    {
+      key: "1",
+      label: "Details",
+      children: <pre>{product.description}</pre>,
+    },
+    {
+      key: "2",
+      label: "Reviews",
+      children: (
+        <>
+          <div className="flex items-center gap-2 mb-4">
+            <span className="text-lg font-semibold">
+              All review ({reviews.length})
+            </span>
+          </div>
+          <div className="flex flex-wrap justify-evenly bg-[#f9fafd]  ">
+            {reviews.map((review) => (
+              <Review key={review._id} review={review} />
+            ))}
+          </div>
+        </>
+      ),
+    },
+  ];
 
   const breadcrumbPaths = [
     { name: "Products", link: "/products" },
     { name: "Product Detail", link: "" },
   ];
 
+  const onChange = (key) => {
+    console.log(key);
+  };
+
   const increment = () => setQuantity((prev) => prev + 1);
   const decrement = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
-
-  const sizes = product2.size;
-  const colors = product2.colors;
 
   const handleColorSelect = (color) => {
     setSelectedColor(color);
@@ -130,11 +107,25 @@ const ProductDetail = () => {
         // setLoading(false);
         console.log("aaaaa");
       });
+
+    axios
+      .get(
+        `https://ojt-gw-01-final-project-back-end.vercel.app/api/reviews/product/${id}`
+      )
+      .then((response) => {
+        console.log("review", response.data);
+        setReview(response.data);
+      })
+      .catch((err) => {
+        // setLoading(false);
+        console.log("Ko tim thay review");
+      });
   }, [id]);
 
   const handleAddToCart = async (productId, color, size, quantity) => {
     try {
-      const url = "https://ojt-gw-01-final-project-back-end.vercel.app/api/carts/add";
+      const url =
+        "https://ojt-gw-01-final-project-back-end.vercel.app/api/carts/add";
       const body = {
         productId: productId,
         color: color,
@@ -142,23 +133,22 @@ const ProductDetail = () => {
         quantity: quantity,
       };
       console.log("body", body);
-      
-  
+
       const response = await axios.post(url, body, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-  
+
       if (response.status === 200) {
-        toast.success("This is a toast notification !", {theme:"grey"});
+        toast.success("Product added to cart successfully!");
         // alert('Product added to cart successfully!');
       } else {
-        alert('Failed to add product to cart. Please try again.');
+        alert("Failed to add product to cart. Please try again.");
       }
     } catch (error) {
-      console.error('Error adding product to cart:', error);
-      alert('An error occurred while adding product to cart.');
+      console.error("Error adding product to cart:", error);
+      alert("An error occurred while adding product to cart.");
     }
   };
 
@@ -167,9 +157,32 @@ const ProductDetail = () => {
       {loading ? (
         <LoadingSpinner />
       ) : (
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 ">
           {/* Breadcrumb */}
-          <Breadcrumb paths={breadcrumbPaths} />
+          <Breadcrumb
+  className="h-10 mt-5" // Set a height of 12 Tailwind spacing units (~3rem)
+  items={[
+    {
+      title: (
+        <Link to="/home">
+          <HomeOutlined />
+        </Link>
+      ),
+    },
+    {
+      href: "",
+      title: (
+        <Link to="/products">
+          <span>Products</span>
+        </Link>
+      ),
+    },
+    {
+      title: product.name, // Dynamically showing the current product's name
+    },
+  ]}
+/>
+
 
           {/* Product Container */}
           <div className="flex flex-wrap lg:flex-nowrap gap-8">
@@ -317,7 +330,7 @@ const ProductDetail = () => {
                 </div>
                 <button
                   disabled={!selectedColor || !selectedSize}
-                  onClick={() => {                    
+                  onClick={() => {
                     handleAddToCart(
                       product._id,
                       selectedColor,
@@ -337,6 +350,15 @@ const ProductDetail = () => {
               </div>
             </div>
           </div>
+
+          <Tabs
+            centered
+            className="w-full"
+            defaultActiveKey="1"
+            items={items}
+            onChange={onChange}
+            size={1000}
+          />
         </div>
       )}
     </>

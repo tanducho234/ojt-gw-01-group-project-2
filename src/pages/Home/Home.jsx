@@ -309,7 +309,7 @@ function Home({ customerReviews = [] }) {
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-5 my-6 md:my-10 w-full max-w-7xl">
           {topSelling.map((product, index) => (
-            <ProductCard key={index} product={product} />
+            <ProductCard key={index} product={product}  root="/products" />
           ))}
         </div>
         <Link
