@@ -1,11 +1,21 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom"; // Import useLocation from react-router-dom
-import { FaCartShopping, FaCircleUser } from "react-icons/fa6";
+import {
+  FaCartShopping,
+  FaCircleUser,
+  FaArrowRightFromBracket,
+} from "react-icons/fa6";
+import { useAuth } from "../../hooks/useAuth";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!isMobileMenuOpen);
+  };
+  const { logout, user } = useAuth();
+
+  const handleLogout = () => {
+    logout();
   };
   return (
     <header className="bg-white shadow-md sticky top-0 z-50">
@@ -24,17 +34,15 @@ const Navbar = () => {
           <ul className="flex items-center space-x-6">
             <li>
               <Link
-                to="/products?sort=createAt&order=desc"
-                className="text-gray-600 hover:text-black transition"
-              >
+                to="/products?sortBy=createdAtNewToOld"
+                className="text-gray-600 hover:text-black transition">
                 New Arrivals
               </Link>
             </li>
             <li>
               <Link
-                to="/products?sort=salePercentage&order=desc"
-                className="text-gray-600 hover:text-black transition"
-              >
+                to="/products?sortBy=salePercentage"
+                className="text-gray-600 hover:text-black transition">
                 On Sale
               </Link>
             </li>
@@ -42,8 +50,7 @@ const Navbar = () => {
             <li>
               <Link
                 to="about"
-                className="text-gray-600 hover:text-black transition"
-              >
+                className="text-gray-600 hover:text-black transition">
                 About Us
               </Link>
             </li>
@@ -75,9 +82,9 @@ const Navbar = () => {
               className="w-8 h-8"
             /> */}
             <FaCartShopping size={25} />
-            <span className="absolute -top-2 -right-2 flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full">
+            {/* <span className="absolute -top-2 -right-2 flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full">
               10
-            </span>
+            </span> */}
           </Link>
           {/* <Link to="/login">
             <img
@@ -86,11 +93,28 @@ const Navbar = () => {
               className="w-8 h-8"
             />
           </Link> */}
-          <FaCircleUser size={25} />{" "}
+          {!user && (
+            <Link to="/login">
+              <FaCircleUser size={25} />
+            </Link>
+          )}
+          {user && (
+            <Link to="/profile/account">
+              <FaCircleUser size={25} />
+            </Link>
+          )}
+
+          {user && (
+            <FaArrowRightFromBracket
+              size={25}
+              onClick={handleLogout}
+              className="cursor-pointer"
+            />
+          )}
+
           <button
             className="lg:hidden text-gray-600 focus:outline-none"
-            onClick={toggleMobileMenu}
-          >
+            onClick={toggleMobileMenu}>
             ☰
           </button>
         </div>
@@ -103,32 +127,28 @@ const Navbar = () => {
             <li>
               <Link
                 to="#"
-                className="block text-gray-700 hover:bg-gray-100 px-4 py-2 rounded"
-              >
+                className="block text-gray-700 hover:bg-gray-100 px-4 py-2 rounded">
                 Shop
               </Link>
             </li>
             <li>
               <Link
-                to="/products?sort=salePercentage&order=desc"
-                className="block text-gray-700 hover:bg-gray-100 px-4 py-2 rounded"
-              >
+                to="/products?sortBy=salePercentage"
+                className="block text-gray-700 hover:bg-gray-100 px-4 py-2 rounded">
                 On Sale
               </Link>
             </li>
             <li>
               <Link
-                to="/products?sort=createAt&order=desc"
-                className="block text-gray-700 hover:bg-gray-100 px-4 py-2 rounded"
-              >
+                to="/products?sortBy=createdAtNewToOld"
+                className="block text-gray-700 hover:bg-gray-100 px-4 py-2 rounded">
                 New Arrivals
               </Link>
             </li>
             <li>
               <Link
                 to="about"
-                className="block text-gray-700 hover:bg-gray-100 px-4 py-2 rounded"
-              >
+                className="block text-gray-700 hover:bg-gray-100 px-4 py-2 rounded">
                 About Us
               </Link>
             </li>
