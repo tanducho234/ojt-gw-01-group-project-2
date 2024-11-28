@@ -544,9 +544,8 @@ const Checkout = () => {
                     Order Confirmation
                   </h2>
                   <Popconfirm
-                    title="Delete the task"
-                    description="Are you sure to delete this task?"
-                    onConfirm={handleConfirmOrder}
+                    title="Place Order"
+                    description="Are you sure you want to place this order?"                    onConfirm={handleConfirmOrder}
                     // onCancel={cancel}
                     okText="Yes"
                     cancelText="No">

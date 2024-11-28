@@ -60,7 +60,7 @@ const OrderDetail = () => {
 
   return (
     <div className="mt-8 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-      <Link to="/OrderSummary" className="text-gray-600 text-sm flex items-center mb-4">
+      <Link to="/profile/orders" className="text-gray-600 text-sm flex items-center mb-4">
         <FontAwesomeIcon icon={faChevronLeft} className="mr-2" /> Back to orders
       </Link>
 

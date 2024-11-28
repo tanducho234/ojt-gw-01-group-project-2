@@ -31,6 +31,7 @@ import Account from "./pages/Profile/Account/Account";
 import { ProfileLayout } from "./utils/ProfileLayout";
 import OrderSummary from "./components/OrderProfileComponent";
 import OrderDetailsComponent from "./components/OrderDetailsComponent";
+import Order from "./pages/Profile/Order/Order";
 function App() {
   return (
     <FetchDataProvider>
@@ -56,6 +57,11 @@ function App() {
           <Route path="/profile" element={<ProfileLayout />}>
             {/* Nested routes within Profile */}
             <Route path="account" element={<Account />} />
+            <Route path="orders" element={<OrderSummary />} />
+            <Route path="orders/:orderId" element={<OrderDetailsComponent />} />
+
+
+
             
             {/* <Route path="settings" element={<AccountSettings />} /> */}
           </Route>
