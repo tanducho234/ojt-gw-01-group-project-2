@@ -10,6 +10,9 @@ import { AdjustmentsVerticalIcon } from "@heroicons/react/24/outline";
 import { useFetchData } from "../../hooks/useFetchData";
 import { useLocation, useNavigate } from "react-router-dom";
 
+import { toast, ToastContainer } from "react-toastify"; // Import toastify
+import "react-toastify/dist/ReactToastify.css"; // Import style của toastify
+
 // import Breadcrumb from "../../components/BreadCrumb/BreadCrumb";
 
 function Products() {
@@ -184,16 +187,35 @@ function Products() {
     // Gọi API sản phẩm với query string đầy đủ
     // fetchProducts(queryString);
     const fetchData = async () => {
-      try {
-        const [productResponse] = await Promise.all([
-          axios.get(`https://ojt-gw-01-final-project-back-end.vercel.app/api/products?${queryParams}`),
-        ]);
-        console.log("productResponse", productResponse.data);
-        setProducts(productResponse.data);
-        setFilteredProducts(productResponse.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
+      // Sử dụng toast.promise để quản lý trạng thái của Promise
+      await toast.promise(
+        axios
+          .get(
+            `https://ojt-gw-01-final-project-back-end.vercel.app/api/products?${queryParams}`
+          )
+          .then((productResponse) => {
+            console.log("productResponse", productResponse.data);
+            setProducts(productResponse.data);
+            setFilteredProducts(productResponse.data);
+          }),
+        {
+          pending: "Loading products...", // Thông báo khi đang tải dữ liệu
+          success: {
+            render() {
+              return ""; // Thông báo thành công
+            },
+            autoClose: 500, // Set thời gian hiển thị thông báo thành công là 3 giây
+          },          error: {
+            render({ data }) {
+              // Hiển thị thông báo lỗi, nếu có
+              return (
+                data.response?.data?.message ||
+                "Error fetching products. Please try again."
+              );
+            },
+          },
+        }
+      );
     };
 
     fetchData();
@@ -219,6 +241,8 @@ function Products() {
 
   return (
     <div className="flex w-full flex-wrap p-5">
+      <ToastContainer />
+
       <aside
         className={`absolute z-20 mt-[60px] bg-white  border rounded-t-lg top-0 left-0 rounded-2xl shadow-2xl shadow-gray h-[1250px] 
            p-3 transition-transform duration-300 max-[540px]:h-[80rem] md:h-[1200px] 2xl:h-[1300px] ${

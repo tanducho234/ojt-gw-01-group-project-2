@@ -34,7 +34,14 @@ const ProductDetail = () => {
     {
       key: "1",
       label: "Details",
-      children: <pre>{product.description}</pre>,
+      children: <div>
+      {product.description.split('\n').map((line, index) => (
+        <React.Fragment key={index}>
+          {line}
+          <br />
+        </React.Fragment>
+      ))}
+    </div>,
     },
     {
       key: "2",

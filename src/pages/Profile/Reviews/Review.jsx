@@ -55,7 +55,7 @@ const Review = () => {
                   />
                   
                   <span className="text-gray-500 text-sm">
-                    Posted on {review.date}
+                    Posted on {new Date(review.date).toLocaleDateString('en-CA')}
                   </span>
                 </div>
               </div>
