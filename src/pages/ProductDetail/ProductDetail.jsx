@@ -9,7 +9,11 @@ import { Tabs } from "antd";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Account from "../Profile/Account/Account";
-import { HomeOutlined, ProductOutlined, ShoppingCartOutlined } from "@ant-design/icons";
+import {
+  HomeOutlined,
+  ProductOutlined,
+  ShoppingCartOutlined,
+} from "@ant-design/icons";
 import { Breadcrumb } from "antd";
 
 const LoadingSpinner = () => (
@@ -34,9 +38,7 @@ const ProductDetail = () => {
     {
       key: "1",
       label: "Details",
-      children: <div>
-      {product.description}
-    </div>,
+      children: <div>{product.description}</div>,
     },
     {
       key: "2",
@@ -150,7 +152,7 @@ const ProductDetail = () => {
       }
     } catch (error) {
       console.error("Error adding product to cart:", error);
-      alert("An error occurred while adding product to cart.");
+      toast.error("Please login first to add products to cart");
     }
   };
 
@@ -162,29 +164,28 @@ const ProductDetail = () => {
         <div className="container mx-auto px-4 ">
           {/* Breadcrumb */}
           <Breadcrumb
-  className="h-10 mt-5" // Set a height of 12 Tailwind spacing units (~3rem)
-  items={[
-    {
-      title: (
-        <Link to="/home">
-          <HomeOutlined />
-        </Link>
-      ),
-    },
-    {
-      href: "",
-      title: (
-        <Link to="/products">
-          <span>Products</span>
-        </Link>
-      ),
-    },
-    {
-      title: product.name, // Dynamically showing the current product's name
-    },
-  ]}
-/>
-
+            className="h-10 mt-5" // Set a height of 12 Tailwind spacing units (~3rem)
+            items={[
+              {
+                title: (
+                  <Link to="/home">
+                    <HomeOutlined />
+                  </Link>
+                ),
+              },
+              {
+                href: "",
+                title: (
+                  <Link to="/products">
+                    <span>Products</span>
+                  </Link>
+                ),
+              },
+              {
+                title: product.name, // Dynamically showing the current product's name
+              },
+            ]}
+          />
 
           {/* Product Container */}
           <div className="flex flex-wrap lg:flex-nowrap gap-8">
@@ -277,8 +278,7 @@ const ProductDetail = () => {
                           selectedColor === item.color
                             ? "2px solid black"
                             : "2px solid gray",
-                      }}
-                    >
+                      }}>
                       {selectedColor === item.color && (
                         <span className="">✓</span>
                       )}
@@ -304,8 +304,7 @@ const ProductDetail = () => {
                   selectedSize === size.size
                     ? "bg-black text-white"
                     : "bg-gray-200 hover:bg-gray-300"
-                }`}
-                          >
+                }`}>
                             {size.size}
                           </button>
                         ))
@@ -318,15 +317,13 @@ const ProductDetail = () => {
                 <div className="flex items-center bg-gray-100 rounded-full">
                   <button
                     onClick={decrement}
-                    className="w-14 h-12 flex items-center justify-center text-2xl rounded-l-full hover:bg-gray-200"
-                  >
+                    className="w-14 h-12 flex items-center justify-center text-2xl rounded-l-full hover:bg-gray-200">
                     -
                   </button>
                   <span className="w-14 text-center text-lg">{quantity}</span>
                   <button
                     onClick={increment}
-                    className="w-14 h-12 flex items-center justify-center text-2xl rounded-r-full hover:bg-gray-200"
-                  >
+                    className="w-14 h-12 flex items-center justify-center text-2xl rounded-r-full hover:bg-gray-200">
                     +
                   </button>
                 </div>
@@ -344,11 +341,10 @@ const ProductDetail = () => {
                     !selectedColor || !selectedSize
                       ? "bg-gray-400 cursor-not-allowed"
                       : "bg-black hover:bg-gray-800"
-                  }`}
-                >
+                  }`}>
                   Add to Cart
                 </button>
-                <ToastContainer />
+                <ToastContainer closeOnClick={true} />
               </div>
             </div>
           </div>

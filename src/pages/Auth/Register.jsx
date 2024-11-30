@@ -241,7 +241,7 @@ const Register = () => {
   return (
     <div className="min-h-screen lg:flex relative">
       <style>{styles}</style>
-      <ToastContainer />
+      <ToastContainer closeOnClick={true} />
       {/* Images section - visible on both desktop and mobile */}
       <div className="lg:w-1/2 bg-white-100 relative overflow-hidden mobile-image-container image-container-margin">
         <div className="absolute inset-0 flex">
@@ -404,8 +404,7 @@ const Register = () => {
 
             <button
               type="submit"
-              className="w-full py-3 bg-black text-white rounded-3xl hover:bg-gray-800 transition"
-            >
+              className="w-full py-3 bg-black text-white rounded-3xl hover:bg-gray-800 transition">
               Create Account
             </button>
 
@@ -413,8 +412,7 @@ const Register = () => {
               <span className="text-gray-600">Already have an account? </span>
               <Link
                 to="/login"
-                className="font-medium text-black-600 hover:text-indigo-500"
-              >
+                className="font-medium text-black-600 hover:text-indigo-500">
                 Log In
               </Link>
             </div>

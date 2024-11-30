@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const AboutUs = () => {
   return (
@@ -32,10 +33,11 @@ const AboutUs = () => {
                 passion for fashion, Lashes is dedicated to bringing you the
                 most exceptional shopping experience.
               </p>
-
-              <button className="px-6 py-1.5 bg-black text-white text-sm rounded-full">
+              <Link
+                to="/"
+                className="px-6 py-1.5 bg-black text-white text-sm rounded-full">
                 Explore
-              </button>
+              </Link>
             </div>
           </div>
           <div className="col-span-1 md:col-span-8 flex justify-center md:justify-end order-1 md:order-2">
@@ -104,9 +106,6 @@ const AboutUs = () => {
               className="w-full h-[300px] md:h-[530px] object-cover grayscale"
             />
           </div>
-
-        
-
         </div>
       </div>
     </div>

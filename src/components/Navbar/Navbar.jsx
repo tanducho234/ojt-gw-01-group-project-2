@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom"; // Import useLocation from react-router-dom
+import { Link ,useNavigate} from "react-router-dom"; // Import useLocation from react-router-dom
 import {
   FaCartShopping,
   FaCircleUser,
@@ -8,6 +8,9 @@ import {
 import { useAuth } from "../../hooks/useAuth";
 
 const Navbar = () => {
+  const navigate = useNavigate(); // Initialize the useNavigate hook
+  const [searchQuery, setSearchQuery] = useState(""); // State to store search query
+
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!isMobileMenuOpen);
@@ -16,6 +19,21 @@ const Navbar = () => {
 
   const handleLogout = () => {
     logout();
+  };
+  const handleSearch = (event) => {
+    if (event.key === "Enter") {
+      // If search query exists, navigate to the products page with the query
+      if (searchQuery.trim()) {
+        const currentPath = window.location.pathname;
+        if (currentPath === '/products') {
+          const searchParams = new URLSearchParams(window.location.search);
+          searchParams.set('key', searchQuery);
+          navigate(`/products?${searchParams.toString()}`);
+        } else {
+          navigate(`/products?key=${searchQuery}`);
+        }
+      }
+    }
   };
   return (
     <header className="bg-white shadow-md sticky top-0 z-50">
@@ -61,6 +79,9 @@ const Navbar = () => {
         <div className="hidden md:flex flex-1 mx-40 max-w-lg relative">
           <input
             type="text"
+            value={searchQuery} // Bind input value to the state
+            onChange={(e) => setSearchQuery(e.target.value)} // Update state on input change
+            onKeyDown={handleSearch} // Call handleSearch on key press
             className="w-full pl-4 pr-12 py-2 border-none rounded-full bg-gray-100 text-sm focus:outline-none focus:ring-0 focus:shadow-none"
             placeholder="Search for products..."
           />

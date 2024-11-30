@@ -41,14 +41,17 @@ function App() {
       <ScrollToTop />
        <Routes>
         <Route path="*" element={<h1>404 - Page Not Found</h1>} />
+        <Route path="about" element={<AboutUs />} />
+        <Route path="login" element={<Login />} />
+        <Route path="register" element={<Register />} />
         <Route path="/" element={<HomeLayout />}>
           <Route path="" element={<Home />} />
           <Route path="home" element={<Home />} />
-          <Route path="about" element={<AboutUs />} />
-          <Route path="login" element={<Login />} />
+      
+        
           <Route path="products" element={<Products />} />
           <Route path="products/:id" element={<ProductDetail />} />
-          <Route path="register" element={<Register />} />
+         
         </Route>
         <Route path="/admin/login" element={<AdminLogin />} />
         {/* Authenticated user layout */}

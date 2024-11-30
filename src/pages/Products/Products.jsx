@@ -15,7 +15,15 @@ import "react-toastify/dist/ReactToastify.css"; // Import style của toastify
 
 // import Breadcrumb from "../../components/BreadCrumb/BreadCrumb";
 
+const LoadingSpinner = () => (
+  <div className="flex justify-center items-center h-screen">
+    <div className="border-t-4 border-blue-500 border-solid w-16 h-16 rounded-full animate-spin"></div>
+  </div>
+);
+
 function Products() {
+  const [loading, setLoading] = useState(true);
+
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -44,9 +52,17 @@ function Products() {
   const handleSortChange = (e) => {
     const selectedSortCriteria = e.target.value;
     console.log(selectedSortCriteria);
+    if (!selectedSortCriteria) return; // No selection (e.g., "Select...")
+
+    const [sortBy, order] = selectedSortCriteria
+      .split("&")
+      .map((param) => param.split("=")[1]);
 
     const searchParams = new URLSearchParams(window.location.search);
-    searchParams.set("sortBy", selectedSortCriteria); // Set the sortby parameter
+
+    searchParams.set("sortBy", sortBy); // Set the sortby parameter
+    searchParams.set("order", order);
+
     navigate({
       pathname: location.pathname, // Keep the same path
       search: `?${searchParams.toString()}`, // Update the query string
@@ -131,19 +147,13 @@ function Products() {
     // setFilteredProducts(filtered);
 
     const searchParams = new URLSearchParams(window.location.search);
-    console.log("searchParams", searchParams);
     searchParams.set("price", `${price[0]}-${price[1]}`);
     searchParams.set("color", selectedColor);
     searchParams.set("size", selectedSize);
     searchParams.set("category", selectedCategory);
     searchParams.set("style", selectedDressStyle);
     searchParams.set("brand", selectedBrand);
-    console.log("searchParams", searchParams);
-    // window.history.pushState(
-    //   {},
-    //   "",
-    //   `${window.location.pathname}?${searchParams.toString()}`
-    // );
+    // console.log("searchParams", searchParams);
 
     navigate({
       pathname: location.pathname, // Keep the same path
@@ -173,6 +183,7 @@ function Products() {
 
   // Function to handle filter changes
   useEffect(() => {
+    setLoading(true);
     console.log("locationchange", location.search);
     const queryParams = new URLSearchParams(location.search);
 
@@ -181,43 +192,26 @@ function Products() {
     const hasSortBy = searchParams.has("sortBy");
     if (hasSortBy) {
       const sortByValue = searchParams.get("sortBy");
-      setSortCriteria(sortByValue);
+      const orderValue = searchParams.get("order");
+
+      setSortCriteria("sortBy=" + sortByValue + "&order=" + orderValue);
     }
 
     // Gọi API sản phẩm với query string đầy đủ
     // fetchProducts(queryString);
     const fetchData = async () => {
-      // Sử dụng toast.promise để quản lý trạng thái của Promise
-      await toast.promise(
-        axios
-          .get(
-            `https://ojt-gw-01-final-project-back-end.vercel.app/api/products?${queryParams}`
-          )
-          .then((productResponse) => {
-            console.log("productResponse", productResponse.data);
-            setProducts(productResponse.data);
-            setFilteredProducts(productResponse.data);
-          }),
-        {
-          pending: "Loading products...", // Thông báo khi đang tải dữ liệu
-          success: {
-            render() {
-              return ""; // Thông báo thành công
-            },
-            autoClose: 500, // Set thời gian hiển thị thông báo thành công là 3 giây
-          },          error: {
-            render({ data }) {
-              // Hiển thị thông báo lỗi, nếu có
-              return (
-                data.response?.data?.message ||
-                "Error fetching products. Please try again."
-              );
-            },
-          },
-        }
-      );
+      try {
+        const response = await axios.get(
+          // `https://ojt-gw-01-final-project-back-end.vercel.app/api/products?${queryParams}`
+          `http://localhost:3000/api/products?${queryParams}`
+        );
+        setProducts(response.data);
+        setFilteredProducts(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
     };
-
     fetchData();
   }, [location]); // Empty dependency array to run only once on component mount
   // Empty dependency array to run only once on component mount
@@ -241,7 +235,7 @@ function Products() {
 
   return (
     <div className="flex w-full flex-wrap p-5">
-      <ToastContainer />
+      <ToastContainer closeOnClick={true} />
 
       <aside
         className={`absolute z-20 mt-[60px] bg-white  border rounded-t-lg top-0 left-0 rounded-2xl shadow-2xl shadow-gray h-[1250px] 
@@ -479,14 +473,24 @@ function Products() {
               onChange={handleSortChange}
               className="py-1 pr-8 border border-gray rounded-md 2xl:py-2 2xl:px-8">
               <option value="">Select...</option>
-              <option value="priceLowToHigh">Price: Low to High</option>
-              <option value="priceHighToLow">Price: High to Low</option>
-              <option value="createdAtNewToOld">Newest First</option>
-              <option value="createdAtOldToNew">Oldest First</option>
-              <option value="ratingHighToLow">Rating: High to Low</option>
-              <option value="ratingLowToHigh">Rating: Low to High</option>
-              <option value="salePercentage">Sale Percentage</option>
-              <option value="soldQuantity">Sold Quantity</option>
+              <option value="sortBy=price&order=asc">Price: Low to High</option>
+              <option value="sortBy=price&order=desc">
+                Price: High to Low
+              </option>
+              <option value="sortBy=createdAt&order=desc">Newest First</option>
+              <option value="sortBy=createdAt&order=asc">Oldest First</option>
+              <option value="sortBy=rating&order=desc">
+                Rating: High to Low
+              </option>
+              <option value="sortBy=rating&order=asc">
+                Rating: Low to High
+              </option>
+              <option value="sortBy=salePercentage&order=desc">
+                Sale Percentage
+              </option>
+              <option value="sortBy=soldQuantity&order=desc">
+                Sold Quantity
+              </option>
             </select>
           </div>
           <div className="">
@@ -498,24 +502,27 @@ function Products() {
             </button>
           </div>
         </div>
-
-        <section
-          className="product-grid w-full 2xl:w-[75%]"
-          style={{ minHeight: "calc(3 * (300px + 32px))" }}>
-          <div
-            className="product-grid grid grid-cols-2 gap-8 w-full sm:grid-cols-2 
+        {loading ? (
+          <LoadingSpinner />
+        ) : (
+          <section
+            className="product-grid w-full 2xl:w-[75%]"
+            style={{ minHeight: "calc(3 * (300px + 32px))" }}>
+            <div
+              className="product-grid grid grid-cols-2 gap-8 w-full sm:grid-cols-2 
           md:grid-cols-2 lg:grid-cols-3 max-[820px]:grid-cols-2 lg:gap-x-0 xl:grid-cols-3">
-            {currentProducts.length > 0 ? (
-              currentProducts
-                .slice(0, window.innerWidth <= 970 ? 6 : 12) // Hiển thị 6 sản phẩm cho sm và md, 9 cho lg và xl
-                .map((product, index) => (
-                  <ProductCard key={index} product={product} />
-                ))
-            ) : (
-              <p>No products available</p>
-            )}
-          </div>
-        </section>
+              {currentProducts.length > 0 ? (
+                currentProducts
+                  .slice(0, window.innerWidth <= 970 ? 6 : 12) // Hiển thị 6 sản phẩm cho sm và md, 9 cho lg và xl
+                  .map((product, index) => (
+                    <ProductCard key={index} product={product} />
+                  ))
+              ) : (
+                <p>No products available</p>
+              )}
+            </div>
+          </section>
+        )}
 
         {/* Pagination Component */}
         <div className="pagination-container w-full mt-8">

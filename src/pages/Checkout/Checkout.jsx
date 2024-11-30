@@ -5,8 +5,7 @@ import ItemCheckout from "../../components/ItemCheckout/ItemCheckout";
 import ShippingAddress from "../../components/ShippingAddress/ShippingAddress";
 import { Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
-import { Button, message, Popconfirm } from 'antd';
-
+import { Button, message, Popconfirm } from "antd";
 
 const LoadingSpinner = () => (
   <div className="flex justify-center items-center h-screen">
@@ -325,7 +324,7 @@ const Checkout = () => {
         <LoadingSpinner />
       ) : (
         <div className="max-w-6xl mx-auto p-6 space-y-6">
-          <ToastContainer />
+          <ToastContainer closeOnClick={true} />
           <h1 className="text-3xl font-bold text-center">Checkout</h1>
           {cartItems.length === 0 ? (
             <div className="text-center space-y-4">
@@ -545,7 +544,8 @@ const Checkout = () => {
                   </h2>
                   <Popconfirm
                     title="Place Order"
-                    description="Are you sure you want to place this order?"                    onConfirm={handleConfirmOrder}
+                    description="Are you sure you want to place this order?"
+                    onConfirm={handleConfirmOrder}
                     // onCancel={cancel}
                     okText="Yes"
                     cancelText="No">

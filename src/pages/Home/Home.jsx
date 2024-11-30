@@ -241,9 +241,11 @@ function Home({ customerReviews = [] }) {
             designed to bring out your individuality and cater to your sense of
             style.
           </p>
-          <button className="bg-black text-white px-6 md:px-8 py-3 md:py-4 rounded-full cursor-pointer transition-all duration-300 hover:bg-gray-800 hover:shadow-lg transform hover:-translate-y-1 active:translate-y-0 text-sm md:text-base">
+          <Link
+            to="/products"
+            className="bg-black text-white px-6 md:px-8 py-3 md:py-4 rounded-full cursor-pointer transition-all duration-300 hover:bg-gray-800 hover:shadow-lg transform hover:-translate-y-1 active:translate-y-0 text-sm md:text-base">
             Shop Now
-          </button>
+          </Link>
           <div className="flex flex-wrap md:flex-nowrap gap-4 md:gap-10 mt-6 md:mt-10">
             <div className="w-1/2 md:w-auto transform transition-all duration-300 hover:scale-110">
               <h2 className="text-2xl md:text-3xl mb-1">{counts.brands}+</h2>
@@ -310,7 +312,7 @@ function Home({ customerReviews = [] }) {
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-5 my-6 md:my-10 w-full max-w-7xl">
           {topSelling.map((product, index) => (
-            <ProductCard key={index} product={product}  root="/products" />
+            <ProductCard key={index} product={product} root="/products" />
           ))}
         </div>
         <Link
