@@ -202,8 +202,7 @@ function Products() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          // `https://ojt-gw-01-final-project-back-end.vercel.app/api/products?${queryParams}`
-          `http://localhost:3000/api/products?${queryParams}`
+          `https://ojt-gw-01-final-project-back-end.vercel.app/api/products?${queryParams}`
         );
         setProducts(response.data);
         setFilteredProducts(response.data);

@@ -298,7 +298,7 @@ function Home({ customerReviews = [] }) {
           ))}
         </div>
         <Link
-          to="/products?sortBy=createdAtNewToOld"
+          to="/products?sortBy=createdAt&order=desc"
           className="px-4 md:px-6 py-2 md:py-3 bg-transparent border-2 border-black rounded cursor-pointer transition-all duration-300 hover:bg-black hover:text-white hover:shadow-lg transform hover:-translate-y-1 text-sm md:text-base">
           View All
         </Link>

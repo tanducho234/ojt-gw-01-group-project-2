@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link ,useNavigate} from "react-router-dom"; // Import useLocation from react-router-dom
+import { Link, useNavigate } from "react-router-dom"; // Import useLocation from react-router-dom
 import {
   FaCartShopping,
   FaCircleUser,
@@ -25,9 +25,9 @@ const Navbar = () => {
       // If search query exists, navigate to the products page with the query
       if (searchQuery.trim()) {
         const currentPath = window.location.pathname;
-        if (currentPath === '/products') {
+        if (currentPath === "/products") {
           const searchParams = new URLSearchParams(window.location.search);
-          searchParams.set('key', searchQuery);
+          searchParams.set("key", searchQuery);
           navigate(`/products?${searchParams.toString()}`);
         } else {
           navigate(`/products?key=${searchQuery}`);
@@ -43,7 +43,7 @@ const Navbar = () => {
           <img
             src="/assets/images/Logofast.png"
             alt="Shop Logo"
-            className="h-15 w-auto"
+            className="h-15 w-[100px]"
           />
         </Link>
 
@@ -52,14 +52,14 @@ const Navbar = () => {
           <ul className="flex items-center space-x-6">
             <li>
               <Link
-                to="/products?sortBy=createdAtNewToOld"
+                to="/products?sortBy=createdAt&order=desc"
                 className="text-gray-600 hover:text-black transition">
                 New Arrivals
               </Link>
             </li>
             <li>
               <Link
-                to="/products?sortBy=salePercentage"
+                to="/products?sortBy=salePercentage&order=desc"
                 className="text-gray-600 hover:text-black transition">
                 On Sale
               </Link>
@@ -154,14 +154,14 @@ const Navbar = () => {
             </li>
             <li>
               <Link
-                to="/products?sortBy=salePercentage"
+                to="/products?sortBy=salePercentage&order=desc"
                 className="block text-gray-700 hover:bg-gray-100 px-4 py-2 rounded">
                 On Sale
               </Link>
             </li>
             <li>
               <Link
-                to="/products?sortBy=createdAtNewToOld"
+                to="/products?sortBy=createdAt&order=desc"
                 className="block text-gray-700 hover:bg-gray-100 px-4 py-2 rounded">
                 New Arrivals
               </Link>

@@ -33,6 +33,7 @@ import OrderSummary from "./components/OrderProfileComponent";
 import OrderDetailsComponent from "./components/OrderDetailsComponent";
 import Order from "./pages/Profile/Order/Order";
 import Review from "./pages/Profile/Reviews/Review";
+import ProductTable from "./components/admin/ProductTable";
 
 function App() {
   return (
@@ -74,6 +75,7 @@ function App() {
           <Route path="" element={<Dashboard />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="products/add" element={<AddProduct />} />
+          <Route path="products" element={<ProductTable />} />
         </Route>
         
         <Route path="/OrderSummary" element={<OrderSummary />} />

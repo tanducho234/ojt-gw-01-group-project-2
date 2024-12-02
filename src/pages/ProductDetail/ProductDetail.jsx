@@ -25,23 +25,32 @@ const LoadingSpinner = () => (
 const ProductDetail = () => {
   const { token } = useAuth();
   const [loading, setLoading] = useState(true);
+  //product quantaty
 
   const { id } = useParams();
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
   const [quantity, setQuantity] = useState(1);
+  const [productQuantity, setProductQuantaty] = useState(null);
+
   const [product, setProduct] = useState({});
   const [salePrice, setSalePrice] = useState(0);
   const [reviews, setReview] = useState([]);
 
   const items = [
     {
-      key: "1",
+      key: "2",
       label: "Details",
-      children: <div>{product.description}</div>,
+      children: (
+        <div>
+          {product.description?.split("\n").map((line, index) => (
+            <p key={index}>{line}</p>
+          ))}
+        </div>
+      ),
     },
     {
-      key: "2",
+      key: "1",
       label: "Reviews",
       children: (
         <>
@@ -69,15 +78,20 @@ const ProductDetail = () => {
     console.log(key);
   };
 
-  const increment = () => setQuantity((prev) => prev + 1);
+  const increment = () =>
+    setQuantity((prev) => (prev == productQuantity ? prev : prev + 1));
   const decrement = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
 
   const handleColorSelect = (color) => {
     setSelectedColor(color);
     setSelectedSize(null);
+    setProductQuantaty(null);
+    setQuantity(1);
   };
   const handleSizeSelect = (size) => {
-    setSelectedSize(size);
+    setSelectedSize(size.size);
+    setProductQuantaty(size.quantity);
+    setQuantity(1);
   };
 
   useEffect(() => {
@@ -222,7 +236,7 @@ const ProductDetail = () => {
                 {product?.name || "Product Name Not Available"}
                 <span className="text-sm bg-gray-100 px-2 py-1 rounded-full text-[gray]">
                   {product?.soldQuantity > 0
-                    ? `Sold: ${product?.soldQuantity} unit${
+                    ? `Sold: ${product?.soldQuantity} item${
                         product?.soldQuantity > 1 ? "s" : ""
                       }`
                     : "Has Not Been Sold Yet"}
@@ -298,7 +312,7 @@ const ProductDetail = () => {
                         color.sizes.map((size) => (
                           <button
                             key={size.size}
-                            onClick={() => handleSizeSelect(size.size)}
+                            onClick={() => handleSizeSelect(size)}
                             className={`px-6 py-2 rounded-full transition-colors w-[100px]
                 ${
                   selectedSize === size.size
@@ -310,6 +324,10 @@ const ProductDetail = () => {
                         ))
                       )}
                 </div>
+                {/* productQuantity */}
+                <div className="text-sm text-gray-600 pl-1 min-h-[20px]">
+                  {selectedSize && `Available: ${productQuantity} items`}
+                </div>
               </div>
 
               {/* Quantity and Add to Cart */}
@@ -320,7 +338,17 @@ const ProductDetail = () => {
                     className="w-14 h-12 flex items-center justify-center text-2xl rounded-l-full hover:bg-gray-200">
                     -
                   </button>
-                  <span className="w-14 text-center text-lg">{quantity}</span>
+                  <input
+                    type="number"
+                    value={quantity}
+                    onChange={(e) => {
+                      const val = parseInt(e.target.value) || 0;
+                      if (val >= 0 && val <= productQuantity) {
+                        setQuantity(val);
+                      }
+                    }}
+                    className="w-20 text-center border-0 bg-gray-100 text-lg [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  />
                   <button
                     onClick={increment}
                     className="w-14 h-12 flex items-center justify-center text-2xl rounded-r-full hover:bg-gray-200">
@@ -350,12 +378,16 @@ const ProductDetail = () => {
           </div>
 
           <Tabs
+          
+            // tabBarGutter={500}
+            tabBarStyle={{ color: "#000000" }}
+            tabBarGutter={500}
             centered
             className="w-full"
             defaultActiveKey="1"
             items={items}
             onChange={onChange}
-            size={1000}
+            size="large"
           />
         </div>
       )}
