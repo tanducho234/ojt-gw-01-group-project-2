@@ -126,11 +126,11 @@ const Register = () => {
     "/assets/images/reg1.png",
     "/assets/images/reg2.png",
     "/assets/images/reg3.png",
-    "/assets/images/reg1.png",
-    "/assets/images/reg2.png",
-    "/assets/images/reg3.png",
-    "/assets/images/reg1.png",
-    "/assets/images/reg2.png",
+    "/assets/images/reg4.png",
+    "/assets/images/reg5.png",
+    "/assets/images/reg6.png",
+    "/assets/images/reg7.png",
+    "/assets/images/reg8.png",
   ];
 
   const [formData, setFormData] = useState({

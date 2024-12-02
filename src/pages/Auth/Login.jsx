@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { FaHouse } from "react-icons/fa6";
 import axios from "axios";
 import { useAuth } from "../../hooks/useAuth";
 import { toast,ToastContainer, Bounce } from "react-toastify";
@@ -103,11 +104,11 @@ const Login = () => {
     "/assets/images/reg1.png",
     "/assets/images/reg2.png",
     "/assets/images/reg3.png",
-    "/assets/images/reg1.png",
-    "/assets/images/reg2.png",
-    "/assets/images/reg3.png",
-    "/assets/images/reg1.png",
-    "/assets/images/reg2.png",
+    "/assets/images/reg4.png",
+    "/assets/images/reg5.png",
+    "/assets/images/reg6.png",
+    "/assets/images/reg7.png",
+    "/assets/images/reg8.png",
   ];
   const { login } = useAuth();
 
@@ -335,12 +336,13 @@ const Login = () => {
                   </div>
 
                   <div className="text-sm">
-                    <a
-                      href="#"
-                      className="font-medium text-black-600 hover:text-indigo-500"
+                  <Link
+                      to="/home"
+                      className="font-medium text-black-600 hover:text-indigo-500 flex items-center gap-2"
                     >
-                      Forgot your password?
-                    </a>
+                      <FaHouse className="w-4 h-4" />
+                      Back to homepage
+                    </Link>
                   </div>
                 </div>
               </div>
