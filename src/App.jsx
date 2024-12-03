@@ -59,11 +59,12 @@ function App() {
         <Route path="/" element={<ProtectedLayout />}>
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/checkout/success/:id" element={<OrderSuccess />} />
+          
           <Route path="/checkout/failed/:id" element={<OrderFailed />} />
           <Route path="/profile" element={<ProfileLayout />}>
             {/* Nested routes within Profile */}
             <Route path="account" element={<Account />} />
-            <Route path="orders" element={<OrderSummary />} />
+            <Route path="orders" element={<Order />} />
             <Route path="orders/:orderId" element={<OrderDetailsComponent />} />
             <Route path="reviews" element={<Review />} />
             {/* <Route path="settings" element={<AccountSettings />} /> */}

@@ -52,7 +52,7 @@ export const AuthProvider = ({ children }) => {
     setToken(token);
 
     if (role === "user") {
-      navigate("/products");
+      navigate("/");
     } else {
       navigate("/admin/dashboard");
     }

@@ -7,7 +7,7 @@ function AccountPage() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState({});
   const [updatedUserInfo, setUpdatedUserInfo] = useState({
     fullName: "",
     email: "",
