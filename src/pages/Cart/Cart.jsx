@@ -61,7 +61,14 @@ const Cart = () => {
 
       // Remove item locally
       setCartItems((prevItems) =>
-        prevItems.filter((cartItem) => cartItem.productId !== item.productId)
+        prevItems.filter(
+          (cartItem) =>
+            !(
+              cartItem.productId === item.productId &&
+              cartItem.color === item.color &&
+              cartItem.size === item.size
+            )
+        )
       );
 
       toast.success("Item has been successfully removed from your cart!");
@@ -94,7 +101,11 @@ const Cart = () => {
       // Update quantity locally
       setCartItems((prevItems) =>
         prevItems.map((item) =>
-          item.productId === productId ? { ...item, quantity } : item
+          item.productId === productId &&
+          item.color === color &&
+          item.size === size
+            ? { ...item, quantity }
+            : item
         )
       );
     } catch (error) {
@@ -136,7 +147,8 @@ const Cart = () => {
                 <h1
                   className="text-3xl text-center font-roboto font-bold mb-5 
             text-gray-800 bg-white p-4 rounded-lg shadow-md 
-            sm:w-full lg:w-full 2xl:w-full">
+            sm:w-full lg:w-full 2xl:w-full"
+                >
                   Your Cart
                 </h1>
                 <div className="space-y-6 w-full h-[35rem] overflow-y-auto custom-scrollbar lg:w-full 2xl:h-[48rem] 2xl:w-[60rem] 2xl:ml-[10rem]">
@@ -186,7 +198,8 @@ const Cart = () => {
                     className="w-full bg-black text-white font-mono border-none
               cursor-pointer text-lg rounded-full py-2 px-1 hover:bg-gray
               hover:text-white
-              font-semibold md:mt-[2rem] md:text-[1.5rem]">
+              font-semibold md:mt-[2rem] md:text-[1.5rem]"
+                  >
                     Checkout
                   </button>
                 </Link>
