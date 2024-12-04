@@ -34,6 +34,7 @@ import OrderDetailsComponent from "./components/OrderDetailsComponent";
 import Order from "./pages/Profile/Order/Order";
 import Review from "./pages/Profile/Reviews/Review";
 import ProductTable from "./components/admin/ProductTable";
+import { PageNotFound } from "./pages/PageNotFound";
 import VoucherTable from "./components/admin/VouchersTable";
 import BrandTable from "./components/admin/BrandTable";
 
@@ -43,7 +44,7 @@ function App() {
     <AuthProvider>
       <ScrollToTop />
        <Routes>
-        <Route path="*" element={<h1>404 - Page Not Found</h1>} />
+        <Route path="*" element={<PageNotFound/>} />
         <Route path="about" element={<AboutUs />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
