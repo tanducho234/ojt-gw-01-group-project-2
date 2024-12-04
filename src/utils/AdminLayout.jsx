@@ -16,45 +16,38 @@ const siderStyle = {
   scrollbarGutter: "stable",
 };
 import { Link } from "react-router-dom";
-import {
-  UserOutlined,
-  VideoCameraOutlined,
-  UploadOutlined,
-  BarChartOutlined,
-  CloudOutlined,
-  AppstoreOutlined,
-  TeamOutlined,
-  ShopOutlined,
-} from "@ant-design/icons"; // Đảm bảo bạn đã import đúng icons
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"; // FontAwesome Icons
+import { faUsers, faChartBar, faShoppingCart, faStore, faTag, faCogs, faTshirt, faVideo } from "@fortawesome/free-solid-svg-icons"; // FontAwesome icons
 
 const items = [
-  { icon: UserOutlined, label: "Users", key: "users", to: "/users" },
+  { icon: <FontAwesomeIcon icon={faUsers} />, label: "Users", key: "users", to: "/users" }, // FontAwesome faUsers
   {
-    icon: VideoCameraOutlined,
-    label: "Dashboard",
-    key: "dashboard",
-    to: "/dashboard",
-  },
-  { icon: UploadOutlined, label: "Products", key: "products", to: "/products" },
+    icon: <FontAwesomeIcon icon={faVideo} />, 
+    label: "Dashboard", 
+    key: "dashboard", 
+    to: "/dashboard"
+  }, // FontAwesome faVideo for Dashboard (video-related icon)
+  { icon: <FontAwesomeIcon icon={faShoppingCart} />, label: "Products", key: "products", to: "/products" }, // FontAwesome faShoppingCart
   {
-    icon: BarChartOutlined,
-    label: "Order Details",
-    key: "order-details",
-    to: "/order-details",
-  },
-  { icon: CloudOutlined, label: "Brands", key: "brands", to: "/brands" },
+    icon: <FontAwesomeIcon icon={faChartBar} />, 
+    label: "Order Details", 
+    key: "order-details", 
+    to: "/order-details"
+  }, // FontAwesome faChartBar for Order Details (graph-like)
+  { icon: <FontAwesomeIcon icon={faStore} />, label: "Brands", key: "brands", to: "/brands" }, // FontAwesome faStore
   {
-    icon: AppstoreOutlined,
-    label: "Categories",
-    key: "categories",
-    to: "/categories",
-  },
-  { icon: TeamOutlined, label: "Styles", key: "styles", to: "/styles" },
-  { icon: ShopOutlined, label: "Vouchers", key: "vouchers", to: "/vouchers" },
-  { icon: ShopOutlined, label: "Shop", key: "shop", to: "/shop" }, // Nếu cần tab Shop
+    icon: <FontAwesomeIcon icon={faCogs} />, 
+    label: "Categories", 
+    key: "categories", 
+    to: "/categories"
+  }, // FontAwesome faCogs for Categories (settings icon for configuration)
+  { icon: <FontAwesomeIcon icon={faTshirt} />, label: "Styles", key: "styles", to: "/styles" }, // FontAwesome faTshirt for Styles
+  { icon: <FontAwesomeIcon icon={faTag} />, label: "Vouchers", key: "vouchers", to: "/vouchers" }, // FontAwesome faTag for Vouchers
+  { icon: <FontAwesomeIcon icon={faStore} />, label: "Shop", key: "shop", to: "/shop" }, // FontAwesome faStore for Shop
 ].map(({ icon, label, key, to }) => ({
   key,
-  icon: React.createElement(icon),
+  icon,
   label: <Link to={`/admin${to}`}>{label}</Link>,
 }));
 
@@ -92,12 +85,12 @@ export const AdminLayout = () => {
         style={{
           marginInlineStart: 200,
         }}>
-        <Header
+        {/* <Header
           style={{
             padding: 0,
             background: colorBgContainer,
           }}
-        />
+        /> */}
         <Content
           style={{
             margin: "24px 16px 0",

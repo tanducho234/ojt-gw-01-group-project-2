@@ -35,6 +35,8 @@ import Order from "./pages/Profile/Order/Order";
 import Review from "./pages/Profile/Reviews/Review";
 import ProductTable from "./components/admin/ProductTable";
 import { PageNotFound } from "./pages/PageNotFound";
+import VoucherTable from "./components/admin/VouchersTable";
+import BrandTable from "./components/admin/BrandTable";
 
 function App() {
   return (
@@ -60,11 +62,12 @@ function App() {
         <Route path="/" element={<ProtectedLayout />}>
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/checkout/success/:id" element={<OrderSuccess />} />
+          
           <Route path="/checkout/failed/:id" element={<OrderFailed />} />
           <Route path="/profile" element={<ProfileLayout />}>
             {/* Nested routes within Profile */}
             <Route path="account" element={<Account />} />
-            <Route path="orders" element={<OrderSummary />} />
+            <Route path="orders" element={<Order />} />
             <Route path="orders/:orderId" element={<OrderDetailsComponent />} />
             <Route path="reviews" element={<Review />} />
             {/* <Route path="settings" element={<AccountSettings />} /> */}
@@ -77,6 +80,8 @@ function App() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="products/add" element={<AddProduct />} />
           <Route path="products" element={<ProductTable />} />
+          <Route path="vouchers" element={<VoucherTable />} />
+          <Route path="brands" element={<BrandTable />} />
         </Route>
         
         <Route path="/OrderSummary" element={<OrderSummary />} />

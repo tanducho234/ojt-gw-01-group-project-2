@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuth } from "../../hooks/useAuth";
 import ItemCheckout from "../../components/ItemCheckout/ItemCheckout";
-import ShippingAddress from "../../components/ShippingAddress/ShippingAddress";
 import { Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { Button, message, Popconfirm } from "antd";
@@ -71,7 +70,6 @@ const Checkout = () => {
     fetchUserAddresses();
   }, []);
 
-  const [showAll, setShowAll] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [discountCode, setDiscountCode] = useState("");
   const [appliedDiscount, setAppliedDiscount] = useState(null);
@@ -80,6 +78,8 @@ const Checkout = () => {
 
   // Modal control
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
+  const [isAddAddressModalOpen, setIsAddAddressModalOpen] = useState(false);
+
   const [newAddress, setNewAddress] = useState({
     recipientName: "",
     phoneNumber: "",
@@ -243,6 +243,12 @@ const Checkout = () => {
       return;
     }
 
+    if (discountCode) {
+      //check valid discount
+      const isDiscountValid = await handleApplyDiscount();
+      if (!isDiscountValid) return;
+    }
+
     // Map cart items to the required format
     const products = cartItems.map((item) => ({
       productId: item.productId, // Assuming you have an _id for the product
@@ -274,6 +280,7 @@ const Checkout = () => {
       voucherDiscountAmount,
       shippingCost,
       totalPrice,
+      voucherCode: discountCode,
       shippingAddress: {
         recipientName: shippingAddress.recipientName,
         phoneNumber: shippingAddress.phoneNumber,
@@ -300,7 +307,7 @@ const Checkout = () => {
         const orderId = response.data._id;
 
         // If the payment method is "Stripe", redirect to the Stripe payment link
-        if (paymentMethod === "Stripe") {
+        if (paymentMethod === "Stripe" || paymentMethod === "VNPAY") {
           window.location.href = response.data.paymentLink; // Assuming the response contains a paymentLink field
         } else if (paymentMethod === "COD") {
           // If it's "COD", redirect to the success page with the order ID
@@ -334,7 +341,8 @@ const Checkout = () => {
               </p>
               <Link
                 to="/products"
-                className="bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-600">
+                className="bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-600"
+              >
                 Go to shopping
               </Link>
             </div>
@@ -362,7 +370,8 @@ const Checkout = () => {
                   <div className="space-y-4">
                     <button
                       onClick={() => setIsAddressModalOpen(true)}
-                      className="w-full bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-600">
+                      className="w-full bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-600"
+                    >
                       Select or Add Shipping Address
                     </button>
                     {selectedAddress && (
@@ -413,7 +422,8 @@ const Checkout = () => {
                           shippingMethod === method
                             ? "bg-black"
                             : "bg-gray-300 hover:bg-gray-400"
-                        }`}>
+                        }`}
+                      >
                         {method === "economy"
                           ? "Economy  ($2.00)"
                           : method === "standard"
@@ -454,7 +464,8 @@ const Checkout = () => {
                     </div>
                     <button
                       onClick={handleApplyDiscount}
-                      className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-600">
+                      className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-600"
+                    >
                       Apply
                     </button>
                   </div>
@@ -548,7 +559,8 @@ const Checkout = () => {
                     onConfirm={handleConfirmOrder}
                     // onCancel={cancel}
                     okText="Yes"
-                    cancelText="No">
+                    cancelText="No"
+                  >
                     <button
                       className="w-full bg-black text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-600"
                       // disabled={!selectedAddress || !paymentMethod}
@@ -561,6 +573,7 @@ const Checkout = () => {
               </div>
             </div>
           )}
+
           {/* Modal for Address Selection */}
           {isAddressModalOpen && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
@@ -569,69 +582,102 @@ const Checkout = () => {
                   Choose or Add Shipping Address
                 </h2>
                 <div className="space-y-4">
-                  {addresses.map((address) => (
+                  {addresses.map((address, index) => (
                     <div
-                      key={address._id}
+                      key={address._id || index}
                       onClick={() => handleAddressSelect(address._id)}
-                      className="p-4 border rounded-lg cursor-pointer hover:bg-gray-100">
-                      <p className="font-semibold">{address.recipientName}</p>
-                      <p>{address.phoneNumber}</p>
-                      <p>{address.address}</p>
+                      className="p-4 border rounded-lg cursor-pointer hover:bg-gray-100"
+                    >
+                      <p className="font-semibold">👤 {address.recipientName}</p>
+                      <p>📞 {address.phoneNumber}</p>
+                      <p>📍 {address.address}</p>
                     </div>
                   ))}
 
-                  {/* Form to Add New Address */}
-                  <div className="space-y-2 border-t pt-4">
-                    <h3 className="text-lg font-semibold">Add New Address</h3>
-                    <input
-                      type="text"
-                      name="recipientName"
-                      value={newAddress.recipientName}
-                      onChange={(e) =>
-                        setNewAddress((prev) => ({
-                          ...prev,
-                          recipientName: e.target.value,
-                        }))
-                      }
-                      placeholder="Recipient Name"
-                      className="w-full border border-gray-300 rounded-lg px-4 py-2"
-                    />
-                    <input
-                      type="text"
-                      name="phoneNumber"
-                      value={newAddress.phoneNumber}
-                      onChange={(e) =>
-                        setNewAddress((prev) => ({
-                          ...prev,
-                          phoneNumber: e.target.value,
-                        }))
-                      }
-                      placeholder="Phone Number"
-                      className="w-full border border-gray-300 rounded-lg px-4 py-2"
-                    />
-                    <textarea
-                      name="address"
-                      value={newAddress.address}
-                      onChange={(e) =>
-                        setNewAddress((prev) => ({
-                          ...prev,
-                          address: e.target.value,
-                        }))
-                      }
-                      placeholder="Full Address"
-                      className="w-full border border-gray-300 rounded-lg px-4 py-2"
-                    />
-                    <button
-                      onClick={handleAddNewAddress}
-                      className="w-full bg-black text-white py-2 px-4 rounded-lg mt-4 hover:bg-blue-600">
-                      Save New Address
-                    </button>
-                  </div>
+                  {/* Button to Open Add Address Modal */}
+                  <button
+                    onClick={() => {
+                      setIsAddressModalOpen(false); // Close Address Modal
+                      setIsAddAddressModalOpen(true); // Open Add Address Modal
+                    }}
+                    className="w-full bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-600"
+                  >
+                    Add New Address
+                  </button>
 
                   <button
                     onClick={() => setIsAddressModalOpen(false)}
-                    className="w-full mt-4 text-center text-blue-500 hover:text-blue-700">
+                    className="w-full mt-4 text-center text-black hover:text-gray-700"
+                  >
                     Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Modal for Adding a New Address */}
+          {isAddAddressModalOpen && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+              <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+                <h2 className="text-xl font-semibold mb-4">Add New Address</h2>
+                <div className="space-y-2">
+                  <input
+                    type="text"
+                    name="recipientName"
+                    value={newAddress.recipientName}
+                    onChange={(e) =>
+                      setNewAddress((prev) => ({
+                        ...prev,
+                        recipientName: e.target.value,
+                      }))
+                    }
+                    placeholder="Recipient Name"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2"
+                  />
+                  <input
+                    type="text"
+                    name="phoneNumber"
+                    value={newAddress.phoneNumber}
+                    onChange={(e) =>
+                      setNewAddress((prev) => ({
+                        ...prev,
+                        phoneNumber: e.target.value,
+                      }))
+                    }
+                    placeholder="Phone Number"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2"
+                  />
+                  <textarea
+                    name="address"
+                    value={newAddress.address}
+                    onChange={(e) =>
+                      setNewAddress((prev) => ({
+                        ...prev,
+                        address: e.target.value,
+                      }))
+                    }
+                    placeholder="Full Address"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2"
+                  />
+                  <button
+                    onClick={() => {
+                      handleAddNewAddress(); // Call Add Address Logic
+                      setIsAddAddressModalOpen(false); // Close Add Address Modal
+                      setIsAddressModalOpen(true); // Reopen Address Selection Modal
+                    }}
+                    className="w-full bg-black text-white py-2 px-4 rounded-lg mt-4 hover:bg-gray-600"
+                  >
+                    Save New Address
+                  </button>
+                  <button
+                    onClick={() => {
+                      setIsAddAddressModalOpen(false); // Close Add Address Modal
+                      setIsAddressModalOpen(true); // Reopen Address Selection Modal
+                    }}
+                    className="w-full mt-4 text-center text-black hover:text-gray-700"
+                  >
+                    Cancel
                   </button>
                 </div>
               </div>

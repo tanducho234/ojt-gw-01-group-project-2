@@ -5,7 +5,6 @@ import Highlighter from "react-highlight-words";
 import axios from "axios"; // Sử dụng axios để fetch API
 import { useFetchData } from "../../hooks/useFetchData";
 import { useNavigate } from "react-router-dom";
-
 const ProductTable = () => {
   const navigate = useNavigate();
 
@@ -16,6 +15,14 @@ const ProductTable = () => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
+
+  const [tableParams, setTableParams] = useState({
+    pagination: {
+      current: 1,
+      pageSize: 10,
+    },
+    filters: {},
+  });
 
   const defaultExpandable = {
     expandedRowRender: (record) => (
@@ -99,22 +106,42 @@ const ProductTable = () => {
   // const scroll = { x: "100vw" };
   const scroll = { x: "max-content" };
 
+  const createQueryParams = () => {
+    const { pagination, filters, sortField, sortOrder } = tableParams;
+    const { current: page, pageSize: limit } = pagination;
+
+    const params = new URLSearchParams();
+
+    // Thêm các thông số pagination và sorting
+    params.append("page", page);
+    params.append("limit", limit);
+    if (sortField) params.append("sortBy", sortField);
+    if (sortOrder)
+      params.append("order", sortOrder === "ascend" ? "asc" : "desc");
+
+    // Thêm các filters
+    Object.keys(filters).forEach((key) => {
+      if (filters[key]) {
+        const filterValue = filters[key];
+        if (Array.isArray(filterValue) && filterValue.length > 0) {
+          filterValue.forEach((value) => params.append(key, value));
+        } else if (filterValue) {
+          params.append(key, filterValue);
+        }
+      }
+    });
+
+    return params.toString();
+  };
+
   const handleTableChange = (pagination, filters, sorter) => {
-    const { current, pageSize } = pagination;
-    const order = sorter.order === 'ascend' ? 'asc' : 'desc';
-    const sortBy = sorter.field;
-    console.log('sortBy', sortBy)
-    console.log('order', order)
-    console.log('current', current)
-    
-  
-    // fetchProducts({
-    //   ...filters,
-    //   sortBy,
-    //   order,
-    //   page: current,
-    //   limit: pageSize,
-    // });
+    setTableParams({
+      pagination,
+      filters,
+      sortOrder: Array.isArray(sorter) ? undefined : sorter.order,
+      sortField: Array.isArray(sorter) ? undefined : sorter.field,
+    });
+    console.log("createQueryParams", createQueryParams());
   };
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -267,7 +294,7 @@ const ProductTable = () => {
           type="link"
           onClick={() => navigate(`${record._id}/edit`)} // Use navigate here
         >
-          <Tag color={"#1677ff"} style={{ marginRight: 5 }}>
+          <Tag color={"black"} style={{ marginRight: 5 }}>
             Edit
           </Tag>
         </Button>
@@ -276,15 +303,24 @@ const ProductTable = () => {
   ];
 
   return (
-    <Table
-      columns={columns}
-      dataSource={products}
-      loading={loading}
-      rowKey="_id"
-      scroll={scroll}
-      expandable={expandable}
-      onChange={handleTableChange}
-    />
+    <>
+      <Table
+        size="small"
+        bordered
+        className="min-h-[80vh]"
+        columns={columns}
+        dataSource={products}
+        loading={loading}
+        rowKey="_id"
+        scroll={scroll}
+        expandable={expandable}
+        onChange={handleTableChange}
+        pagination={{
+          ...tableParams.pagination,
+          position: ["bottomCenter"], // Set pagination at the bottom center
+        }}
+      />
+    </>
   );
 };
 
