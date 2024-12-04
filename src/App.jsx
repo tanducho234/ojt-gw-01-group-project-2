@@ -38,6 +38,7 @@ import { PageNotFound } from "./pages/PageNotFound";
 import VoucherTable from "./components/admin/VouchersTable";
 import BrandTable from "./components/admin/BrandTable";
 import CategoryTable from "./components/admin/CategoryTable";
+import OrderTable from "./components/admin/OrderTable";
 
 function App() {
   return (
@@ -84,6 +85,7 @@ function App() {
           <Route path="vouchers" element={<VoucherTable />} />
           <Route path="brands" element={<BrandTable />} />
           <Route path="categories" element={<CategoryTable />} />
+          <Route path="order-details" element={<OrderTable />} />
 
         </Route>
         

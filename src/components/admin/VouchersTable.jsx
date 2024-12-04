@@ -60,6 +60,8 @@ const VoucherTable = () => {
   };
 
   const handleAddVoucher = async (voucherData) => {
+    let loadingMessage = message.loading("Adding voucher", 0);
+
     try {
       await axios.post(
         "https://ojt-gw-01-final-project-back-end.vercel.app/api/vouchers",
@@ -68,16 +70,20 @@ const VoucherTable = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
+      loadingMessage()
       message.success("Voucher added successfully!");
       setIsModalVisible(false);
       fetchVouchers(); // Refresh table
     } catch (error) {
       console.error("Error adding voucher:", error);
+      loadingMessage();
       message.error("Failed to add voucher!");
     }
   };
 
   const handleUpdateVoucher = async (updatedVoucher) => {
+    let loadingMessage = message.loading("Updating voucher", 0);
+
     try {
       await axios.put(
         `https://ojt-gw-01-final-project-back-end.vercel.app/api/vouchers/${editingVoucher._id}`,
@@ -86,12 +92,14 @@ const VoucherTable = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
+      loadingMessage()
       message.success("Voucher updated successfully!");
       setIsModalVisible(false);
       setEditingVoucher(null); // Reset state
       fetchVouchers(); // Refresh table
     } catch (error) {
       console.error("Error updating voucher:", error);
+      loadingMessage();
       message.error("Failed to update voucher!");
     }
   };

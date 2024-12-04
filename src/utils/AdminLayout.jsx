@@ -36,17 +36,18 @@ export const AdminLayout = () => {
 
   const items = [
     {
+      icon: <FontAwesomeIcon icon={faVideo} />,
+      label: "Dashboard",
+      key: "dashboard",
+      to: "/dashboard",
+    }, 
+    {
       icon: <FontAwesomeIcon icon={faUsers} />,
       label: "Users",
       key: "users",
       to: "/users",
     }, // FontAwesome faUsers
-    {
-      icon: <FontAwesomeIcon icon={faVideo} />,
-      label: "Dashboard",
-      key: "dashboard",
-      to: "/dashboard",
-    }, // FontAwesome faVideo for Dashboard (video-related icon)
+    // FontAwesome faVideo for Dashboard (video-related icon)
     {
       icon: <FontAwesomeIcon icon={faShoppingCart} />,
       label: "Products",
@@ -71,12 +72,12 @@ export const AdminLayout = () => {
       key: "categories",
       to: "/categories",
     }, // FontAwesome faCogs for Categories (settings icon for configuration)
-    {
-      icon: <FontAwesomeIcon icon={faTshirt} />,
-      label: "Styles",
-      key: "styles",
-      to: "/styles",
-    }, // FontAwesome faTshirt for Styles
+    // {
+    //   icon: <FontAwesomeIcon icon={faTshirt} />,
+    //   label: "Styles",
+    //   key: "styles",
+    //   to: "/styles",
+    // }, // FontAwesome faTshirt for Styles
     {
       icon: <FontAwesomeIcon icon={faTag} />,
       label: "Vouchers",

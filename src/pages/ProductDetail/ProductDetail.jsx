@@ -15,6 +15,7 @@ import {
   ShoppingCartOutlined,
 } from "@ant-design/icons";
 import { Breadcrumb } from "antd";
+import { set } from "react-hook-form";
 
 const LoadingSpinner = () => (
   <div className="flex justify-center items-center h-screen">
@@ -29,10 +30,12 @@ const ProductDetail = () => {
 
   const { id } = useParams();
   const [selectedColor, setSelectedColor] = useState(null);
+  const [images, setImages] = useState([]);
+  const [bigImage, setBigImage] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [productQuantity, setProductQuantaty] = useState(null);
-
+  const [currentPrice, setCurrentPrice] = useState(null);
   const [product, setProduct] = useState({});
   const [salePrice, setSalePrice] = useState(0);
   const [reviews, setReview] = useState([]);
@@ -82,16 +85,33 @@ const ProductDetail = () => {
     setQuantity((prev) => (prev == productQuantity ? prev : prev + 1));
   const decrement = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
 
-  const handleColorSelect = (color) => {
-    setSelectedColor(color);
+  const calculateSalePrice = (price, salePercentage) => {
+    if (salePercentage > 0) {
+      return Number((price * (1 - salePercentage / 100)))
+        .toFixed(2)
+        .replace(/\.00$/, "");
+    }
+    return price;
+  };
+
+  const handleColorSelect = (item) => {
+    setSelectedColor(item.color);
+    setImages(item.imgLinks);
+    setBigImage(item.imgLinks[0]);
     setSelectedSize(null);
     setProductQuantaty(null);
     setQuantity(1);
+    setSalePrice(calculateSalePrice(product.price, product.salePercentage));
+
   };
   const handleSizeSelect = (size) => {
     setSelectedSize(size.size);
     setProductQuantaty(size.quantity);
+    setCurrentPrice(size.price);
+    setSalePrice(calculateSalePrice(size.price, product.salePercentage));
+
     setQuantity(1);
+    
   };
 
   useEffect(() => {
@@ -102,17 +122,13 @@ const ProductDetail = () => {
       )
       .then((response) => {
         setProduct(response.data);
-        setSalePrice(
-          response.data.salePercentage > 0
-            ? Number(
-                response.data.price * (1 - response.data.salePercentage / 100)
-              )
-                .toFixed(2)
-                .replace(/\.00$/, "")
-            : response.data.price
-        );
-        setSelectedColor(response.data.colors[0].color);
+        setCurrentPrice(response.data.price);
+        
+       setSalePrice(calculateSalePrice(response.data.price, response.data.salePercentage));
 
+        setSelectedColor(response.data.colors[0].color);
+        setImages(response.data.colors[0].imgLinks);
+        setBigImage(response.data.colors[0].imgLinks[0]);
         setLoading(false);
 
         console.log(
@@ -122,7 +138,7 @@ const ProductDetail = () => {
         );
       })
       .catch((err) => {
-        // setLoading(false);
+        setLoading(false);
         console.log("aaaaa");
       });
 
@@ -188,7 +204,6 @@ const ProductDetail = () => {
                 ),
               },
               {
-                href: "",
                 title: (
                   <Link to="/products">
                     <span>Products</span>
@@ -207,22 +222,26 @@ const ProductDetail = () => {
             <div className="w-full lg:w-1/2">
               <div className="flex flex-col-reverse md:flex-row gap-4">
                 {/* Thumbnail Images */}
-                <div className="flex flex-wrap gap-2 md:flex-col md:gap-4">
-                  {[1, 2, 3].map((_, index) => (
+                <div className="flex flex-wrap gap-2 md:flex-col md:gap-4 justify-center">
+                  {images.map((image, index) => (
                     <img
                       key={index}
-                      src="https://placehold.co/150x180"
+                      src={image}
                       alt={`Thumbnail ${index + 1}`}
-                      className="w-[calc(33%-0.3rem)] md:w-[150px] h-auto rounded-3xl object-cover cursor-pointer hover:opacity-75"
+                      className={`w-[calc(33%-0.5rem)] md:w-[150px] h-auto rounded-3xl object-cover cursor-pointer hover:opacity-75 transition-all duration-200 ease-in-out ${
+                        bigImage === image ? "border-4 border-black" : ""
+                      }`}
+                      onClick={() => setBigImage(image)}
                     />
                   ))}
                 </div>
+
                 {/* Main Image */}
                 <div className="flex-1">
                   <img
-                    src="https://placehold.co/400x500"
-                    alt="Main product2"
-                    className="w-[520px] h-[570px] rounded-3xl object-cover cursor-pointer hover:opacity-75"
+                    src={bigImage}
+                    alt="Main product"
+                    className="w-full h-auto rounded-3xl object-cover cursor-pointer hover:opacity-75 transition-all duration-200 ease-in-out"
                   />
                 </div>
               </div>
@@ -257,7 +276,7 @@ const ProductDetail = () => {
                 {product.salePercentage > 0 && (
                   <>
                     <span className="text-2xl text-gray-500 line-through">
-                      ${product.price}
+                      ${currentPrice}
                     </span>
                     <span className="px-3 py-1 text-red-600 bg-red-100 rounded-full text-sm">
                       {product.salePercentage}% OFF
@@ -278,7 +297,7 @@ const ProductDetail = () => {
                   {product.colors?.map((item) => (
                     <button
                       key={item.color}
-                      onClick={() => handleColorSelect(item.color)}
+                      onClick={() => handleColorSelect(item)}
                       className={`w-9 h-9 rounded-full flex items-center justify-center transition-transform
                     ${selectedColor === item.color ? "scale-110" : ""}
                   `}
@@ -378,7 +397,6 @@ const ProductDetail = () => {
           </div>
 
           <Tabs
-          
             // tabBarGutter={500}
             tabBarStyle={{ color: "#000000" }}
             tabBarGutter={500}
