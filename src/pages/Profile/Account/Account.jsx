@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuth } from "../../../hooks/useAuth";
 import ProfileAddressUser from "../../../components/AddressProfileUser";
+import { EditOutlined } from "@ant-design/icons";
 
 function AccountPage() {
   const [address, setAddresses] = useState([]);
@@ -37,9 +38,7 @@ function AccountPage() {
       } catch (err) {
         console.error("Error fetching addresses", err);
         setError("Failed to fetch addresses");
-      } finally {
-        setLoading(false);
-      }
+      } 
     };
     const fetchUserInformation = async () => {
       try {
@@ -61,18 +60,16 @@ function AccountPage() {
       } catch (err) {
         console.error("Error fetching user", err);
         setError("Failed to fetch user");
-      } finally {
-        setLoading(false);
-      }
+      } 
     };
 
-    if (token) {
-      fetchAddresses();
-      fetchUserInformation();
-    } else {
-      setError("No token found.");
-      setLoading(false);
-    }
+    
+      fetchAddresses().then(() => {
+      fetchUserInformation().then(() => {
+        setLoading(false);
+      });
+    });      
+   
   }, [token]); // Refetch if token changes
 
   const handleInputChange = (e) => {
@@ -134,13 +131,10 @@ function AccountPage() {
           </div>
           <button
             onClick={() => setIsEditing(true)}
-            className="bg-black p-2 rounded-full absolute top-[-14px] right-[-9px] transform translate-x-3 z-10 w-13 h-13"
-          >
-            <img
-              src="/images/iconedit.png"
-              alt="Edit"
-              className="w-full h-full object-contain"
-            />
+            className="bg-black p-2 rounded-full absolute top-[-14px] right-[-9px] transform translate-x-3 z-10 w-13 h-13">
+            <div>
+              <EditOutlined style={{ fontSize: "24px",color:"white" }} />
+            </div>
           </button>
         </div>
       ) : (
@@ -219,21 +213,19 @@ function AccountPage() {
             <button
               type="button"
               onClick={() => setIsEditing(false)}
-              className="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg"
-            >
+              className="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg">
               Cancel
             </button>
             <button
               type="submit"
-              className="bg-black text-white px-4 py-2 rounded-lg"
-            >
+              className="bg-black text-white px-4 py-2 rounded-lg">
               Save
             </button>
           </div>
         </form>
       )}
       <div>
-        <ProfileAddressUser />
+        <ProfileAddressUser address={address}/>
       </div>
     </section>
   );

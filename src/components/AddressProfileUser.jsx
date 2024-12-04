@@ -3,10 +3,10 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faTrash, faUser, faPhone, faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "../hooks/useAuth";
-import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
+import { message } from "antd";
 
-const AddressComponent = () => {
+const AddressComponent = ({address}) => {
   const [showInput, setShowInput] = useState(false); // Manage modal visibility
   const [newAddress, setNewAddress] = useState({
     recipientName: "",
@@ -14,33 +14,32 @@ const AddressComponent = () => {
     address: "",
   }); // Store new address
   const [addresses, setAddresses] = useState([]); // List of addresses
-  const [loading, setLoading] = useState(true); // Loading state
+  const [loading, setLoading] = useState(false); // Loading state
   const [error, setError] = useState(null); // Error state
-  const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "" });
   const { token } = useAuth();
 
   // Fetch address list from server
   useEffect(() => {
-    const fetchAddresses = async () => {
-      try {
-        const response = await axios.get(
-          "https://ojt-gw-01-final-project-back-end.vercel.app/api/addresses",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setAddresses(response.data);
-        setLoading(false);
-      } catch (err) {
-        console.error("Error fetching addresses:", err);
-        setError("Failed to load addresses");
-        setLoading(false);
-      }
-    };
-
-    fetchAddresses();
+    // const fetchAddresses = async () => {
+    //   try {
+    //     const response = await axios.get(
+    //       "https://ojt-gw-01-final-project-back-end.vercel.app/api/addresses",
+    //       {
+    //         headers: {
+    //           Authorization: `Bearer ${token}`,
+    //         },
+    //       }
+    //     );
+    //     setAddresses(response.data);
+    //     setLoading(false);
+    //   } catch (err) {
+    //     console.error("Error fetching addresses:", err);
+    //     setError("Failed to load addresses");
+    //     setLoading(false);
+    //   }
+    // };
+    setAddresses(address)
+    // fetchAddresses();
   }, [token]);
 
   // Handle input changes for the new address
@@ -50,16 +49,19 @@ const AddressComponent = () => {
 
   // Handle adding a new address
   const handleAddNewAddress = async () => {
+    // Input validation
     if (!newAddress.recipientName || !newAddress.phoneNumber || !newAddress.address) {
-      setSnackbar({ open: true, message: "Please fill in all fields.", severity: "error" });
+      message.error("Please fill in all fields.");
       return;
     }
-
+  
     if (!/^\d+$/.test(newAddress.phoneNumber)) {
-      setSnackbar({ open: true, message: "Phone number must contain only numbers.", severity: "error" });
+      message.error("Phone number must contain only numbers.");
       return;
     }
-
+  
+    const closeLoadingMessage = message.loading("Adding address...", 0); // Show loading message
+  
     try {
       const response = await axios.post(
         "https://ojt-gw-01-final-project-back-end.vercel.app/api/addresses",
@@ -70,18 +72,25 @@ const AddressComponent = () => {
           },
         }
       );
+      closeLoadingMessage(); // Close loading message
       setAddresses([...addresses, response.data.address]);
-      setSnackbar({ open: true, message: "Address added successfully!", severity: "success" });
+      message.success("Address added successfully!");
       setShowInput(false);
       setNewAddress({ recipientName: "", phoneNumber: "", address: "" });
     } catch (err) {
+      closeLoadingMessage(); // Close loading message
       console.error("Failed to add address:", err);
-      setSnackbar({ open: true, message: "Failed to add address.", severity: "error" });
+      message.error(
+        err.response?.data?.message || "Failed to add address. Please try again!"
+      );
     }
   };
+  
 
   // Handle deleting an address
   const handleDelete = async (id) => {
+    const closeLoadingMessage = message.loading("Deleting address...", 0); // Show loading message
+  
     try {
       await axios.delete(
         `https://ojt-gw-01-final-project-back-end.vercel.app/api/addresses/${id}`,
@@ -91,18 +100,20 @@ const AddressComponent = () => {
           },
         }
       );
+      closeLoadingMessage(); // Close loading message
       setAddresses(addresses.filter((address) => address._id !== id));
-      setSnackbar({ open: true, message: "Address deleted successfully!", severity: "success" });
+      message.success("Address deleted successfully!");
     } catch (err) {
+      closeLoadingMessage(); // Close loading message
       console.error("Failed to delete address:", err);
-      setSnackbar({ open: true, message: "Failed to delete address.", severity: "error" });
+      message.error(
+        err.response?.data?.message || "Failed to delete address. Please try again!"
+      );
     }
   };
+  
 
-  const handleSnackbarClose = () => {
-    setSnackbar({ open: false, message: "", severity: "" });
-  };
-
+  
   if (loading) return <div>Loading...</div>;
   if (error) return <div className="text-red-500">{error}</div>;
 
@@ -220,21 +231,7 @@ const AddressComponent = () => {
         </div>
       )}
 
-      {/* Snackbar */}
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={3000}
-        onClose={handleSnackbarClose}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-      >
-        <Alert
-          onClose={handleSnackbarClose}
-          severity={snackbar.severity}
-          variant="filled"
-        >
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
+    
     </div>
   );
 };

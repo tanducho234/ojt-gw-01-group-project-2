@@ -15,19 +15,39 @@ import { Link, Outlet } from "react-router-dom";
 import ProfileAddress from "../components/AddressProfileUser";
 
 const items = [
-  UserOutlined, // Account
-  ShoppingCartOutlined, // Orders
-  StarOutlined, // Reviews
-  LogoutOutlined, // Log Out
-].map((icon, index) => ({
-  key: String(index + 1),
-  icon: React.createElement(icon),
-  label: (
-    <Link to={["account", "orders", "reviews", "/logout"][index]}>
-      {["Account", "Orders", "Reviews", "Log Out"][index]}
-    </Link>
-  ),
+  {
+    icon: <UserOutlined />,
+    label: "Account",
+    key: "account",
+    to: "/account",
+  },
+  {
+    icon: <ShoppingCartOutlined />,
+    label: "Orders",
+    key: "orders",
+    to: "/orders",
+  },
+  {
+    icon: <StarOutlined />,
+    label: "Reviews",
+    key: "reviews",
+    to: "/reviews",
+  },
+  {
+    icon: <LogoutOutlined />,
+    label: "Log Out",
+    key: "logout",
+    onClick: () => {
+      logout();
+    },
+  },
+].map(({ icon, label, key, to, onClick }) => ({
+  key,
+  icon,
+  label: to ? <Link to={`/profile${to}`}>{label}</Link> : label,
+  onClick,
 }));
+
 
 const { Content } = Layout;
 
@@ -45,21 +65,6 @@ export const ProfileLayout = () => {
     }
   }, [screens.lg]);
 
-  const renderContent = (key) => {
-    switch (key) {
-      case "1":
-        return <Account />;
-      case "2":
-        return <Order />;
-      case "3":
-        return <Reviews />;
-      case "4":
-        logout();
-        return null;
-      default:
-        return <div>Select a menu item</div>;
-    }
-  };
 
   return (
     <Layout>
@@ -111,11 +116,9 @@ export const ProfileLayout = () => {
         >
           <Menu
             mode="inline"
-            selectedKeys={[selectedKey]}
-            onClick={(e) => {
-              setSelectedKey(e.key);
-              if (e.key === "4") logout();
-            }}
+            defaultSelectedKeys={[
+              window.location.pathname.split("/profile/")[1]?.split("/")[0],
+            ]}
             items={items}
           />
         </Layout.Sider>

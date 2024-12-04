@@ -237,7 +237,7 @@ const ProductDetail = () => {
                 </div>
 
                 {/* Main Image */}
-                <div className="flex-1">
+                <div className=" flex flex-1">
                   <img
                     src={bigImage}
                     alt="Main product"

@@ -29,7 +29,7 @@ const OrderTable = () => {
   const fetchOrders = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3000/api/order-details/admin",
+        "https://ojt-gw-01-final-project-back-end.vercel.app/api/order-details/admin",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
