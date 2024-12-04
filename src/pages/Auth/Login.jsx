@@ -338,7 +338,7 @@ const Login = () => {
                   <div className="text-sm">
                   <Link
                       to="/home"
-                      className="font-medium text-black-600 hover:text-indigo-500 flex items-center gap-2"
+                      className="font-medium text-black-600 hover:text-gray-500 flex items-center gap-2"
                     >
                       <FaHouse className="w-4 h-4" />
                       Back to homepage
@@ -349,7 +349,7 @@ const Login = () => {
 
               <button
                 type="submit"
-                className="w-full py-3 bg-black text-white rounded-3xl hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="w-full py-3 bg-black text-white rounded-3xl hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
                 Login
               </button>
@@ -358,7 +358,7 @@ const Login = () => {
                 <span className="text-gray-600">Don't have an account? </span>
                 <Link
                   to="/register"
-                  className="font-medium text-black-600 hover:text-indigo-500"
+                  className="font-medium text-black-600 hover:text-gray-500"
                 >
                   Register
                 </Link>
