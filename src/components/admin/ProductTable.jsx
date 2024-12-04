@@ -1,20 +1,26 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Table, Input, Button, Space, Tag } from "antd";
+import { Table, Input, Button, Space, Tag, Modal, message } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import axios from "axios"; // Sử dụng axios để fetch API
 import { useFetchData } from "../../hooks/useFetchData";
 import { useNavigate } from "react-router-dom";
+import ProductForm from "./ProductForm";
+import { useAuth } from "../../hooks/useAuth";
 const ProductTable = () => {
   const navigate = useNavigate();
-
-  const { categories, styles, brands, colors, sizes } = useFetchData();
+  const { token } = useAuth();
+  const { categories, styles, brands, colors, sizes,refetchData } = useFetchData();
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [editingProduct, setEditingProduct] = useState(null); // Quản lý sản phẩm đang chỉnh sửa
 
   const [tableParams, setTableParams] = useState({
     pagination: {
@@ -84,21 +90,20 @@ const ProductTable = () => {
   };
 
   const [expandable, setExpandable] = useState(defaultExpandable);
-
+  const fetchProducts = async () => {
+    try {
+      const response = await axios.get(
+        "https://ojt-gw-01-final-project-back-end.vercel.app/api/products"
+      );
+      setProducts(response.data);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
     // Fetch dữ liệu từ API
-    const fetchProducts = async () => {
-      try {
-        const response = await axios.get(
-          "https://ojt-gw-01-final-project-back-end.vercel.app/api/products"
-        );
-        setProducts(response.data);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
 
     fetchProducts();
   }, []);
@@ -155,6 +160,63 @@ const ProductTable = () => {
     setSearchText("");
   };
 
+  const handleEditProduct = (product) => {
+    console.log("handleEditProduct", product);
+    setEditingProduct(product);
+    setIsModalVisible(true);
+  };
+
+  const handleAddProduct = async (values) => {
+    let loadingMessage = message.loading("Adding product", 0);
+    try {
+      await axios.post(
+        "https://ojt-gw-01-final-project-back-end.vercel.app/api/products",
+        values,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      loadingMessage()
+      message.success("Product added successfully!");
+      fetchProducts(); // Tải lại danh sách sản phẩm
+    } catch (error) {
+      loadingMessage()
+      message.error("Failed to add product.");
+      console.error(error);
+    } finally {
+      setIsModalVisible(false);
+    }
+  };
+
+  const handleUpdateProduct = async (values) => {
+    let loadingMessage = message.loading("Updating product", 0);
+
+    try {
+      const response = await axios.put(
+        `https://ojt-gw-01-final-project-back-end.vercel.app/api/products/${editingProduct._id}`,
+        values,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      loadingMessage()
+      message.success("Product updated successfully!");
+      // Update the product in the existing products array
+      setProducts((prevProducts) =>
+        prevProducts.map((product) =>
+          product._id === editingProduct._id ? response.data : product
+        )
+      );
+
+    } catch (error) {
+      loadingMessage()
+      message.error("Failed to update product.");
+      console.error(error);
+    } finally {
+      setIsModalVisible(false);
+      setEditingProduct(null);
+    }
+  };
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -284,16 +346,31 @@ const ProductTable = () => {
       })),
       onFilter: (value, record) => record.styleId === value,
     },
+    ,
+    {
+      align: "center",
+
+      title: "General Image",
+      dataIndex: "generalImgLink",
+      key: "generalImgLink",
+      render: (link) =>
+        link ? (
+          <img
+            src={link}
+            alt="product"
+            style={{ maxHeight: "50px", display: "block", margin: "0 auto" }}
+          />
+        ) : (
+          "No Image"
+        ),
+    },
     {
       title: "Action",
       key: "operation",
       fixed: "right",
       width: "auto",
       render: (_, record) => (
-        <Button
-          type="link"
-          onClick={() => navigate(`${record._id}/edit`)} // Use navigate here
-        >
+        <Button type="link" onClick={() => handleEditProduct(record)}>
           <Tag color={"black"} style={{ marginRight: 5 }}>
             Edit
           </Tag>
@@ -304,6 +381,12 @@ const ProductTable = () => {
 
   return (
     <>
+      <Button
+        type="primary"
+        onClick={() => setIsModalVisible(true)}
+        style={{ marginBottom: 16, float: "left", backgroundColor: "black" }}>
+        Add Product
+      </Button>
       <Table
         size="small"
         bordered
@@ -320,6 +403,20 @@ const ProductTable = () => {
           position: ["bottomCenter"], // Set pagination at the bottom center
         }}
       />
+
+      <Modal
+        title={editingProduct ? "Edit Product" : "Add New Product"}
+        open={isModalVisible}
+        onCancel={() => {
+          setIsModalVisible(false);
+          setEditingProduct(null);
+        }}
+        footer={null}>
+        <ProductForm
+          initialValues={editingProduct}
+          onSubmit={editingProduct ? handleUpdateProduct : handleAddProduct}
+        />
+      </Modal>
     </>
   );
 };

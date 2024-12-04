@@ -37,6 +37,7 @@ import ProductTable from "./components/admin/ProductTable";
 import { PageNotFound } from "./pages/PageNotFound";
 import VoucherTable from "./components/admin/VouchersTable";
 import BrandTable from "./components/admin/BrandTable";
+import CategoryTable from "./components/admin/CategoryTable";
 
 function App() {
   return (
@@ -82,6 +83,8 @@ function App() {
           <Route path="products" element={<ProductTable />} />
           <Route path="vouchers" element={<VoucherTable />} />
           <Route path="brands" element={<BrandTable />} />
+          <Route path="categories" element={<CategoryTable />} />
+
         </Route>
         
         <Route path="/OrderSummary" element={<OrderSummary />} />

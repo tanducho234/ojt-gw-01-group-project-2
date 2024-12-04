@@ -18,41 +18,92 @@ const siderStyle = {
 import { Link } from "react-router-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"; // FontAwesome Icons
-import { faUsers, faChartBar, faShoppingCart, faStore, faTag, faCogs, faTshirt, faVideo } from "@fortawesome/free-solid-svg-icons"; // FontAwesome icons
-
-const items = [
-  { icon: <FontAwesomeIcon icon={faUsers} />, label: "Users", key: "users", to: "/users" }, // FontAwesome faUsers
-  {
-    icon: <FontAwesomeIcon icon={faVideo} />, 
-    label: "Dashboard", 
-    key: "dashboard", 
-    to: "/dashboard"
-  }, // FontAwesome faVideo for Dashboard (video-related icon)
-  { icon: <FontAwesomeIcon icon={faShoppingCart} />, label: "Products", key: "products", to: "/products" }, // FontAwesome faShoppingCart
-  {
-    icon: <FontAwesomeIcon icon={faChartBar} />, 
-    label: "Order Details", 
-    key: "order-details", 
-    to: "/order-details"
-  }, // FontAwesome faChartBar for Order Details (graph-like)
-  { icon: <FontAwesomeIcon icon={faStore} />, label: "Brands", key: "brands", to: "/brands" }, // FontAwesome faStore
-  {
-    icon: <FontAwesomeIcon icon={faCogs} />, 
-    label: "Categories", 
-    key: "categories", 
-    to: "/categories"
-  }, // FontAwesome faCogs for Categories (settings icon for configuration)
-  { icon: <FontAwesomeIcon icon={faTshirt} />, label: "Styles", key: "styles", to: "/styles" }, // FontAwesome faTshirt for Styles
-  { icon: <FontAwesomeIcon icon={faTag} />, label: "Vouchers", key: "vouchers", to: "/vouchers" }, // FontAwesome faTag for Vouchers
-  { icon: <FontAwesomeIcon icon={faStore} />, label: "Shop", key: "shop", to: "/shop" }, // FontAwesome faStore for Shop
-].map(({ icon, label, key, to }) => ({
-  key,
-  icon,
-  label: <Link to={`/admin${to}`}>{label}</Link>,
-}));
+import {
+  faUsers,
+  faChartBar,
+  faShoppingCart,
+  faStore,
+  faTag,
+  faCogs,
+  faTshirt,
+  faVideo,
+  faSignOutAlt,
+} from "@fortawesome/free-solid-svg-icons"; // FontAwesome icons
 
 export const AdminLayout = () => {
   const { user } = useAuth();
+  const { logout } = useAuth();
+
+  const items = [
+    {
+      icon: <FontAwesomeIcon icon={faUsers} />,
+      label: "Users",
+      key: "users",
+      to: "/users",
+    }, // FontAwesome faUsers
+    {
+      icon: <FontAwesomeIcon icon={faVideo} />,
+      label: "Dashboard",
+      key: "dashboard",
+      to: "/dashboard",
+    }, // FontAwesome faVideo for Dashboard (video-related icon)
+    {
+      icon: <FontAwesomeIcon icon={faShoppingCart} />,
+      label: "Products",
+      key: "products",
+      to: "/products",
+    }, // FontAwesome faShoppingCart
+    {
+      icon: <FontAwesomeIcon icon={faChartBar} />,
+      label: "Order Details",
+      key: "order-details",
+      to: "/order-details",
+    }, // FontAwesome faChartBar for Order Details (graph-like)
+    {
+      icon: <FontAwesomeIcon icon={faStore} />,
+      label: "Brands",
+      key: "brands",
+      to: "/brands",
+    }, // FontAwesome faStore
+    {
+      icon: <FontAwesomeIcon icon={faCogs} />,
+      label: "Categories",
+      key: "categories",
+      to: "/categories",
+    }, // FontAwesome faCogs for Categories (settings icon for configuration)
+    {
+      icon: <FontAwesomeIcon icon={faTshirt} />,
+      label: "Styles",
+      key: "styles",
+      to: "/styles",
+    }, // FontAwesome faTshirt for Styles
+    {
+      icon: <FontAwesomeIcon icon={faTag} />,
+      label: "Vouchers",
+      key: "vouchers",
+      to: "/vouchers",
+    }, // FontAwesome faTag for Vouchers
+    {
+      icon: <FontAwesomeIcon icon={faStore} />,
+      label: "Shop",
+      key: "shop",
+      to: "/shop",
+    }, // FontAwesome faStore for Shop
+    {
+      icon: <FontAwesomeIcon icon={faSignOutAlt} />,
+      label: "Logout",
+      key: "logout",
+      onClick: () => {
+        logout();
+      },
+    },
+  ].map(({ icon, label, key, to, onClick }) => ({
+    key,
+    icon,
+    label: to ? <Link to={`/admin${to}`}>{label}</Link> : label,
+    onClick,
+  }));
+
   const {
     token: { colorBgContainer = "white", borderRadiusLG },
   } = theme.useToken();
@@ -75,8 +126,7 @@ export const AdminLayout = () => {
           theme="light"
           mode="inline"
           defaultSelectedKeys={[
-            window.location.pathname.split("/admin/")[1]?.split("/")[0] 
-            
+            window.location.pathname.split("/admin/")[1]?.split("/")[0],
           ]}
           items={items}
         />

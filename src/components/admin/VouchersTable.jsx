@@ -29,7 +29,7 @@ const VoucherTable = () => {
   const fetchVouchers = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3000/api/vouchers/admin",
+        "https://ojt-gw-01-final-project-back-end.vercel.app/api/vouchers/admin",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -61,9 +61,13 @@ const VoucherTable = () => {
 
   const handleAddVoucher = async (voucherData) => {
     try {
-      await axios.post("https://ojt-gw-01-final-project-back-end.vercel.app/api/vouchers", voucherData, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await axios.post(
+        "https://ojt-gw-01-final-project-back-end.vercel.app/api/vouchers",
+        voucherData,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       message.success("Voucher added successfully!");
       setIsModalVisible(false);
       fetchVouchers(); // Refresh table

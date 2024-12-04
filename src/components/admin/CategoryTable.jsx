@@ -5,23 +5,23 @@ import Highlighter from "react-highlight-words";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
-import BrandForm from "./BrandForm";
+import CategoryForm from "./BrandForm";
 import { useFetchData } from "../../hooks/useFetchData";
-// Import your BrandForm here when available
-// import BrandForm from "./BrandForm";
+// Import your CategoryForm here when available
+// import CategoryForm from "./CategoryForm";
 
-const BrandTable = () => {
+const CategoryTable = () => {
   const { token } = useAuth();
   const { refetchData } = useFetchData();
 
-  const [brands, setBrands] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [recordEditing, setRecordEditing] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [editingBrand, setEditingBrand] = useState(null);
+  const [editingCategory, setEditingCategory] = useState(null);
 
   const [tableParams, setTableParams] = useState({
     pagination: {
@@ -30,24 +30,21 @@ const BrandTable = () => {
     },
   });
 
-  const fetchBrands = async () => {
+  const fetchCategories = async () => {
     try {
-      const response = await axios.get(
-        "https://ojt-gw-01-final-project-back-end.vercel.app/api/brands",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      setBrands(response.data);
+      const response = await axios.get("https://ojt-gw-01-final-project-back-end.vercel.app/api/categories", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setCategories(response.data);
     } catch (error) {
-      console.error("Error fetching brands:", error);
+      console.error("Error fetching categories:", error);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchBrands();
+    fetchCategories();
   }, []);
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -61,59 +58,55 @@ const BrandTable = () => {
     setSearchText("");
   };
 
-  const handleAddBrand = async (brandData) => {
-    let loadingMessage = message.loading("Adding brand", 0);
+  const handleAddCategory = async (categoryData) => {
+    let loadingMessage = message.loading("Adding category", 0);
 
     try {
-      await axios.post(
-        "https://ojt-gw-01-final-project-back-end.vercel.app/api/brands",
-        brandData,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      await axios.post("https://ojt-gw-01-final-project-back-end.vercel.app/api/categories", categoryData, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       loadingMessage();
-      message.success("Brand added successfully!");
+      message.success("Category added successfully!");
       setIsModalVisible(false);
-      fetchBrands(); // Refresh table
+      fetchCategories(); // Refresh table
       refetchData();
     } catch (error) {
       loadingMessage();
-      console.error("Error adding brand:", error);
-      message.error("Failed to add brand!");
+      console.error("Error adding category:", error);
+      message.error("Failed to add category!");
     }
   };
 
-  const handleUpdateBrand = async (updatedBrand) => {
+  const handleUpdateCategory = async (updatedCategory) => {
     let loadingMessage = message.loading("Updating product", 0);
 
     try {
       const response = await axios.put(
-        `https://ojt-gw-01-final-project-back-end.vercel.app/api/brands/${editingBrand._id}`,
-        updatedBrand,
+        `https://ojt-gw-01-final-project-back-end.vercel.app/api/categories/${editingCategory._id}`,
+        updatedCategory,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      message.success("Brand updated successfully!");
+      message.success("Category updated successfully!");
       setIsModalVisible(false);
-      setEditingBrand(null);
-      setBrands((prevBrands) =>
-        prevBrands.map((brand) =>
-          brand._id === editingBrand._id ? response.data : brand
+      setEditingCategory(null);
+      setCategories((prevCategories) =>
+        prevCategories.map((category) =>
+          category._id === editingCategory._id ? response.data : category
         )
       );
       refetchData();
       loadingMessage();
     } catch (error) {
-      message.error("Failed to update brand!");
+      message.error("Failed to update category!");
       console.log(error);
       loadingMessage();
     }
   };
 
-  const handleEditBrand = (brand) => {
-    setEditingBrand(brand);
+  const handleEditCategory = (category) => {
+    setEditingCategory(category);
     setIsModalVisible(true);
   };
 
@@ -178,7 +171,7 @@ const BrandTable = () => {
   const columns = [
     {
       width: 200,
-      title: "Brand Name",
+      title: "Category Name",
       dataIndex: "name",
       key: "name",
       ...getColumnSearchProps("name"),
@@ -200,7 +193,7 @@ const BrandTable = () => {
         link ? (
           <img
             src={link}
-            alt="Brand"
+            alt="Category"
             style={{ maxHeight: "50px", display: "block", margin: "0 auto" }}
           />
         ) : (
@@ -214,7 +207,7 @@ const BrandTable = () => {
       fixed: "right",
       render: (_, record) => (
         <>
-          <Button type="link" onClick={() => handleEditBrand(record)}>
+          <Button type="link" onClick={() => handleEditCategory(record)}>
             <Tag color="black" style={{ marginRight: 5 }}>
               Edit
             </Tag>
@@ -230,12 +223,12 @@ const BrandTable = () => {
         type="primary"
         onClick={() => setIsModalVisible(true)}
         style={{ marginBottom: 16, float: "left", backgroundColor: "black" }}>
-        Add Brand
+        Add Category
       </Button>
       <Table
         size="small"
         columns={columns}
-        dataSource={brands}
+        dataSource={categories}
         loading={loading}
         bordered
         scroll={{ x: "max-content" }}
@@ -254,20 +247,20 @@ const BrandTable = () => {
         }}
       />
       <Modal
-        title={editingBrand ? "Edit Brand" : "Add New Brand"}
+        title={editingCategory ? "Edit Category" : "Add New Category"}
         open={isModalVisible}
         onCancel={() => {
           setIsModalVisible(false);
-          setEditingBrand(null);
+          setEditingCategory(null);
         }}
         footer={null}>
-        <BrandForm
-          initialValues={editingBrand}
-          onSubmit={editingBrand ? handleUpdateBrand : handleAddBrand}
+        <CategoryForm
+          initialValues={editingCategory}
+          onSubmit={editingCategory ? handleUpdateCategory : handleAddCategory}
         />
       </Modal>
     </>
   );
 };
 
-export default BrandTable;
+export default CategoryTable;

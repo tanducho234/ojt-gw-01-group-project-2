@@ -131,7 +131,7 @@ function AccountPage() {
             className="bg-black p-2 rounded-full absolute top-[-14px] right-[-9px] transform translate-x-3 z-10 w-13 h-13"
           >
             <img
-              src="/public/images/iconedit.png"
+              src="/images/iconedit.png"
               alt="Edit"
               className="w-full h-full object-contain"
             />
@@ -153,7 +153,7 @@ function AccountPage() {
             <div className="relative">
               {/* Icon nằm bên trái */}
               <img
-                src="/public/images/IconName.png" // Đường dẫn hình ảnh icon
+                src="/images/IconName.png" // Đường dẫn hình ảnh icon
                 alt="icon"
                 className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5"
               />
@@ -176,7 +176,7 @@ function AccountPage() {
             <div className="relative">
               {/* Icon nằm bên trái */}
               <img
-                src="/public/images/IconEmail.png" // Đường dẫn hình ảnh icon
+                src="/images/IconEmail.png" // Đường dẫn hình ảnh icon
                 alt="icon"
                 className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5"
               />
@@ -195,7 +195,7 @@ function AccountPage() {
             <div className="relative">
               {/* Icon nằm bên trái */}
               <img
-                src="/public/images/IconPhone.png" // Đường dẫn hình ảnh icon
+                src="/images/IconPhone.png" // Đường dẫn hình ảnh icon
                 alt="icon"
                 className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5"
               />

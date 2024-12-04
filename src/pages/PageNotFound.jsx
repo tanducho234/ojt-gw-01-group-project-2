@@ -126,7 +126,7 @@ export const PageNotFound = () => {
           whileTap={{ scale: 0.9 }}
         >
           <Link
-            to="/"
+            to={-1}
             className="inline-block px-8 py-4 text-lg font-semibold 
             bg-gradient-to-r from-red-500 to-red-600 
             text-white rounded-full 

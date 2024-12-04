@@ -31,31 +31,32 @@ export const FetchDataProvider = ({ children }) => {
     "XL",
   ]);
   const [error, setError] = useState(null);
+  const fetchData = async () => {
+    try {
+      const [categoryResponse, styleResponse, brandResponse] =
+        await Promise.all([
+          axios.get(`${URL}/api/categories`),
+          axios.get(`${URL}/api/styles`),
+          axios.get(`${URL}/api/brands`),
+        ]);
+      setCategories(categoryResponse.data);
+      setStyles(styleResponse.data);
+      setBrands(brandResponse.data);
+    } catch (err) {
+      setError("Failed to fetch data");
+      console.error(err);
+    } finally {
+      console.log("Brands/Categories/Styles mounted");
+    }
+  };
 
   // Fetch data from API
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [categoryResponse, styleResponse, brandResponse] =
-          await Promise.all([
-            axios.get(`${URL}/api/categories`),
-            axios.get(`${URL}/api/styles`),
-            axios.get(`${URL}/api/brands`),
-          ]);
-        setCategories(categoryResponse.data);
-        setStyles(styleResponse.data);
-        setBrands(brandResponse.data);
-      } catch (err) {
-        setError("Failed to fetch data");
-        console.error(err);
-      } finally {
-        console.log("Brands/Categories/Styles mounted");
-      }
-    };
-
     fetchData();
   }, []); // Empty dependency array to run once on mount
-
+  const refetchData = () => {
+    fetchData();
+  };
   // Memoize context value to optimize re-renders
   const value = useMemo(
     () => ({
@@ -64,6 +65,7 @@ export const FetchDataProvider = ({ children }) => {
       brands,
       colors,
       sizes,
+      refetchData
     }),
     [categories, styles, brands]
   );

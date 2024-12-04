@@ -119,9 +119,7 @@ const Checkout = () => {
       }
 
       // Kiểm tra và áp dụng mã giảm giá
-      const selectedDiscount = discounts.find(
-        (discount) => discount.code === discountCode && discount.isActive
-      );
+      const selectedDiscount = data.voucher;
 
       if (!selectedDiscount) {
         toast.error("Invalid discount code or expired!");
@@ -341,8 +339,7 @@ const Checkout = () => {
               </p>
               <Link
                 to="/products"
-                className="bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-600"
-              >
+                className="bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-600">
                 Go to shopping
               </Link>
             </div>
@@ -370,8 +367,7 @@ const Checkout = () => {
                   <div className="space-y-4">
                     <button
                       onClick={() => setIsAddressModalOpen(true)}
-                      className="w-full bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-600"
-                    >
+                      className="w-full bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-600">
                       Select or Add Shipping Address
                     </button>
                     {selectedAddress && (
@@ -422,8 +418,7 @@ const Checkout = () => {
                           shippingMethod === method
                             ? "bg-black"
                             : "bg-gray-300 hover:bg-gray-400"
-                        }`}
-                      >
+                        }`}>
                         {method === "economy"
                           ? "Economy  ($2.00)"
                           : method === "standard"
@@ -463,10 +458,13 @@ const Checkout = () => {
                       </datalist>
                     </div>
                     <button
-                      onClick={handleApplyDiscount}
-                      className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-600"
-                    >
-                      Apply
+                      onClick={
+                        appliedDiscount
+                          ? () => setAppliedDiscount(null)
+                          : handleApplyDiscount
+                      }
+                      className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-600">
+                      {appliedDiscount ? "Reset" : "Apply"}
                     </button>
                   </div>
                   {appliedDiscount && (
@@ -559,8 +557,7 @@ const Checkout = () => {
                     onConfirm={handleConfirmOrder}
                     // onCancel={cancel}
                     okText="Yes"
-                    cancelText="No"
-                  >
+                    cancelText="No">
                     <button
                       className="w-full bg-black text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-600"
                       // disabled={!selectedAddress || !paymentMethod}
@@ -586,9 +583,10 @@ const Checkout = () => {
                     <div
                       key={address._id || index}
                       onClick={() => handleAddressSelect(address._id)}
-                      className="p-4 border rounded-lg cursor-pointer hover:bg-gray-100"
-                    >
-                      <p className="font-semibold">👤 {address.recipientName}</p>
+                      className="p-4 border rounded-lg cursor-pointer hover:bg-gray-100">
+                      <p className="font-semibold">
+                        👤 {address.recipientName}
+                      </p>
                       <p>📞 {address.phoneNumber}</p>
                       <p>📍 {address.address}</p>
                     </div>
@@ -600,15 +598,13 @@ const Checkout = () => {
                       setIsAddressModalOpen(false); // Close Address Modal
                       setIsAddAddressModalOpen(true); // Open Add Address Modal
                     }}
-                    className="w-full bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-600"
-                  >
+                    className="w-full bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-600">
                     Add New Address
                   </button>
 
                   <button
                     onClick={() => setIsAddressModalOpen(false)}
-                    className="w-full mt-4 text-center text-black hover:text-gray-700"
-                  >
+                    className="w-full mt-4 text-center text-black hover:text-gray-700">
                     Close
                   </button>
                 </div>
@@ -666,8 +662,7 @@ const Checkout = () => {
                       setIsAddAddressModalOpen(false); // Close Add Address Modal
                       setIsAddressModalOpen(true); // Reopen Address Selection Modal
                     }}
-                    className="w-full bg-black text-white py-2 px-4 rounded-lg mt-4 hover:bg-gray-600"
-                  >
+                    className="w-full bg-black text-white py-2 px-4 rounded-lg mt-4 hover:bg-gray-600">
                     Save New Address
                   </button>
                   <button
@@ -675,8 +670,7 @@ const Checkout = () => {
                       setIsAddAddressModalOpen(false); // Close Add Address Modal
                       setIsAddressModalOpen(true); // Reopen Address Selection Modal
                     }}
-                    className="w-full mt-4 text-center text-black hover:text-gray-700"
-                  >
+                    className="w-full mt-4 text-center text-black hover:text-gray-700">
                     Cancel
                   </button>
                 </div>
