@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faTrash, faUser, faPhone, faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "../hooks/useAuth";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
@@ -123,9 +123,18 @@ const AddressComponent = () => {
               >
                 <FontAwesomeIcon icon={faTrash} />
               </button>
-              <p className="text-gray-800 font-medium">Recipient Name: {address.recipientName}</p>
-              <p className="text-gray-800 font-medium">Phone Number: {address.phoneNumber}</p>
-              <p className="text-gray-800 font-medium">Address: {address.address}</p>
+              <p className="text-gray-800 font-medium">
+                <FontAwesomeIcon icon={faUser} className="mr-2 text-gray-700" />
+                Recipient Name: {address.recipientName}
+              </p>
+              <p className="text-gray-800 font-medium">
+                <FontAwesomeIcon icon={faPhone} className="mr-2 text-gray-700" />
+                Phone Number: {address.phoneNumber}
+              </p>
+              <p className="text-gray-800 font-medium">
+                <FontAwesomeIcon icon={faMapMarkerAlt} className="mr-2 text-gray-700" />
+                Address: {address.address}
+              </p>
             </div>
           ))
         ) : (
@@ -152,7 +161,10 @@ const AddressComponent = () => {
           <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
             <h3 className="text-lg font-semibold mb-4 text-gray-900">Add a New Address</h3>
             <div className="mb-4">
-              <label className="block font-medium text-sm text-gray-700">Recipient Name</label>
+              <label className="block font-medium text-sm text-gray-700">
+                <FontAwesomeIcon icon={faUser} className="mr-2 text-gray-700" />
+                Recipient Name
+              </label>
               <input
                 type="text"
                 name="recipientName"
@@ -163,7 +175,10 @@ const AddressComponent = () => {
               />
             </div>
             <div className="mb-4">
-              <label className="block font-medium text-sm text-gray-700">Phone Number</label>
+              <label className="block font-medium text-sm text-gray-700">
+                <FontAwesomeIcon icon={faPhone} className="mr-2 text-gray-700" />
+                Phone Number
+              </label>
               <input
                 type="text"
                 name="phoneNumber"
@@ -174,7 +189,10 @@ const AddressComponent = () => {
               />
             </div>
             <div className="mb-4">
-              <label className="block font-medium text-sm text-gray-700">Address</label>
+              <label className="block font-medium text-sm text-gray-700">
+                <FontAwesomeIcon icon={faMapMarkerAlt} className="mr-2 text-gray-700" />
+                Address
+              </label>
               <input
                 type="text"
                 name="address"
