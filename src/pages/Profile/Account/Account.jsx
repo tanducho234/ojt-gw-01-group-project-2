@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuth } from "../../../hooks/useAuth";
+import ProfileAddressUser from "../../../components/AddressProfileUser";
 
 function AccountPage() {
   const [address, setAddresses] = useState([]);
@@ -13,6 +14,11 @@ function AccountPage() {
     email: "",
     phone: "",
   });
+  const LoadingSpinner = () => (
+    <div className="flex justify-center items-center h-screen">
+      <div className="border-t-4 border-blue-500 border-solid w-16 h-16 rounded-full animate-spin"></div>
+    </div>
+  );
 
   const { token } = useAuth(); // Assuming useAuth() returns { token }
 
@@ -102,11 +108,11 @@ function AccountPage() {
     }
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <LoadingSpinner />; // Show LoadingSpinner while loading
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <section className="w-[730px] mx-auto bg-white rounded-lg p-8 shadow">
+    <section className="w-full mx-auto bg-white rounded-lg p-8 shadow">
       {!isEditing && <h2 className="text-2xl font-bold mb-6">Account</h2>}
       {!isEditing && (
         <p className="text-lg text-[#747474] mb-6">
@@ -180,15 +186,15 @@ function AccountPage() {
                 alt="icon"
                 className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5"
               />
-            <input
-              type="email"
-              name="email"
-              value={updatedUserInfo.email}
-              onChange={handleInputChange}
-              className="w-full pl-10 px-4 py-2 rounded-lg border border-gray-300 bg-gray-200 text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-300"
-              readOnly
-            />
-          </div>
+              <input
+                type="email"
+                name="email"
+                value={updatedUserInfo.email}
+                onChange={handleInputChange}
+                className="w-full pl-10 px-4 py-2 rounded-lg border border-gray-300 bg-gray-200 text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                readOnly
+              />
+            </div>
           </div>
           <div className="mb-4">
             <label className="block text-sm font-semibold">Phone</label>
@@ -199,15 +205,15 @@ function AccountPage() {
                 alt="icon"
                 className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5"
               />
-            <input
-              type="text"
-              name="phone"
-              value={updatedUserInfo.phone}
-              onChange={handleInputChange}
-              className="w-full pl-10 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black"
-              required
-            />
-          </div>
+              <input
+                type="text"
+                name="phone"
+                value={updatedUserInfo.phone}
+                onChange={handleInputChange}
+                className="w-full pl-10 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black"
+                required
+              />
+            </div>
           </div>
           <div className="flex justify-between">
             <button
@@ -226,6 +232,9 @@ function AccountPage() {
           </div>
         </form>
       )}
+      <div>
+        <ProfileAddressUser />
+      </div>
     </section>
   );
 }

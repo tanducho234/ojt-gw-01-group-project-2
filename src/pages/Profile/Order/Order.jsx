@@ -159,10 +159,10 @@ const Order = () => {
                     </div>
 
                     <div className="space-y-4 sm:space-y-6">
-                      {order.products.map((item) => (
+                      {order.products.map((item,index) => (
                         <div
                           className="flex items-start sm:items-center"
-                          key={item.productId}
+                          key={index}
                         >
                           <img
                             src={item.imgLink}

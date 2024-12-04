@@ -125,15 +125,15 @@ const AddressComponent = () => {
               </button>
               <p className="text-gray-800 font-medium">
                 <FontAwesomeIcon icon={faUser} className="mr-2 text-gray-700" />
-                Recipient Name: {address.recipientName}
+                Recipient Name: <span className="font-normal">{address.recipientName}</span>
               </p>
               <p className="text-gray-800 font-medium">
                 <FontAwesomeIcon icon={faPhone} className="mr-2 text-gray-700" />
-                Phone Number: {address.phoneNumber}
+                Phone Number: <span className="font-normal">{address.phoneNumber}</span>
               </p>
               <p className="text-gray-800 font-medium">
                 <FontAwesomeIcon icon={faMapMarkerAlt} className="mr-2 text-gray-700" />
-                Address: {address.address}
+                Address: <span className="font-normal">{address.address}</span>
               </p>
             </div>
           ))
@@ -153,7 +153,7 @@ const AddressComponent = () => {
       {/* Add address modal */}
       {showInput && (
         <div
-          className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center p-4"
+          className="fixed inset-0 z-10 bg-gray-800 bg-opacity-50 flex items-center justify-center p-4"
           onClick={(e) => {
             if (e.target.classList.contains("fixed")) setShowInput(false);
           }}
