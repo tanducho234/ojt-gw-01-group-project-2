@@ -19,7 +19,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import { ProtectedLayout } from "./utils/ProtectedLayout";
 import { HomeLayout } from "./utils/HomeLayout";
 import { AdminLayout } from "./utils/AdminLayout";
-import AddressComponent from "./components/ProfileAddress";
+
 
 function App() {
   return (
@@ -49,7 +49,7 @@ function App() {
           <Route path="" element={<Dashboard />} />
           <Route path="dashboard" element={<Dashboard />} />
         </Route>{" "}
-        <Route path="/address" element={<AddressComponent />} />
+
       </Routes>
     </AuthProvider>
   );
