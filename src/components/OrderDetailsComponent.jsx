@@ -1,7 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
+import {
+  faChevronLeft,
+  faTruck,
+  faBoxOpen,
+  faArrowUpRightFromSquare,
+} from "@fortawesome/free-solid-svg-icons";
+
 import Modal from "react-modal";
 import axios from "axios";
 import { useAuth } from "../hooks/useAuth";
@@ -12,7 +18,10 @@ const OrderDetail = () => {
   const { token } = useAuth();
   const location = useLocation();
   const { order } = location.state;
+  const orderId = order._id;
   const [storedOrder, setStoredOrder] = useState(order);
+  const [steps, setSteps] = useState([]); 
+  const [loading, setLoading] = useState(true);
 
   const calculateSubtotal = () => {
     return order.products.reduce((total, item) => {
@@ -63,12 +72,16 @@ const OrderDetail = () => {
     switch (status) {
       case "Pending":
         return "bg-yellow-100 text-yellow-600";
-      case "Shipped":
+      case "Preparing":
+        return "bg-pink-100 text-pink-600";
+      case "Canceled":
+        return "bg-red-100 text-red-600";
+      case "Delivering":
         return "bg-blue-100 text-blue-600";
       case "Delivered":
         return "bg-green-100 text-green-600";
-      case "Canceled":
-        return "bg-red-100 text-red-600";
+      case "Returned":
+        return "bg-gray-100 text-gray-600";
       default:
         return "bg-gray-100 text-gray-600";
     }
@@ -85,32 +98,39 @@ const OrderDetail = () => {
         return "Unknown";
     }
   };
-  const steps = [
-    {
-      label: "Pending",
-      description: "Order is being processed",
-      status: "completed",
-      date: "2024-11-25 10:00 AM",
-    },
-    {
-      label: "Delivered",
-      description: "Package delivered to courier",
-      status: "completed",
-      date: "2024-11-26 2:00 PM",
-    },
-    {
-      label: "Delivered",
-      description: "Order delivered to the recipient",
-      status: "in-progress",
-      date: "2024-11-27 3:30 PM",
-    },
-    {
-      label: "Canceled",
-      description: "Order was canceled by the customer",
-      status: "pending",
-      date: "2024-11-28 9:00 AM",
-    },
-  ];
+  // Gọi lại khi token thay đổi
+
+  useEffect(() => {
+    if (!token || !orderId) return; // Ensure both token and orderId are available
+
+    const fetchSteps = async () => {
+      try {
+        setLoading(true);
+
+        const response = await axios.get(
+          `https://ojt-gw-01-final-project-back-end.vercel.app/api/order-details/${orderId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const apiSteps = response.data.statusHistory.map((item) => ({
+          status: item.status, // Map API status to local 'status'
+          date: item.timestamp, // Use 'timestamp' for the time
+        }));
+
+        setSteps(apiSteps);
+      } catch (error) {
+        console.error("Failed to fetch steps from API", error);
+      } finally {
+        setLoading(false); // Stop the loading spinner
+      }
+    };
+
+    fetchSteps();
+  }, [token, orderId]);
 
   return (
     <div className="mt-8 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -173,48 +193,30 @@ const OrderDetail = () => {
         </div>
 
         {/* Status History Section */}
-        <div className="  p-1">
-        <h2 className="text-lg font-medium mb-4">History Status</h2>
+        <div className="p-1">
+          <h2 className="text-lg font-medium mb-4">History Status</h2>
           <div className="bg-white p-4 rounded shadow">
             <Steps
-              progressDot
               direction="vertical"
-              current={steps.findIndex((step) => step.status === "in-progress")}
-              items={steps.map((step, index) => ({
-                title: (
-                  <span
-                    className={
-                      step.status === "completed" &&
-                      index ===
-                        steps.findIndex((s) => s.status === "in-progress") - 1
-                        ? "text-black font-semibold"
-                        : "text-gray-500"
-                    }
-                  >
-                    {step.label}
-                  </span>
-                ),
-                description: (
-                  <span
-                    className={
-                      step.status === "completed" &&
-                      index ===
-                        steps.findIndex((s) => s.status === "in-progress") - 1
-                        ? "text-black"
-                        : "text-gray-500"
-                    }
-                  >
-                    {`${step.description} - ${step.date}`}
-                  </span>
-                ),
-                status:
-                  step.status === "completed"
-                    ? "finish"
-                    : step.status === "in-progress"
-                    ? "process"
-                    : "wait",
-              }))}
-            />
+              size="small"
+              current={steps.findIndex((step) => step.status === order.status)}
+            >
+              {steps.map((step, index) => (
+                <Steps.Step
+                  key={index}
+                  title={step.status}
+                  description={new Intl.DateTimeFormat("en-GB", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: false, // 24-hour format
+                  }).format(new Date(step.date))}
+                  className={step.status}
+                />
+              ))}
+            </Steps>
           </div>
         </div>
       </div>
@@ -227,23 +229,28 @@ const OrderDetail = () => {
           <h2 className="text-lg font-medium mb-4">Payment</h2>
           <div className="space-y-4">
             <div className="flex justify-between">
-              <span>{order.paymentMethod}</span>
+              <span className="text-gray-600">Payment Method:</span>
+              <span className="text-gray-600 font-semibold">
+                {order.paymentMethod}
+              </span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Payment Status:</span>
-              <span>{order.paymentStatus}</span>
+              <span className="text-gray-600 font-semibold">
+                {order.paymentStatus}
+              </span>
             </div>
             {/* Conditional Button for Pending Payment Status */}
-            {order.paymentStatus === "Pending" &&
-              order.status !== "Canceled" && (
+            {order.paymentStatus === "Pending" && order.paymentMethod!=="COD" &&
+              order.status !== "Canceled"  && (
                 <div className="flex justify-between mt-4">
                   <a
                     href={order.paymentLink}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <button className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">
-                      Complete Payment
+                    <button className="bg-green-500 font-bold text-white px-4 py-2 rounded-full hover:bg-green-600">
+                      Continue to Payment
                     </button>
                   </a>
                 </div>
@@ -257,36 +264,59 @@ const OrderDetail = () => {
           <div className="space-y-4">
             <div className="flex justify-between">
               <span className="text-gray-600">Name:</span>
-              <span>{order.shippingAddress.recipientName}</span>{" "}
+              <span className="text-gray-600 font-semibold ">
+                {order.shippingAddress.recipientName}
+              </span>{" "}
               {/* Added name field here */}
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Address:</span>
-              <span>{order.shippingAddress.address}</span>
+              <span className="text-gray-600 font-semibold ">
+                {order.shippingAddress.address}
+              </span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Phone:</span>
-              <span>{order.shippingAddress.phoneNumber}</span>
+              <span className="text-gray-600 font-semibold ">
+                {order.shippingAddress.phoneNumber}
+              </span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Delivery method:</span>
-              <span>{getShippingMethod(order.shippingCost)}</span>
+              <span className="text-gray-600 font-semibold ">
+                {getShippingMethod(order.shippingCost)}
+              </span>
             </div>
           </div>
         </div>
       </div>
-
+      <hr />
       {/* Payment and Need Help */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
         <div className="p-6">
           <h2 className="text-lg font-medium mb-4">Need Help?</h2>
           <div className="space-y-4">
             <div className="flex justify-between">
-              <span className="text-gray-600">Delivery Info?</span>
+              <span className="text-gray-600">
+                <FontAwesomeIcon icon={faTruck} className="mr-2 text-lg" />
+                Delivery Info
+                <FontAwesomeIcon
+                  icon={faArrowUpRightFromSquare}
+                  className="ml-1 text-gray-600"
+                />
+              </span>
               <span>{order.deliveryInfo}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600">Returns?</span>
+              <span className="text-gray-600">
+                {" "}
+                <FontAwesomeIcon icon={faBoxOpen} className="mr-2 text-lg" />
+                Returns
+                <FontAwesomeIcon
+                  icon={faArrowUpRightFromSquare}
+                  className="ml-1 text-gray-600"
+                />
+              </span>
               <span>{order.returnPolicy}</span>
             </div>
           </div>
@@ -298,33 +328,48 @@ const OrderDetail = () => {
           <div className="space-y-4">
             <div className="flex justify-between">
               <span className="text-gray-600">Subtotal:</span>
-              <span>${subtotal.toFixed(2)}</span>
+              <span className="text-gray-600 font-semibold">
+                ${subtotal.toFixed(2)}
+              </span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Discount:</span>
-              <span>-${order.voucherDiscountAmount}</span>
+              <span className="text-gray-600 font-semibold">
+                -${order.voucherDiscountAmount}
+              </span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Ship Cost:</span>
-              <span>+${order.shippingCost}</span>
+              <span className="text-gray-600 font-semibold">
+                +${order.shippingCost}
+              </span>
             </div>
+            <hr />
             <div className="flex justify-between font-medium">
-              <span>Total:</span>
-              <span>${order.totalPrice}</span>
+              <span className="text-gray-600 text-lg font-semibold">
+                Total:
+              </span>
+              <span className="text-black text-lg font-bold">
+                ${order.totalPrice}
+              </span>
             </div>
           </div>
         </div>
       </div>
 
       {/* Action Buttons */}
-      <div className="flex justify-between mt-6">
+      <div className="flex justify-center mt-6">
         {order.status === "Delivered" && (
-          <button
-            onClick={openReviewModal}
-            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-          >
-            Send Review
-          </button>
+          <div class="max-w-md mx-auto mt-8 p-6">
+            <div class="flex justify-center gap-4 mt-4">
+              {/* <button class="bg-white font-bold text-red-600 border-[1px] border-rose-500 rounded-full py-2 px-10 hover:bg-pink-100 transition duration-300">
+                Return Order
+              </button>
+              <button class="bg-black font-bold text-white py-2 px-10 rounded-full hover:bg-gray-600 transition duration-300">
+                Send Review
+              </button> */}
+            </div>
+          </div>
         )}
 
         {storedOrder.status === "Pending" && (
@@ -335,7 +380,36 @@ const OrderDetail = () => {
             okText="Yes"
             cancelText="No"
           >
-            <Button danger>Cancel Order</Button>
+            <div class="max-w-md mx-auto mt-8 p-6">
+              <div class="flex justify-center items-center gap-4 mt-4">
+                <Button
+                  danger
+                  className="bg-white font-bold text-red-600 border border-rose-500 rounded-full py-2 px-10 hover:bg-pink-100 transition duration-300"
+                >
+                  Cancel Order
+                </Button>
+              </div>
+            </div>
+          </Popconfirm>
+        )}
+        {storedOrder.status === "Preparing" && (
+          <Popconfirm
+            title="Are you sure you want to cancel this order?"
+            onConfirm={handleCancelOrder}
+            onCancel={cancel}
+            okText="Yes"
+            cancelText="No"
+          >
+            <div class="max-w-md mx-auto mt-8 p-6">
+              <div class="flex justify-center items-center gap-4 mt-4">
+                <Button
+                  danger
+                  className="bg-white font-bold text-red-600 border border-rose-500 rounded-full py-2 px-10 hover:bg-pink-100 transition duration-300"
+                >
+                  Cancel Order
+                </Button>
+              </div>
+            </div>
           </Popconfirm>
         )}
         {storedOrder.status === "Delivering" && (
@@ -346,7 +420,16 @@ const OrderDetail = () => {
             okText="Yes"
             cancelText="No"
           >
-            <Button disabled>Cancel Order</Button>
+            <div class="max-w-md mx-auto mt-2 p-2">
+              <div class="flex justify-center gap-4 mt-2">
+                <Button
+                  disabled
+                  className="bg-white font-bold text-red-600 border border-rose-500 rounded-full py-2 px-10 hover:bg-pink-100 transition duration-300"
+                >
+                  Cancel Order
+                </Button>
+              </div>
+            </div>
           </Popconfirm>
         )}
       </div>

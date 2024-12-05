@@ -73,19 +73,20 @@ const Order = () => {
       case "Pending":
         return "bg-yellow-100 text-yellow-600";
       case "Preparing":
-        return "bg-blue-100 text-blue-600";
+        return "bg-pink-300 text-pink-800";
+      case "Canceled":
+        return "bg-red-200 text-red-600";
       case "Delivering":
-        return "bg-purple-100 text-purple-600";
+        return "bg-blue-100 text-blue-600";
       case "Delivered":
         return "bg-green-100 text-green-600";
       case "Returned":
         return "bg-gray-100 text-gray-600";
-      case "Canceled":
-        return "bg-red-100 text-red-600";
       default:
         return "bg-gray-100 text-gray-600";
     }
   };
+
 
   // Lọc orders dựa trên tab được chọn
   const filteredOrders =

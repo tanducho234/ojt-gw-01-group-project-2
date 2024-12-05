@@ -5,8 +5,7 @@ import {
   Route,
   Outlet,
 } from "react-router-dom";
-import Navbar from "./components/Navbar/Navbar";
-import Footer from "./components/Footer/Footer";
+
 import Home from "./pages/Home/Home";
 import Products from "./pages/Products/Products";
 import ProductDetail from "./pages/ProductDetail/ProductDetail";
@@ -29,7 +28,7 @@ import OrderSuccess from "./pages/Checkout/OrderSuccess";
 import OrderFailed from "./pages/Checkout/OrderFailed";
 import Account from "./pages/Profile/Account/Account";
 import { ProfileLayout } from "./utils/ProfileLayout";
-import OrderSummary from "./components/OrderProfileComponent";
+
 import OrderDetailsComponent from "./components/OrderDetailsComponent";
 import Order from "./pages/Profile/Order/Order";
 import Review from "./pages/Profile/Reviews/Review";
@@ -92,9 +91,7 @@ function App() {
           <Route path="order-details" element={<OrderTable />} />
 
         </Route>
-        
-        <Route path="/OrderSummary" element={<OrderSummary />} />
-        <Route path="/OrderSummary/:orderId" element={<OrderDetailsComponent />} />
+
       </Routes>
     </AuthProvider>
     </FetchDataProvider>
