@@ -5,6 +5,7 @@ import ItemCheckout from "../../components/ItemCheckout/ItemCheckout";
 import { Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { Button, message, Popconfirm } from "antd";
+import { set } from "react-hook-form";
 
 const LoadingSpinner = () => (
   <div className="flex justify-center items-center h-screen">
@@ -330,17 +331,23 @@ const Checkout = () => {
       ) : (
         <div className="max-w-6xl mx-auto p-6 space-y-6">
           <ToastContainer closeOnClick={true} />
-          <h1 className="text-3xl font-bold text-center">Checkout</h1>
           {cartItems.length === 0 ? (
-            <div className="text-center space-y-4">
-              <p className="text-lg font-semibold text-red-600">
-                Your cart is empty. Please add some items to proceed with
-                checkout.
+            <div className="w-full py-12 rounded-lg shadow-md items-center justify-center text-center">
+              <h1 className="text-4xl font-bold text-gray-800 mb-4">
+                Your Cart is Empty
+              </h1>
+              <img
+                src="./././public/images/emptycart.png"
+                alt="Empty Cart"
+                className="mx-auto mb-6 w-64 h-64 object-cover"
+              />
+              <p className="mb-4">
+                Add some products to your cart to continue shopping.
               </p>
-              <Link
-                to="/products"
-                className="bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-600">
-                Go to shopping
+              <Link to="/products">
+                <button className="bg-black text-white font-semibold py-3 px-6 rounded-lg hover:bg-gray-700 transition duration-300 ease-in-out transform hover:scale-105">
+                  Continue Shopping
+                </button>
               </Link>
             </div>
           ) : (
@@ -367,7 +374,8 @@ const Checkout = () => {
                   <div className="space-y-4">
                     <button
                       onClick={() => setIsAddressModalOpen(true)}
-                      className="w-full bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-600">
+                      className="w-full bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-600"
+                    >
                       Select or Add Shipping Address
                     </button>
                     {selectedAddress && (
@@ -418,7 +426,8 @@ const Checkout = () => {
                           shippingMethod === method
                             ? "bg-black"
                             : "bg-gray-300 hover:bg-gray-400"
-                        }`}>
+                        }`}
+                      >
                         {method === "economy"
                           ? "Economy  ($2.00)"
                           : method === "standard"
@@ -460,10 +469,14 @@ const Checkout = () => {
                     <button
                       onClick={
                         appliedDiscount
-                          ? () => setAppliedDiscount(null)
+                          ? () => {
+                              setAppliedDiscount(null);
+                              setDiscountCode("");
+                            }
                           : handleApplyDiscount
                       }
-                      className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-600">
+                      className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-600"
+                    >
                       {appliedDiscount ? "Reset" : "Apply"}
                     </button>
                   </div>
@@ -557,7 +570,8 @@ const Checkout = () => {
                     onConfirm={handleConfirmOrder}
                     // onCancel={cancel}
                     okText="Yes"
-                    cancelText="No">
+                    cancelText="No"
+                  >
                     <button
                       className="w-full bg-black text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-600"
                       // disabled={!selectedAddress || !paymentMethod}
@@ -583,7 +597,8 @@ const Checkout = () => {
                     <div
                       key={address._id || index}
                       onClick={() => handleAddressSelect(address._id)}
-                      className="p-4 border rounded-lg cursor-pointer hover:bg-gray-100">
+                      className="p-4 border rounded-lg cursor-pointer hover:bg-gray-100"
+                    >
                       <p className="font-semibold">
                         👤 {address.recipientName}
                       </p>
@@ -598,13 +613,15 @@ const Checkout = () => {
                       setIsAddressModalOpen(false); // Close Address Modal
                       setIsAddAddressModalOpen(true); // Open Add Address Modal
                     }}
-                    className="w-full bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-600">
+                    className="w-full bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-600"
+                  >
                     Add New Address
                   </button>
 
                   <button
                     onClick={() => setIsAddressModalOpen(false)}
-                    className="w-full mt-4 text-center text-black hover:text-gray-700">
+                    className="w-full mt-4 text-center text-black hover:text-gray-700"
+                  >
                     Close
                   </button>
                 </div>
@@ -662,7 +679,8 @@ const Checkout = () => {
                       setIsAddAddressModalOpen(false); // Close Add Address Modal
                       setIsAddressModalOpen(true); // Reopen Address Selection Modal
                     }}
-                    className="w-full bg-black text-white py-2 px-4 rounded-lg mt-4 hover:bg-gray-600">
+                    className="w-full bg-black text-white py-2 px-4 rounded-lg mt-4 hover:bg-gray-600"
+                  >
                     Save New Address
                   </button>
                   <button
@@ -670,7 +688,8 @@ const Checkout = () => {
                       setIsAddAddressModalOpen(false); // Close Add Address Modal
                       setIsAddressModalOpen(true); // Reopen Address Selection Modal
                     }}
-                    className="w-full mt-4 text-center text-black hover:text-gray-700">
+                    className="w-full mt-4 text-center text-black hover:text-gray-700"
+                  >
                     Cancel
                   </button>
                 </div>
