@@ -1,11 +1,18 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Table, Input, Button, Space, Tag, Modal, message } from "antd";
-import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
+import { Table, Input, Button, Space, Tag, Modal, message, Select } from "antd";
+import { PlusOutlined, SearchOutlined, SyncOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 // import OrderForm from "./OrderForm"; // Create a form similar to ProductForm
 import { useAuth } from "../../hooks/useAuth";
+const statusOptions = [
+  { value: "Pending", label: "Pending" },
+  { value: "Preparing", label: "Preparing" },
+  { value: "Delivering", label: "Delivering" },
+  { value: "Delivered", label: "Delivered" },
+  { value: "Returned", label: "Returned" },
+];
 
 const OrderTable = () => {
   const navigate = useNavigate();
@@ -14,9 +21,9 @@ const OrderTable = () => {
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
+  const [recordEditing, setRecordEditing] = useState([]);
+
   const searchInput = useRef(null);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [editingOrder, setEditingOrder] = useState(null);
 
   const [tableParams, setTableParams] = useState({
     pagination: {
@@ -25,6 +32,49 @@ const OrderTable = () => {
     },
     filters: {},
   });
+
+  const [isStatusModalVisible, setIsStatusModalVisible] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [newStatus, setNewStatus] = useState("");
+
+  const handleUpdateStatus = (order) => {
+    setSelectedOrder(order);
+    setNewStatus(order.status);
+    setIsStatusModalVisible(true);
+  };
+  const handleSaveStatus = async () => {
+    if (selectedOrder && newStatus !== selectedOrder.status) {
+      try {
+        setRecordEditing((prev) => [...prev, selectedOrder]);
+
+        // Make an API call to update the order status
+        const response = await axios.put(
+          `https://ojt-gw-01-final-project-back-end.vercel.app/api/order-details/${selectedOrder._id}`,
+          { status: newStatus },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        // Update the order status locally
+        const updatedOrders = orders.map((order) =>
+          order._id === selectedOrder._id
+            ? { ...order, status: newStatus }
+            : order
+        );
+        setOrders(updatedOrders);
+        message.success("Order status updated successfully!");
+      } catch (error) {
+        message.error("Failed to update order status.");
+      } finally {
+        setIsStatusModalVisible(false);
+        setRecordEditing((prev) =>
+          prev.filter((item) => item._id !== selectedOrder._id)
+        );
+      }
+    } else {
+      setIsStatusModalVisible(false);
+    }
+  };
 
   const fetchOrders = async () => {
     try {
@@ -149,7 +199,7 @@ const OrderTable = () => {
     {
       width: 50,
       align: "center",
-      title: "User",
+      title: "User ID",
       dataIndex: "userId",
       key: "userId",
       // render: (userId) => userId || "Unknown",
@@ -177,45 +227,38 @@ const OrderTable = () => {
       key: "paymentMethod",
     },
     {
-      width:100,
+      width: 120,
       align: "center",
       title: "Order Status",
       dataIndex: "status",
       key: "status",
-      filters: [
-        { text: "Pending", value: "Pending" },
-        { text: "Preparing", value: "Preparing" },
-        { text: "Delivering", value: "Delivering" },
-        { text: "Delivered", value: "Delivered" },
-        { text: "Returned", value: "Returned" },
-      ],
-      onFilter: (value, record) => record.status === value,
-      render: (status) => {
-        let color;
-        switch (status) {
-          case "Pending":
-            color = "blue";
-            break;
-          case "Preparing":
-            color = "geekblue";
-            break;
-          case "Delivering":
-            color = "orange";
-            break;
-          case "Delivered":
-            color = "green";
-            break;
-          case "Returned":
-            color = "red";
-            break;
-          default:
-            color = "red";
-        }
-        return <Tag color={color}>{status}</Tag>;
+      render: (status, record) => {
+        return recordEditing.some((item) => item._id === record._id) ? (
+          <Tag icon={<SyncOutlined spin />} color="processing">
+            Updating
+          </Tag>
+        ) : (
+          <Tag
+            color={
+              status === "Pending"
+                ? "blue"
+                : status === "Preparing"
+                ? "geekblue"
+                : status === "Delivering"
+                ? "orange"
+                : status === "Delivered"
+                ? "green"
+                : "red"
+            }
+            style={{ cursor: "pointer" }}
+            onClick={() => handleUpdateStatus(record)}>
+            {status}
+          </Tag>
+        );
       },
     },
     {
-      width:30,
+      width: 30,
       title: "Total Price",
       dataIndex: "totalPrice",
       key: "totalPrice",
@@ -224,6 +267,7 @@ const OrderTable = () => {
     },
 
     {
+      width: 120,
       align: "center",
       title: "Payment Status",
       dataIndex: "paymentStatus",
@@ -252,15 +296,46 @@ const OrderTable = () => {
         return <Tag color={color}>{status}</Tag>;
       },
     },
+    //add shippingAddress
     {
-      title: "Action",
-      key: "action",
-      render: (_, record) => (
-        <Button type="link" onClick={() => handleEditOrder(record)}>
-          <Tag color="black">Edit</Tag>
-        </Button>
-      ),
+      align: "left",
+      title: <div style={{ textAlign: "center" }}>Shipping Address</div>,
+      dataIndex: "shippingAddress",
+      key: "shippingAddress",
+      children: [
+        {
+          title: "Recipient Name",
+          dataIndex: ["shippingAddress", "recipientName"],
+          key: "recipientName",
+          width: 150,
+          render: (recipientName) => recipientName || "N/A",
+        },
+        {
+          title: "Phone Number",
+          dataIndex: ["shippingAddress", "phoneNumber"],
+          key: "phoneNumber",
+          width: 150,
+          render: (phoneNumber) => phoneNumber || "N/A",
+        },
+        {
+          title: "Address",
+          dataIndex: ["shippingAddress", "address"],
+          key: "address",
+          width: 250,
+          render: (address) => address || "N/A",
+        },
+      ],
     },
+
+    // {
+    //   title: "Action",
+    //   key: "action",
+    //   render: (_, record) => (
+    //     <Button type="link" onClick={() => handleEditOrder(record)}>
+    //       <Tag color="black">Edit</Tag>
+    //     </Button>
+    //   ),
+    // },
   ];
 
   return (
@@ -271,6 +346,7 @@ const OrderTable = () => {
         columns={columns}
         dataSource={orders}
         loading={loading}
+        scroll={{ x: "max-content" }}
         rowKey="_id"
         pagination={{
           ...tableParams.pagination,
@@ -286,6 +362,33 @@ const OrderTable = () => {
       >
         <OrderForm initialValues={editingOrder} />
       </Modal> */}
+
+      <Modal
+        okButtonProps={{
+          style: { backgroundColor: "black", borderColor: "black" },
+        }}
+        title="Update Order Status"
+        open={isStatusModalVisible}
+        onCancel={() => setIsStatusModalVisible(false)}
+        onOk={handleSaveStatus}>
+        <Select
+          value={newStatus}
+          onChange={(value) => setNewStatus(value)}
+          style={{ width: "100%" }}>
+          {statusOptions
+            .filter((status) => {
+              if (selectedOrder?.status === "Preparing") {
+                return status.value !== "Pending";
+              }
+              return true;
+            })
+            .map((status) => (
+              <Select.Option key={status.value} value={status.value}>
+                {status.label}
+              </Select.Option>
+            ))}
+        </Select>
+      </Modal>
     </>
   );
 };

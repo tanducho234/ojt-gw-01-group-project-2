@@ -5,13 +5,14 @@ import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import axios from "axios"; // Sử dụng axios để fetch API
 import { useFetchData } from "../../hooks/useFetchData";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ProductForm from "./ProductForm";
 import { useAuth } from "../../hooks/useAuth";
 const ProductTable = () => {
   const navigate = useNavigate();
   const { token } = useAuth();
-  const { categories, styles, brands, colors, sizes,refetchData } = useFetchData();
+  const { categories, styles, brands, colors, sizes, refetchData } =
+    useFetchData();
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -176,11 +177,11 @@ const ProductTable = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      loadingMessage()
+      loadingMessage();
       message.success("Product added successfully!");
       fetchProducts(); // Tải lại danh sách sản phẩm
     } catch (error) {
-      loadingMessage()
+      loadingMessage();
       message.error("Failed to add product.");
       console.error(error);
     } finally {
@@ -199,7 +200,7 @@ const ProductTable = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      loadingMessage()
+      loadingMessage();
       message.success("Product updated successfully!");
       // Update the product in the existing products array
       setProducts((prevProducts) =>
@@ -207,9 +208,8 @@ const ProductTable = () => {
           product._id === editingProduct._id ? response.data : product
         )
       );
-
     } catch (error) {
-      loadingMessage()
+      loadingMessage();
       message.error("Failed to update product.");
       console.error(error);
     } finally {
@@ -369,12 +369,18 @@ const ProductTable = () => {
       key: "operation",
       fixed: "right",
       width: "auto",
+      align: "center",
       render: (_, record) => (
-        <Button type="link" onClick={() => handleEditProduct(record)}>
-          <Tag color={"black"} style={{ marginRight: 5 }}>
-            Edit
-          </Tag>
-        </Button>
+        <>
+          <Button type="link" onClick={() => handleEditProduct(record)}>
+            <Tag color={"black"} style={{ marginRight: 5 }}>
+              Edit
+            </Tag>
+          </Button>
+          <Link to={`/admin/products/${record._id}`}>
+            <Button type="primary">Manage Product Variants</Button>
+          </Link>
+        </>
       ),
     },
   ];
@@ -397,7 +403,13 @@ const ProductTable = () => {
         rowKey="_id"
         scroll={scroll}
         expandable={expandable}
-        onChange={handleTableChange}
+        onChange={(pagination, filters, sorter) => {
+          setLoading(true);
+          setTimeout(() => {
+            setLoading(false);
+            handleTableChange(pagination, filters, sorter);
+          }, 300);
+        }}
         pagination={{
           ...tableParams.pagination,
           position: ["bottomCenter"], // Set pagination at the bottom center

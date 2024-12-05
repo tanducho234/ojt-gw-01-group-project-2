@@ -39,6 +39,7 @@ import BrandTable from "./components/admin/BrandTable";
 import CategoryTable from "./components/admin/CategoryTable";
 import OrderTable from "./components/admin/OrderTable";
 import { UnderConstructionPage } from "./pages/UnderConstructionPage";
+import ManageProductVariant from "./components/admin/ManageProductVariant";
 
 
 function App() {
@@ -89,6 +90,8 @@ function App() {
           <Route path="brands" element={<BrandTable />} />
           <Route path="categories" element={<CategoryTable />} />
           <Route path="order-details" element={<OrderTable />} />
+          <Route path="products/:productId" element={<ManageProductVariant />} />
+
 
         </Route>
 

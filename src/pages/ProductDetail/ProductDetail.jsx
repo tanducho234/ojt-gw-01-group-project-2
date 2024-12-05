@@ -344,7 +344,7 @@ const ProductDetail = () => {
                       )}
                 </div>
                 {/* productQuantity */}
-                <div className="text-sm text-gray-600 pl-1 min-h-[20px]">
+                <div className="text-sm text-black pl-1 min-h-[20px]">
                   {selectedSize && `Available: ${productQuantity} items`}
                 </div>
               </div>

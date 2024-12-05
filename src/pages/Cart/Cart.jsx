@@ -130,7 +130,7 @@ const Cart = () => {
                 Your Cart is Empty
               </h1>
               <img
-                src="./././public/images/emptycart.png"
+                src="/images/emptycart.png"
                 alt="Empty Cart"
                 className="mx-auto mb-6 w-64 h-64 object-cover"
               />

@@ -16,7 +16,7 @@ import { UploadOutlined } from "@ant-design/icons";
 const ProductForm = ({ initialValues, onSubmit }) => {
   const { categories, styles, brands } = useFetchData();
   const [form] = Form.useForm();
-  const [imageUrl, setImageUrl] = useState("");
+  const [imageUrl, setImageUrl] = useState(null);
 
   useEffect(() => {
     if (initialValues) {
@@ -29,11 +29,7 @@ const ProductForm = ({ initialValues, onSubmit }) => {
   }, [initialValues, form]);
 
   const handleFinish = (values) => {
-    const formattedValues = {
-      ...values,
-      generalImgLink: imageUrl,
-    };
-    onSubmit(formattedValues);
+    onSubmit(values);
   };
   const handleUploadChange = async (info) => {
     console.log("handleUploadChange", info);
@@ -43,6 +39,7 @@ const ProductForm = ({ initialValues, onSubmit }) => {
       const response = info.file.response; // Ensure response returns image URL
       if (response) {
         setImageUrl(response);
+        form.setFieldValue("generalImgLink", response);
         message.success({
           content: "Image uploaded successfully!",
           key: "upload",
@@ -76,7 +73,6 @@ const ProductForm = ({ initialValues, onSubmit }) => {
         ]}>
         <Input placeholder="Enter product name" />
       </Form.Item>
-
       <Form.Item
         name="gender"
         label="Gender"
@@ -87,7 +83,6 @@ const ProductForm = ({ initialValues, onSubmit }) => {
           <Select.Option value="unisex">Unisex</Select.Option>
         </Select>
       </Form.Item>
-
       <Form.Item
         name="price"
         label="Price"
@@ -98,7 +93,6 @@ const ProductForm = ({ initialValues, onSubmit }) => {
           style={{ width: "100%" }}
         />
       </Form.Item>
-
       <Form.Item
         name="salePercentage"
         label="Sale Percentage"
@@ -117,7 +111,6 @@ const ProductForm = ({ initialValues, onSubmit }) => {
           style={{ width: "100%" }}
         />
       </Form.Item>
-
       <Form.Item
         name="categoryId"
         label="Category"
@@ -130,7 +123,6 @@ const ProductForm = ({ initialValues, onSubmit }) => {
           ))}
         </Select>
       </Form.Item>
-
       <Form.Item
         name="brandId"
         label="Brand"
@@ -143,7 +135,6 @@ const ProductForm = ({ initialValues, onSubmit }) => {
           ))}
         </Select>
       </Form.Item>
-
       <Form.Item
         name="styleId"
         label="Style"
@@ -156,8 +147,10 @@ const ProductForm = ({ initialValues, onSubmit }) => {
           ))}
         </Select>
       </Form.Item>
-
-      <Form.Item label="Upload Image">
+      <Form.Item
+        label="Upload Image"
+        name="generalImgLink"
+        rules={[{ required: true, message: "Please upload an image" }]}>
         <Upload
           name="image"
           action="https://ojt-gw-01-final-project-back-end.vercel.app/api/upload-images/single"
@@ -172,7 +165,7 @@ const ProductForm = ({ initialValues, onSubmit }) => {
             <img src={imageUrl} alt="Brand" style={{ maxHeight: 200 }} />
           </div>
         )}
-      </Form.Item>
+      </Form.Item>{" "}
       <Form.Item>
         <Button
           type="primary"
