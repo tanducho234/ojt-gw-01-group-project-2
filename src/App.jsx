@@ -39,6 +39,8 @@ import VoucherTable from "./components/admin/VouchersTable";
 import BrandTable from "./components/admin/BrandTable";
 import CategoryTable from "./components/admin/CategoryTable";
 import OrderTable from "./components/admin/OrderTable";
+import { UnderConstructionPage } from "./pages/UnderConstructionPage";
+
 
 function App() {
   return (
@@ -47,6 +49,8 @@ function App() {
       <ScrollToTop />
        <Routes>
         <Route path="*" element={<PageNotFound/>} />
+        <Route path="coming-soon" element={<UnderConstructionPage/>} />
+
         <Route path="about" element={<AboutUs />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />

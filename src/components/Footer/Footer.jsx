@@ -147,7 +147,7 @@ const Footer = () => {
             <ul className="space-y-2">
               <li>
                 <Link
-                  to="#"
+                  to="/coming-soon"
                   className="text-sm text-gray-600 hover:text-black transition">
                   Customer Support
                 </Link>
