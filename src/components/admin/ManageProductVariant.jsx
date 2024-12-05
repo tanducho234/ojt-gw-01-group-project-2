@@ -159,7 +159,7 @@ const ManageProductVariant = () => {
               </Space>
               {sizes.map((size, index) => (
                 <div key={index}>
-                  <strong>{size.size}</strong> - Price: ${size.price} - Qty:{" "}
+                  <strong>{size.size}</strong> - Price: ${size.price} - Qty:
                   {size.quantity}
                 </div>
               ))}
@@ -182,19 +182,19 @@ const ManageProductVariant = () => {
           <div key={index}>
             <strong>Color:</strong> {colorVariant.color}
             <br />
-            <strong>Sizes:</strong>{" "}
+            <strong>Sizes:</strong>
             {colorVariant.sizes.map(
               (s) => `${s.size} (Price: $${s.price}, Qty: ${s.quantity})`
             )}
             <br />
-            <strong>Images:</strong>{" "}
+            <strong>Images:</strong>
             {colorVariant.imgLinks.map((link, idx) => (
               <a
                 href={link}
                 key={idx}
                 target="_blank"
                 rel="noopener noreferrer">
-                View {idx + 1}{" "}
+                View {idx + 1}
               </a>
             ))}
             <hr />

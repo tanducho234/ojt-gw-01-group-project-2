@@ -165,7 +165,7 @@ const ProductForm = ({ initialValues, onSubmit }) => {
             <img src={imageUrl} alt="Brand" style={{ maxHeight: 200 }} />
           </div>
         )}
-      </Form.Item>{" "}
+      </Form.Item>
       <Form.Item>
         <Button
           type="primary"

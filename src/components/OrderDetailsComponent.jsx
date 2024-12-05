@@ -20,7 +20,7 @@ const OrderDetail = () => {
   const { order } = location.state;
   const orderId = order._id;
   const [storedOrder, setStoredOrder] = useState(order);
-  const [steps, setSteps] = useState([]); 
+  const [steps, setSteps] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const calculateSubtotal = () => {
@@ -136,8 +136,7 @@ const OrderDetail = () => {
     <div className="mt-8 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       <Link
         to="/profile/orders"
-        className="text-gray-600 text-sm flex items-center mb-4"
-      >
+        className="text-gray-600 text-sm flex items-center mb-4">
         <FontAwesomeIcon icon={faChevronLeft} className="mr-2" /> Back to orders
       </Link>
       {/* Order Details Title Section */}
@@ -152,8 +151,7 @@ const OrderDetail = () => {
           <span
             className={`mt-2 sm:mt-0 px-4 py-2 text-sm font-medium rounded-full ${getStatusStyle(
               storedOrder.status
-            )}`}
-          >
+            )}`}>
             {storedOrder.status}
           </span>
         </div>
@@ -168,8 +166,7 @@ const OrderDetail = () => {
             {order.products.map((item) => (
               <div
                 className="flex items-start sm:items-center"
-                key={item.productId}
-              >
+                key={item.productId}>
                 <img
                   src={item.imgLink}
                   alt={item.name}
@@ -199,8 +196,7 @@ const OrderDetail = () => {
             <Steps
               direction="vertical"
               size="small"
-              current={steps.findIndex((step) => step.status === order.status)}
-            >
+              current={steps.findIndex((step) => step.status === order.status)}>
               {steps.map((step, index) => (
                 <Steps.Step
                   key={index}
@@ -241,14 +237,14 @@ const OrderDetail = () => {
               </span>
             </div>
             {/* Conditional Button for Pending Payment Status */}
-            {order.paymentStatus === "Pending" && order.paymentMethod!=="COD" &&
-              order.status !== "Canceled"  && (
+            {order.paymentStatus === "Pending" &&
+              order.paymentMethod !== "COD" &&
+              order.status !== "Canceled" && (
                 <div className="flex justify-between mt-4">
                   <a
                     href={order.paymentLink}
                     target="_blank"
-                    rel="noopener noreferrer"
-                  >
+                    rel="noopener noreferrer">
                     <button className="bg-green-500 font-bold text-white px-4 py-2 rounded-full hover:bg-green-600">
                       Continue to Payment
                     </button>
@@ -266,7 +262,7 @@ const OrderDetail = () => {
               <span className="text-gray-600">Name:</span>
               <span className="text-gray-600 font-semibold ">
                 {order.shippingAddress.recipientName}
-              </span>{" "}
+              </span>
               {/* Added name field here */}
             </div>
             <div className="flex justify-between">
@@ -309,7 +305,6 @@ const OrderDetail = () => {
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">
-                {" "}
                 <FontAwesomeIcon icon={faBoxOpen} className="mr-2 text-lg" />
                 Returns
                 <FontAwesomeIcon
@@ -378,14 +373,12 @@ const OrderDetail = () => {
             onConfirm={handleCancelOrder}
             onCancel={cancel}
             okText="Yes"
-            cancelText="No"
-          >
+            cancelText="No">
             <div class="max-w-md mx-auto mt-8 p-6">
               <div class="flex justify-center items-center gap-4 mt-4">
                 <Button
                   danger
-                  className="bg-white font-bold text-red-600 border border-rose-500 rounded-full py-2 px-10 hover:bg-pink-100 transition duration-300"
-                >
+                  className="bg-white font-bold text-red-600 border border-rose-500 rounded-full py-2 px-10 hover:bg-pink-100 transition duration-300">
                   Cancel Order
                 </Button>
               </div>
@@ -398,14 +391,12 @@ const OrderDetail = () => {
             onConfirm={handleCancelOrder}
             onCancel={cancel}
             okText="Yes"
-            cancelText="No"
-          >
+            cancelText="No">
             <div class="max-w-md mx-auto mt-8 p-6">
               <div class="flex justify-center items-center gap-4 mt-4">
                 <Button
                   danger
-                  className="bg-white font-bold text-red-600 border border-rose-500 rounded-full py-2 px-10 hover:bg-pink-100 transition duration-300"
-                >
+                  className="bg-white font-bold text-red-600 border border-rose-500 rounded-full py-2 px-10 hover:bg-pink-100 transition duration-300">
                   Cancel Order
                 </Button>
               </div>
@@ -418,14 +409,12 @@ const OrderDetail = () => {
             onConfirm={handleCancelOrder}
             onCancel={cancel}
             okText="Yes"
-            cancelText="No"
-          >
+            cancelText="No">
             <div class="max-w-md mx-auto mt-2 p-2">
               <div class="flex justify-center gap-4 mt-2">
                 <Button
                   disabled
-                  className="bg-white font-bold text-red-600 border border-rose-500 rounded-full py-2 px-10 hover:bg-pink-100 transition duration-300"
-                >
+                  className="bg-white font-bold text-red-600 border border-rose-500 rounded-full py-2 px-10 hover:bg-pink-100 transition duration-300">
                   Cancel Order
                 </Button>
               </div>
@@ -440,27 +429,23 @@ const OrderDetail = () => {
         onRequestClose={closeReviewModal}
         contentLabel="Review Modal"
         className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
-        overlayClassName="fixed inset-0"
-      >
+        overlayClassName="fixed inset-0">
         <div className="bg-white p-6 rounded-lg w-full max-w-md">
           <h2 className="text-lg font-medium mb-4">Send Review</h2>
           <textarea
             value={review}
             onChange={(e) => setReview(e.target.value)}
             className="w-full h-32 border border-gray-300 rounded-lg p-2 mb-4"
-            placeholder="Write your review here..."
-          ></textarea>
+            placeholder="Write your review here..."></textarea>
           <div className="flex justify-end space-x-4">
             <button
               onClick={closeReviewModal}
-              className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300"
-            >
+              className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300">
               Cancel
             </button>
             <button
               onClick={handleReviewSubmit}
-              className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-            >
+              className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
               Submit Review
             </button>
           </div>

@@ -6,6 +6,8 @@ import { Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { Button, message, Popconfirm } from "antd";
 import { set } from "react-hook-form";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMapMarkerAlt, faPhone, faUser } from "@fortawesome/free-solid-svg-icons";
 
 const LoadingSpinner = () => (
   <div className="flex justify-center items-center h-screen">
@@ -374,8 +376,7 @@ const Checkout = () => {
                   <div className="space-y-4">
                     <button
                       onClick={() => setIsAddressModalOpen(true)}
-                      className="w-full bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-600"
-                    >
+                      className="w-full bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-600">
                       Select or Add Shipping Address
                     </button>
                     {selectedAddress && (
@@ -384,7 +385,7 @@ const Checkout = () => {
                           Selected Shipping Address
                         </h3>
                         <p className="mt-2">
-                          <span className="font-semibold">Name:</span>{" "}
+                          <span className="font-semibold">Name:</span>
                           {
                             addresses.find(
                               (addr) => addr._id === selectedAddress
@@ -392,7 +393,7 @@ const Checkout = () => {
                           }
                         </p>
                         <p>
-                          <span className="font-semibold">Phone:</span>{" "}
+                          <span className="font-semibold">Phone:</span>
                           {
                             addresses.find(
                               (addr) => addr._id === selectedAddress
@@ -400,7 +401,7 @@ const Checkout = () => {
                           }
                         </p>
                         <p>
-                          <span className="font-semibold">Address:</span>{" "}
+                          <span className="font-semibold">Address:</span>
                           {
                             addresses.find(
                               (addr) => addr._id === selectedAddress
@@ -426,8 +427,7 @@ const Checkout = () => {
                           shippingMethod === method
                             ? "bg-black"
                             : "bg-gray-300 hover:bg-gray-400"
-                        }`}
-                      >
+                        }`}>
                         {method === "economy"
                           ? "Economy  ($2.00)"
                           : method === "standard"
@@ -459,7 +459,7 @@ const Checkout = () => {
                             <option key={discount._id} value={discount.code}>
                               {discount.discountAmount > 0
                                 ? `$${discount.discountAmount.toFixed(2)}`
-                                : `${discount.discountPercentage}%`}{" "}
+                                : `${discount.discountPercentage}%`}
                               - (Min Order: ${discount.minOrderValue.toFixed(2)}
                               )
                             </option>
@@ -475,14 +475,13 @@ const Checkout = () => {
                             }
                           : handleApplyDiscount
                       }
-                      className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-600"
-                    >
+                      className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-600">
                       {appliedDiscount ? "Reset" : "Apply"}
                     </button>
                   </div>
                   {appliedDiscount && (
                     <p className="mt-2 text-green-600">
-                      Applied Discount:{" "}
+                      Applied Discount:
                       {appliedDiscount.type === "amount"
                         ? `$${appliedDiscount.value.toFixed(2)}`
                         : `${appliedDiscount.value}%`}
@@ -570,8 +569,7 @@ const Checkout = () => {
                     onConfirm={handleConfirmOrder}
                     // onCancel={cancel}
                     okText="Yes"
-                    cancelText="No"
-                  >
+                    cancelText="No">
                     <button
                       className="w-full bg-black text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-600"
                       // disabled={!selectedAddress || !paymentMethod}
@@ -597,13 +595,29 @@ const Checkout = () => {
                     <div
                       key={address._id || index}
                       onClick={() => handleAddressSelect(address._id)}
-                      className="p-4 border rounded-lg cursor-pointer hover:bg-gray-100"
-                    >
+                      className="p-4 border rounded-lg cursor-pointer hover:bg-gray-100">
                       <p className="font-semibold">
-                        👤 {address.recipientName}
+                        <FontAwesomeIcon
+                          icon={faUser}
+                          className="mr-2 text-gray-700"
+                        />
+
+                        {address.recipientName}
                       </p>
-                      <p>📞 {address.phoneNumber}</p>
-                      <p>📍 {address.address}</p>
+                      <p>
+                        <FontAwesomeIcon
+                          icon={faPhone}
+                          className="mr-2 text-gray-700"
+                        />
+                        {address.phoneNumber}
+                      </p>
+                      <p>
+                        <FontAwesomeIcon
+                          icon={faMapMarkerAlt}
+                          className="mr-2 text-gray-700"
+                        />
+                        {address.address}
+                      </p>
                     </div>
                   ))}
 
@@ -613,15 +627,13 @@ const Checkout = () => {
                       setIsAddressModalOpen(false); // Close Address Modal
                       setIsAddAddressModalOpen(true); // Open Add Address Modal
                     }}
-                    className="w-full bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-600"
-                  >
+                    className="w-full bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-600">
                     Add New Address
                   </button>
 
                   <button
                     onClick={() => setIsAddressModalOpen(false)}
-                    className="w-full mt-4 text-center text-black hover:text-gray-700"
-                  >
+                    className="w-full mt-4 text-center text-black hover:text-gray-700">
                     Close
                   </button>
                 </div>
@@ -679,8 +691,7 @@ const Checkout = () => {
                       setIsAddAddressModalOpen(false); // Close Add Address Modal
                       setIsAddressModalOpen(true); // Reopen Address Selection Modal
                     }}
-                    className="w-full bg-black text-white py-2 px-4 rounded-lg mt-4 hover:bg-gray-600"
-                  >
+                    className="w-full bg-black text-white py-2 px-4 rounded-lg mt-4 hover:bg-gray-600">
                     Save New Address
                   </button>
                   <button
@@ -688,8 +699,7 @@ const Checkout = () => {
                       setIsAddAddressModalOpen(false); // Close Add Address Modal
                       setIsAddressModalOpen(true); // Reopen Address Selection Modal
                     }}
-                    className="w-full mt-4 text-center text-black hover:text-gray-700"
-                  >
+                    className="w-full mt-4 text-center text-black hover:text-gray-700">
                     Cancel
                   </button>
                 </div>

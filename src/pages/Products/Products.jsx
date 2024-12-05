@@ -241,7 +241,6 @@ function Products() {
            p-3 transition-transform duration-300 max-[540px]:h-[80rem] md:h-[1200px] 2xl:h-[1300px] ${
              showFilters ? "translate-x-0" : "-translate-x-full"
            } sm:translate-x-0 sm:block max-[375px]:w-full max-[414px]:w-full max-[430px]:w-full md:w-60 max-[820px]:w-60 2xl:w-80`}>
-        {" "}
         <div className=" p-5">
           <div>
             <h3 className="font-bold text-2xl">Filters</h3>
@@ -464,7 +463,7 @@ function Products() {
             <label
               htmlFor="sort"
               className="text-[16px] font-medium 2xl:text-xl 2xl:font-semibold">
-              Sort By:{" "}
+              Sort By:
             </label>
             <select
               id="sort"

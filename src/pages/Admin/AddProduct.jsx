@@ -43,7 +43,7 @@ export const AddProduct = () => {
   const [variants, setVariants] = useState([]);
 
   const addVariant = () => {
-    console.log("addVariant")
+    console.log("addVariant");
     // Use react-hook-form validation
     if (!currentColor) {
       setError("currentColor", {
@@ -151,7 +151,6 @@ export const AddProduct = () => {
 
   return (
     <div className="p-6 bg-gray-100">
-      
       <h2 className="text-xl font-semibold mb-4">Add New Product</h2>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Product Details */}
@@ -280,7 +279,7 @@ export const AddProduct = () => {
                   Description is required
                 </span>
               )}
-            </div>{" "}
+            </div>
           </div>
         </div>
 

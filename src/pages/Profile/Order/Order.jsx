@@ -87,7 +87,6 @@ const Order = () => {
     }
   };
 
-
   // Lọc orders dựa trên tab được chọn
   const filteredOrders =
     activeTab === "All"
@@ -111,8 +110,7 @@ const Order = () => {
             scrollbarColor: "#6B7280 #E5E7EB",
             overflowX: "hidden",
             scrollBehavior: "smooth",
-          }}
-        >
+          }}>
           {tabs.map((tab) => (
             <button
               key={tab}
@@ -121,8 +119,7 @@ const Order = () => {
                   ? "bg-black text-white border-black"
                   : "text-gray-600 border-gray-300 hover:bg-gray-200"
               }`}
-              onClick={() => setActiveTab(tab)}
-            >
+              onClick={() => setActiveTab(tab)}>
               {tab}
             </button>
           ))}
@@ -137,8 +134,7 @@ const Order = () => {
                 {filteredOrders.map((order) => (
                   <div
                     key={order._id}
-                    className="border rounded-lg p-4 sm:p-6 shadow-md bg-white"
-                  >
+                    className="border rounded-lg p-4 sm:p-6 shadow-md bg-white">
                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
                       <div>
                         <p className="text-gray-600 text-sm font-medium sm:text-base">
@@ -146,25 +142,23 @@ const Order = () => {
                           {order._id}
                         </p>
                         <p className="text-gray-600 text-sm font-medium sm:text-base">
-                          <span className="font-normal">Order date:</span>{" "}
+                          <span className="font-normal">Order date:</span>
                           {new Date(order.createdAt).toLocaleDateString()}
                         </p>
                       </div>
                       <span
                         className={`mt-2 sm:mt-0 px-4 py-2 text-sm font-medium rounded-full ${getStatusStyle(
                           order.status
-                        )}`}
-                      >
+                        )}`}>
                         {order.status}
                       </span>
                     </div>
 
                     <div className="space-y-4 sm:space-y-6">
-                      {order.products.map((item,index) => (
+                      {order.products.map((item, index) => (
                         <div
                           className="flex items-start sm:items-center"
-                          key={index}
-                        >
+                          key={index}>
                           <img
                             src={item.imgLink}
                             alt={item.name}
@@ -194,12 +188,11 @@ const Order = () => {
                       <Link
                         to={`${order._id}`}
                         state={{ order }}
-                        className="text-black font-medium text-sm sm:text-base mb-2 sm:mb-0"
-                      >
+                        className="text-black font-medium text-sm sm:text-base mb-2 sm:mb-0">
                         View details <FontAwesomeIcon icon={faChevronRight} />
                       </Link>
                       <p className="font-normal text-sm sm:text-base">
-                        Grand total:{" "}
+                        Grand total:
                         <span className="text-base font-medium sm:text-lg">
                           ${order.totalPrice}
                         </span>
