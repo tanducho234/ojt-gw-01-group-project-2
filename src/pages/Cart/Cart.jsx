@@ -125,17 +125,21 @@ const Cart = () => {
       ) : (
         <div className="w-full p-4 flex flex-col lg:flex-row lg:justify-between gap-4">
           {cartItems.length === 0 ? (
-            // Thông báo khi giỏ hàng rỗng
-            <div className="w-full text-center">
-              <h1 className="text-3xl font-bold mb-4">
-                Giỏ hàng của bạn đang trống
+            <div className="w-full py-12 rounded-lg shadow-md items-center justify-center text-center">
+              <h1 className="text-4xl font-bold text-gray-800 mb-4">
+                Your Cart is Empty
               </h1>
-              <p className="text-gray-500 text-lg mb-6">
-                Hãy thêm sản phẩm vào giỏ hàng để tiếp tục mua sắm.
+              <img
+                src="./././public/images/emptycart.png"
+                alt="Empty Cart"
+                className="mx-auto mb-6 w-64 h-64 object-cover"
+              />
+              <p className="mb-4">
+                Add some products to your cart to continue shopping.
               </p>
               <Link to="/products">
-                <button className="bg-black text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-600">
-                  Tiếp tục mua sắm
+                <button className="bg-black text-white font-semibold py-3 px-6 rounded-lg hover:bg-gray-700 transition duration-300 ease-in-out transform hover:scale-105">
+                  Continue Shopping
                 </button>
               </Link>
             </div>

@@ -1,8 +1,40 @@
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
 import { Link } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+
 const Footer = () => {
+
+  const [email, setEmail] = useState("");
+
+  const handleSubscribe = async (e) => {
+    e.preventDefault(); // Ngăn form gửi request mặc định
+    
+    // Kiểm tra nếu email không hợp lệ
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regex cơ bản kiểm tra định dạng email
+    if (!email || !emailPattern.test(email)) {
+      toast.error("Please enter a valid email address.");
+      return;
+    }
+  
+    try {
+      // Gửi yêu cầu đến API
+      const response = await axios.post(
+        "https://ojt-gw-01-final-project-back-end.vercel.app/api/emails/subscribe-notification",
+        { email }
+      );
+      toast.success("You have successfully subscribed to the newsletter!", { closeOnClick: true });
+      setEmail(""); // Reset input
+    } catch (error) {
+      console.error("Error subscribing:", error.response?.data || error.message);
+      toast.error("There was an error subscribing. Please try again.", { closeOnClick: true });
+    }
+  };
+  
+
   return (
     <footer className="bg-gray-100 text-gray-800">
+      <ToastContainer/>
       {/* Newsletter Section */}
       <div
         className="flex justify-center items-center py-6 md:py-10 px-4 h-64"
@@ -13,7 +45,9 @@ const Footer = () => {
           <h2 className="text-xl md:text-2xl lg:text-5xl font-bold max-w-2xl text-center md:text-left mb-4 md:mb-0">
             STAY UPTO DATE ABOUT OUR LATEST OFFERS
           </h2>
-          <form className="flex flex-col items-center md:items-start gap-4 mt-4 md:mt-0 w-full md:w-auto">
+          <form
+            className="flex flex-col items-center md:items-start gap-4 mt-4 md:mt-0 w-full md:w-auto"
+            onSubmit={handleSubscribe}>
             <div className="relative w-full md:w-72">
               <span className="absolute left-4 top-1/2 -translate-y-1/2">
                 <svg
@@ -32,9 +66,12 @@ const Footer = () => {
                 </svg>
               </span>
               <input
-                type="email"
+                // type="email"
                 placeholder="Enter your email address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="w-full pl-14 pr-4 py-3 rounded-full text-black border border-gray-300 focus:outline-none"
+                required
               />
             </div>
             <button
@@ -65,7 +102,7 @@ const Footer = () => {
             <div className="flex items-center gap-4 md:gap-6">
               {/* Social Media Icons */}
               <Link
-                to="#"
+                to="/coming-soon"
                 className="w-8 md:w-10 h-8 md:h-10 rounded-full border border-gray-200 flex items-center justify-center hover:border-gray-400 transition">
                 <svg
                   className="w-4 md:w-5 h-4 md:h-5"
@@ -75,7 +112,7 @@ const Footer = () => {
                 </svg>
               </Link>
               <Link
-                to="#"
+                to="/coming-soon"
                 className="w-8 md:w-10 h-8 md:h-10 rounded-full border border-gray-200 flex items-center justify-center hover:border-gray-400 transition">
                 <svg
                   className="w-4 md:w-5 h-4 md:h-5"
@@ -85,7 +122,7 @@ const Footer = () => {
                 </svg>
               </Link>
               <Link
-                to="#"
+                to="/coming-soon"
                 className="w-8 md:w-10 h-8 md:h-10 rounded-full border border-gray-200 flex items-center justify-center hover:border-gray-400 transition">
                 <svg
                   className="w-4 md:w-5 h-4 md:h-5"
@@ -95,7 +132,7 @@ const Footer = () => {
                 </svg>
               </Link>
               <Link
-                to="#"
+                to="/coming-soon"
                 className="w-8 md:w-10 h-8 md:h-10 rounded-full border border-gray-200 flex items-center justify-center hover:border-gray-400 transition">
                 <svg
                   className="w-4 md:w-5 h-4 md:h-5"
@@ -120,21 +157,21 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  to="#"
+                  to="/coming-soon"
                   className="text-sm text-gray-600 hover:text-black transition">
                   Features
                 </Link>
               </li>
               <li>
                 <Link
-                  to="#"
+                  to="/coming-soon"
                   className="text-sm text-gray-600 hover:text-black transition">
                   Works
                 </Link>
               </li>
               <li>
                 <Link
-                  to="#"
+                  to="/coming-soon"
                   className="text-sm text-gray-600 hover:text-black transition">
                   Career
                 </Link>
@@ -147,28 +184,28 @@ const Footer = () => {
             <ul className="space-y-2">
               <li>
                 <Link
-                  to="#"
+                  to="/coming-soon"
                   className="text-sm text-gray-600 hover:text-black transition">
                   Customer Support
                 </Link>
               </li>
               <li>
                 <Link
-                  to="#"
+                  to="/coming-soon"
                   className="text-sm text-gray-600 hover:text-black transition">
                   Delivery Details
                 </Link>
               </li>
               <li>
                 <Link
-                  to="#"
+                  to="/coming-soon"
                   className="text-sm text-gray-600 hover:text-black transition">
                   Terms & Conditions
                 </Link>
               </li>
               <li>
                 <Link
-                  to="#"
+                  to="/coming-soon"
                   className="text-sm text-gray-600 hover:text-black transition">
                   Privacy Policy
                 </Link>
@@ -181,21 +218,21 @@ const Footer = () => {
             <ul className="space-y-2">
               <li>
                 <Link
-                  to="/profile"
+                  to="/profile/account"
                   className="text-sm text-gray-600 hover:text-black transition">
                   Account
                 </Link>
               </li>
               <li>
                 <Link
-                  to="#"
+                  to="/profile/orders"
                   className="text-sm text-gray-600 hover:text-black transition">
                   Manage Deliveries
                 </Link>
               </li>
               <li>
                 <Link
-                  to="#"
+                  to="/profile/orders"
                   className="text-sm text-gray-600 hover:text-black transition">
                   Orders
                 </Link>
@@ -216,7 +253,7 @@ const Footer = () => {
       <div className="border-t border-gray-300 py-5">
         <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
           <span className="text-sm text-gray-600">
-            Lashes © 2024, All Rights Reserved
+            Faster © 2024, All Rights Reserved
           </span>
           <div className="flex items-center gap-4">
             <img src="/assets/images/Visa.png" alt="Visa" className="h-10" />
