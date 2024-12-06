@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Table, Input, Button, Space, Tag, Modal, message } from "antd";
-import { SearchOutlined, SyncOutlined } from "@ant-design/icons";
+import { EditOutlined, SearchOutlined, SyncOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -207,11 +207,13 @@ const CategoryTable = () => {
       fixed: "right",
       render: (_, record) => (
         <>
-          <Button type="link" onClick={() => handleEditCategory(record)}>
-            <Tag color="black" style={{ marginRight: 5 }}>
-              Edit
-            </Tag>
-          </Button>
+          <Button
+            onClick={() => handleEditCategory(record)}
+            color="default"
+            variant="solid"
+            icon={<EditOutlined />}
+            title="Edit"
+          />
         </>
       ),
     },
@@ -222,10 +224,15 @@ const CategoryTable = () => {
       <Button
         type="primary"
         onClick={() => setIsModalVisible(true)}
-        style={{ marginBottom: 16, float: "left", backgroundColor: "black" }}>
+        style={{ marginBottom: 16, float: "right", backgroundColor: "black" }}>
         Add Category
       </Button>
       <Table
+        title={() => (
+          <span style={{ fontWeight: "bold", fontSize: "1.5em" }}>
+            Categories table
+          </span>
+        )}
         size="small"
         columns={columns}
         dataSource={categories}

@@ -89,7 +89,7 @@ function App() {
           <Route path="vouchers" element={<VoucherTable />} />
           <Route path="brands" element={<BrandTable />} />
           <Route path="categories" element={<CategoryTable />} />
-          <Route path="order-details" element={<OrderTable />} />
+          <Route path="orders" element={<OrderTable />} />
           <Route path="products/:productId" element={<ManageProductVariant />} />
 
 

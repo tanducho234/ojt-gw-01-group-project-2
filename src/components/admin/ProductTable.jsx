@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Table, Input, Button, Space, Tag, Modal, message } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import axios from "axios"; // Sử dụng axios để fetch API
@@ -283,6 +283,14 @@ const ProductTable = () => {
 
   const columns = [
     {
+      title: "Product ID",
+      dataIndex: "_id",
+      key: "_id", 
+      fixed: "left",
+      sorter: (a, b) => a._id.localeCompare(b._id),
+      ...getColumnSearchProps("_id"),
+    },
+    {
       title: "Name",
       dataIndex: "name",
       key: "name",
@@ -290,17 +298,17 @@ const ProductTable = () => {
       sorter: (a, b) => a.name.localeCompare(b.name),
       ...getColumnSearchProps("name"),
     },
-    {
-      title: "Gender",
-      dataIndex: "gender",
-      key: "gender",
-      filters: [
-        { text: "Male", value: "male" },
-        { text: "Female", value: "female" },
-        { text: "Unisex", value: "unisex" },
-      ],
-      onFilter: (value, record) => record.gender === value,
-    },
+    // {
+    //   title: "Gender",
+    //   dataIndex: "gender",
+    //   key: "gender",
+    //   filters: [
+    //     { text: "Male", value: "male" },
+    //     { text: "Female", value: "female" },
+    //     { text: "Unisex", value: "unisex" },
+    //   ],
+    //   onFilter: (value, record) => record.gender === value,
+    // },
     {
       title: "Price",
       dataIndex: "price",
@@ -364,6 +372,7 @@ const ProductTable = () => {
           "No Image"
         ),
     },
+ 
     {
       title: "Action",
       key: "operation",
@@ -372,13 +381,20 @@ const ProductTable = () => {
       align: "center",
       render: (_, record) => (
         <>
-          <Button type="link" onClick={() => handleEditProduct(record)}>
-            <Tag color={"black"} style={{ marginRight: 5 }}>
-              Edit
-            </Tag>
-          </Button>
+          <Button
+            onClick={() => handleEditProduct(record)}
+            color="default"
+            variant="solid"
+            icon={<EditOutlined />}
+            title="Edit"
+          />
           <Link to={`/admin/products/${record._id}`}>
-            <Button type="primary">Manage Product Variants</Button>
+            <Button
+              type="primary"
+              color="default"
+              variant="solid"
+              icon={<PlusOutlined />}
+            />
           </Link>
         </>
       ),
@@ -390,10 +406,15 @@ const ProductTable = () => {
       <Button
         type="primary"
         onClick={() => setIsModalVisible(true)}
-        style={{ marginBottom: 16, float: "left", backgroundColor: "black" }}>
+        style={{ marginBottom: 16, float: "right", backgroundColor: "black" }}>
         Add Product
       </Button>
       <Table
+        title={() => (
+          <span style={{ fontWeight: "bold", fontSize: "1.5em" }}>
+            Products table
+          </span>
+        )}
         size="small"
         bordered
         className="min-h-[80vh]"

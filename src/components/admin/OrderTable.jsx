@@ -225,6 +225,12 @@ const OrderTable = () => {
       title: "Payment Method",
       dataIndex: "paymentMethod",
       key: "paymentMethod",
+      filters: [
+        { text: "COD", value: "COD" },
+        { text: "Stripe", value: "Stripe" },
+        { text: "VNPAY", value: "VNPAY" },
+      ],
+      onFilter: (value, record) => record.paymentMethod === value,
     },
     {
       width: 120,
@@ -232,6 +238,15 @@ const OrderTable = () => {
       title: "Order Status",
       dataIndex: "status",
       key: "status",
+      filters: [
+        { text: "Pending", value: "Pending" },
+        { text: "Preparing", value: "Preparing" },
+        { text: "Delivering", value: "Delivering" },
+        { text: "Delivered", value: "Delivered" },
+        { text: "Returned", value: "Returned" },
+      ],
+      onFilter: (value, record) => record.status === value,
+
       render: (status, record) => {
         return recordEditing.some((item) => item._id === record._id) ? (
           <Tag icon={<SyncOutlined spin />} color="processing">
@@ -341,6 +356,11 @@ const OrderTable = () => {
   return (
     <>
       <Table
+        title={() => (
+          <span style={{ fontWeight: "bold", fontSize: "1.5em" }}>
+            Orders table
+          </span>
+        )}
         size="small"
         bordered
         columns={columns}

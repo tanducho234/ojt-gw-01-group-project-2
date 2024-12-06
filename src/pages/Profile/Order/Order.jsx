@@ -4,12 +4,8 @@ import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../../../hooks/useAuth";
+import { LoadingSpinner } from "../../../components/LoadingSpinner";
 
-const LoadingSpinner = () => (
-  <div className="flex justify-center items-center h-screen">
-    <div className="border-t-4 border-blue-500 border-solid w-16 h-16 rounded-full animate-spin"></div>
-  </div>
-);
 
 const Order = () => {
   const { token } = useAuth();

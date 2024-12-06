@@ -56,9 +56,9 @@ export const AdminLayout = () => {
     }, // FontAwesome faShoppingCart
     {
       icon: <FontAwesomeIcon icon={faChartBar} />,
-      label: "Order Details",
-      key: "order-details",
-      to: "/order-details",
+      label: "Orders",
+      key: "orders",
+      to: "/orders",
     }, // FontAwesome faChartBar for Order Details (graph-like)
     {
       icon: <FontAwesomeIcon icon={faStore} />,
