@@ -40,6 +40,7 @@ import CategoryTable from "./components/admin/CategoryTable";
 import OrderTable from "./components/admin/OrderTable";
 import { UnderConstructionPage } from "./pages/UnderConstructionPage";
 import ManageProductVariant from "./components/admin/ManageProductVariant";
+import ReturnOrder from "./components/ReturnOrder";
 
 
 function App() {
@@ -75,6 +76,8 @@ function App() {
             <Route path="account" element={<Account />} />
             <Route path="orders" element={<Order />} />
             <Route path="orders/:orderId" element={<OrderDetailsComponent />} />
+            <Route path="orders/:orderId/return" element={<ReturnOrder />} />
+
             <Route path="reviews" element={<Review />} />
             {/* <Route path="settings" element={<AccountSettings />} /> */}
           </Route>
