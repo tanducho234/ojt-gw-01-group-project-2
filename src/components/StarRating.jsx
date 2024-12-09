@@ -27,7 +27,7 @@ const StarRating = ({ rating, size = "text-xl" }) => {
     <div className="flex items-center space-x-2">
       <div className="flex space-x-1">{stars}</div>
       <span className="text-sm">
-        <span className="text-black">{rating||0}</span>
+        <span className="text-black">{(rating || 0).toFixed(1)}</span>
         <span className="text-gray-600">/5</span>
       </span>
     </div>

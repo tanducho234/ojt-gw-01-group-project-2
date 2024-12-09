@@ -8,14 +8,8 @@ import { Tabs } from "antd";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Account from "../Profile/Account/Account";
-import {
-  HomeOutlined,
-  ProductOutlined,
-  ShoppingCartOutlined,
-} from "@ant-design/icons";
+import { HomeOutlined } from "@ant-design/icons";
 import { Breadcrumb } from "antd";
-import { set } from "react-hook-form";
 
 const LoadingSpinner = () => (
   <div className="flex justify-center items-center h-screen">
@@ -40,6 +34,10 @@ const ProductDetail = () => {
   const [salePrice, setSalePrice] = useState(0);
   const [reviews, setReview] = useState([]);
 
+  const [showAll, setShowAll] = useState(false);
+
+  const displayedReviews = showAll ? reviews : reviews.slice(0, 6);
+
   const items = [
     {
       key: "2",
@@ -62,11 +60,21 @@ const ProductDetail = () => {
               All review ({reviews.length})
             </span>
           </div>
-          <div className="flex flex-wrap justify-evenly bg-[#f9fafd]  ">
-            {reviews.map((review) => (
+          <div className="flex flex-wrap justify-evenly bg-[#f9fafd]">
+            {displayedReviews.map((review) => (
               <Review key={review._id} review={review} />
             ))}
           </div>
+          {reviews.length > 6 && (
+            <div className="mt-4 text-center">
+              <button
+                className="px-4 py-2 text-white bg-black rounded hover:bg-gray-600"
+                onClick={() => setShowAll(!showAll)}
+              >
+                {showAll ? "Show Less" : "Show All"}
+              </button>
+            </div>
+          )}
         </>
       ),
     },
@@ -87,7 +95,7 @@ const ProductDetail = () => {
 
   const calculateSalePrice = (price, salePercentage) => {
     if (salePercentage > 0) {
-      return Number((price * (1 - salePercentage / 100)))
+      return Number(price * (1 - salePercentage / 100))
         .toFixed(2)
         .replace(/\.00$/, "");
     }
@@ -102,7 +110,6 @@ const ProductDetail = () => {
     setProductQuantaty(null);
     setQuantity(1);
     setSalePrice(calculateSalePrice(product.price, product.salePercentage));
-
   };
   const handleSizeSelect = (size) => {
     setSelectedSize(size.size);
@@ -111,7 +118,6 @@ const ProductDetail = () => {
     setSalePrice(calculateSalePrice(size.price, product.salePercentage));
 
     setQuantity(1);
-    
   };
 
   useEffect(() => {
@@ -123,8 +129,10 @@ const ProductDetail = () => {
       .then((response) => {
         setProduct(response.data);
         setCurrentPrice(response.data.price);
-        
-       setSalePrice(calculateSalePrice(response.data.price, response.data.salePercentage));
+
+        setSalePrice(
+          calculateSalePrice(response.data.price, response.data.salePercentage)
+        );
 
         setSelectedColor(response.data.colors[0].color);
         setImages(response.data.colors[0].imgLinks);
@@ -311,7 +319,8 @@ const ProductDetail = () => {
                           selectedColor === item.color
                             ? "2px solid black"
                             : "2px solid gray",
-                      }}>
+                      }}
+                    >
                       {selectedColor === item.color && (
                         <span className="">✓</span>
                       )}
@@ -337,7 +346,8 @@ const ProductDetail = () => {
                   selectedSize === size.size
                     ? "bg-black text-white"
                     : "bg-gray-200 hover:bg-gray-300"
-                }`}>
+                }`}
+                          >
                             {size.size}
                           </button>
                         ))
@@ -354,7 +364,8 @@ const ProductDetail = () => {
                 <div className="flex items-center bg-gray-100 rounded-full">
                   <button
                     onClick={decrement}
-                    className="w-14 h-12 flex items-center justify-center text-2xl rounded-l-full hover:bg-gray-200">
+                    className="w-14 h-12 flex items-center justify-center text-2xl rounded-l-full hover:bg-gray-200"
+                  >
                     -
                   </button>
                   <input
@@ -370,7 +381,8 @@ const ProductDetail = () => {
                   />
                   <button
                     onClick={increment}
-                    className="w-14 h-12 flex items-center justify-center text-2xl rounded-r-full hover:bg-gray-200">
+                    className="w-14 h-12 flex items-center justify-center text-2xl rounded-r-full hover:bg-gray-200"
+                  >
                     +
                   </button>
                 </div>
@@ -388,7 +400,8 @@ const ProductDetail = () => {
                     !selectedColor || !selectedSize
                       ? "bg-gray-400 cursor-not-allowed"
                       : "bg-black hover:bg-gray-800"
-                  }`}>
+                  }`}
+                >
                   Add to Cart
                 </button>
                 <ToastContainer closeOnClick={true} />
