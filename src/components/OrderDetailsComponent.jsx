@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronLeft,
@@ -113,22 +114,49 @@ const OrderDetail = () => {
     }
   };
 
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedReason, setSelectedReason] = useState("");
+
+  // Predefined reasons for cancellation
+  const reasons = [
+    "No longer needed",
+    "Bought by mistake",
+    "Better price available",
+    "Wrong address",
+    "Others",
+  ];
+
+  // Handlers
+  const showModal = () => setIsModalVisible(true);
+  const hideModal = () => setIsModalVisible(false);
+
   const handleCancelOrder = async () => {
+    if (!selectedReason) {
+      message.error("Please select a reason before canceling the order"); // Thông báo lỗi
+      return; // Ngăn thực thi tiếp
+    }
+
     try {
+      hideModal();
       const response = await axios.put(
         `https://ojt-gw-01-final-project-back-end.vercel.app/api/order-details/${order._id}`,
-        { status: "Canceled" },
+        { status: "Canceled", description: selectedReason }, // Gửi thêm lý do hủy
         { headers: { Authorization: `Bearer ${token}` } }
       );
+
+      // Cập nhật trạng thái đơn hàng mới
       setOrder(response.data);
 
+      // Map lại các bước trong status history
       const apiSteps = response.data.statusHistory.map((item) => ({
         status: item.status, // Map API status to local 'status'
         date: item.timestamp, // Use 'timestamp' for the time
+        description: item.description,
       }));
       setSteps(apiSteps);
 
       message.success("Order canceled successfully");
+      // Đóng modal sau khi hủy thành công
     } catch (error) {
       console.error(
         "Error updating order status:",
@@ -189,6 +217,7 @@ const OrderDetail = () => {
       const apiSteps = response.data.statusHistory.map((item) => ({
         status: item.status, // Map API status to local 'status'
         date: item.timestamp, // Use 'timestamp' for the time
+        description: item.description,
       }));
       console.log("data: ", response.data);
 
@@ -204,6 +233,11 @@ const OrderDetail = () => {
   useEffect(() => {
     fetchSteps();
   }, []);
+  const navigate = useNavigate();
+
+  const handleReturnOrder = () => {
+    navigate(`return`);
+  };
 
   return (
     <div className="mt-8 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -275,6 +309,11 @@ const OrderDetail = () => {
               <h2 className="text-lg font-medium mb-4">History Status</h2>
               <div className="bg-white p-4 rounded shadow">
                 <Steps
+                  status={
+                    ["Canceled", "Returned"].includes(order.status)
+                      ? "error"
+                      : undefined
+                  }
                   direction="vertical"
                   size="small"
                   current={steps.findIndex(
@@ -283,6 +322,7 @@ const OrderDetail = () => {
                 >
                   {steps.map((step, index) => (
                     <Steps.Step
+                      subTitle={step.description}
                       key={index}
                       title={step.status}
                       description={new Intl.DateTimeFormat("vi", {
@@ -293,7 +333,8 @@ const OrderDetail = () => {
                         minute: "2-digit",
                         hour12: false, // 24-hour format
                       }).format(new Date(step.date))}
-                      className={step.status}
+
+                      // className={"step-returned"}
                     />
                   ))}
                 </Steps>
@@ -447,59 +488,98 @@ const OrderDetail = () => {
 
           {/* Action Buttons */}
           <div className="flex justify-center mt-6">
-            {order.status === "Delivered" && order.isReviewed != true && (
-              <div className="max-w-md mx-auto mt-8 p-6">
-                <div className="flex justify-center gap-4 mt-4">
-                  <button
-                    className="bg-black font-bold text-white py-2 px-10 rounded-full hover:bg-gray-600 transition duration-300"
-                    onClick={openModal}
-                  >
-                    Send Review
-                  </button>
+            <div className="max-w-md mx-auto mt-8 p-6">
+              {order.status === "Delivered" && (
+                <div className="max-w-md mx-auto mt-8 p-6">
+                  <div className="flex justify-center gap-4 mt-4">
+                    <button
+                      onClick={handleReturnOrder}
+                      className="bg-white font-bold text-red-600 border-[1px] border-rose-500 rounded-full py-2 px-10 hover:bg-pink-100 transition duration-300"
+                    >
+                      Return Order
+                    </button>
+                    <>
+                      {order.isReviewed != true && (
+                        <button
+                          className="bg-black font-bold text-white py-2 px-10 rounded-full hover:bg-gray-600 transition duration-300"
+                          onClick={openModal}
+                        >
+                          Send Review
+                        </button>
+                      )}
+                    </>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+              {(order.status === "Pending" || order.status === "Preparing") && (
+                <>
+                  {/* Cancel Order Button */}
+                  <div className="flex justify-center items-center gap-4 mt-4">
+                    <button
+                      onClick={showModal}
+                      className="bg-white font-bold text-red-600 border border-rose-500 rounded-full py-2 px-10 hover:bg-pink-100 transition duration-300"
+                    >
+                      Cancel Order
+                    </button>
+                  </div>
 
-            {order.status === "Pending" && (
-              <Popconfirm
-                title="Are you sure you want to cancel this order?"
-                onConfirm={handleCancelOrder}
-                onCancel={cancel}
-                okText="Yes"
-                cancelText="No"
-              >
-                <div className="max-w-md mx-auto mt-8 p-6">
-                  <div className="flex justify-center items-center gap-4 mt-4">
-                    <Button
-                      danger
-                      className="bg-white font-bold text-red-600 border border-rose-500 rounded-full py-2 px-10 hover:bg-pink-100 transition duration-300"
-                    >
-                      Cancel Order
-                    </Button>
-                  </div>
-                </div>
-              </Popconfirm>
-            )}
-            {order.status === "Preparing" && (
-              <Popconfirm
-                title="Are you sure you want to cancel this order?"
-                onConfirm={handleCancelOrder}
-                onCancel={cancel}
-                okText="Yes"
-                cancelText="No"
-              >
-                <div className="max-w-md mx-auto mt-8 p-6">
-                  <div className="flex justify-center items-center gap-4 mt-4">
-                    <Button
-                      danger
-                      className="bg-white font-bold text-red-600 border border-rose-500 rounded-full py-2 px-10 hover:bg-pink-100 transition duration-300"
-                    >
-                      Cancel Order
-                    </Button>
-                  </div>
-                </div>
-              </Popconfirm>
-            )}
+                  {/* Modal Pop-up */}
+                  {isModalVisible && (
+                    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+                      <div className="bg-white rounded-xl shadow-lg p-6 w-[25rem] h-[26rem]">
+                        {/* Modal Title */}
+                        <h2 className="mt-8 text-lg font-bold mb-4 text-center">
+                          Why are you canceling this order?{" "}
+                          <span className="text-red-500">*</span>
+                        </h2>
+                        <p className="text-sm mb-4 text-gray-600 text-center">
+                          Pick a reason from the options provided below:
+                        </p>
+
+                        {/* Radio Buttons for Reasons */}
+                        <form>
+                          {reasons.map((reason, index) => (
+                            <label
+                              key={index}
+                              className="flex items-center ml-8 gap-2 mb-2 cursor-pointer"
+                            >
+                              <input
+                                type="radio"
+                                name="cancelReason"
+                                value={reason}
+                                checked={selectedReason === reason}
+                                onChange={(e) =>
+                                  setSelectedReason(e.target.value)
+                                }
+                                className="text-rose-500 focus:ring-rose-500"
+                              />
+                              <span className="text-gray-700">{reason}</span>
+                            </label>
+                          ))}
+                        </form>
+
+                        {/* Modal Buttons */}
+                        <div className="flex justify-center gap-4 mt-6">
+                          <button
+                            onClick={hideModal}
+                            className="bg-white font-bold text-black border border-black rounded-full py-4 px-12 hover:bg-rose-600 hover:text-white hover:border-none transition duration-300"
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            onClick={handleCancelOrder}
+                            className="bg-black font-bold text-white border border-white rounded-full py-4 px-12 hover:bg-gray-600 hover:text-black hover:border hover:border-black transition duration-300"
+                          >
+                            Submit
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+
             {order.status === "Delivering" && (
               <Popconfirm
                 title="Are you sure you want to cancel this order?"
