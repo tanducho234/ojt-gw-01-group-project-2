@@ -3,7 +3,7 @@ import { useAuth } from "../../hooks/useAuth";
 import axios from "axios";
 import { message } from "antd";
 
-export const AdminLogin = () => {
+export const ShippingLogin = () => {
   const URL = "https://ojt-gw-01-final-project-back-end.vercel.app";
 
   const [username, setUsername] = useState("");
@@ -41,15 +41,11 @@ export const AdminLogin = () => {
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center bg-cover bg-center"
-      style={{
-        backgroundImage: "url('/assets/images/bgloginad.png')",
-      }}>
-      <div className="bg-white bg-opacity-90 rounded-lg shadow-lg w-11/12 md:w-4/5 lg:w-3/4 xl:w-2/3 flex overflow-hidden min-h-[400px] h-[80vh] max-h-[800px]">
+      className="min-h-screen flex items-center justify-center bg-cover bg-center">
         {/* Left Section */}
         <div className="w-1/2 bg-white hidden md:flex items-center justify-center p-8">
           <img
-            src="/assets/images/admin_log_pic.png"
+            src="/assets/images/ShippingLogin.png"
             alt="Illustration"
             className="w-3/4"
           />
@@ -57,9 +53,10 @@ export const AdminLogin = () => {
         {/* Right Section */}
         <div className="w-full md:w-1/2 flex flex-col justify-center items-center p-12 bg-white">
           <div className="w-full max-w-sm">
-            <h2 className="text-lg font-semibold text-purple-600 mb-4">
-              Login as an Admin User
-            </h2>
+            <h1 className="text-3xl font-extrabold text-gray-900 mb-4">
+              Login as an Shipper User
+            </h1>
+         <p className="text-gray-600 mb-8">Enter your details below</p>
             <form onSubmit={handleLogin}>
               {/* Email Input */}
               <div className="relative mb-4">
@@ -67,7 +64,7 @@ export const AdminLogin = () => {
                   type="email"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  placeholder="Email * "
+                  placeholder="Email"
                   className="w-full py-2 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                 />
                 <span className="absolute right-4 top-2 text-gray-400">
@@ -80,7 +77,7 @@ export const AdminLogin = () => {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Password * "
+                  placeholder="Password"
                   className="w-full py-2 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                 />
                 <span className="absolute right-4 top-2 text-gray-400">
@@ -90,14 +87,14 @@ export const AdminLogin = () => {
               {/* Login Button */}
               <button
                 type="submit"
-                className="w-full py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition">
+                className="w-full py-2 bg-black text-white rounded-lg hover:bg-gray-600 transition">
                 LOGIN
               </button>
             </form>
             <div className="text-center mt-4"></div>
           </div>
         </div>
-      </div>
+
     </div>
   );
 };

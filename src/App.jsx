@@ -14,6 +14,7 @@ import Checkout from "./pages/Checkout/Checkout";
 import Register from "./pages/Auth/Register";
 import Login from "./pages/Auth/Login";
 
+import { ShippingLogin } from "./pages/Shipping/Login";
 import AboutUs from "./pages/About/About";
 import { AuthProvider, useAuth } from "./hooks/useAuth";
 import { FetchDataProvider } from "./hooks/useFetchData";
@@ -65,6 +66,7 @@ function App() {
          
         </Route>
         <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/shipping/login" element={<ShippingLogin />} />
         {/* Authenticated user layout */}
         <Route path="/" element={<ProtectedLayout />}>
           <Route path="/checkout" element={<Checkout />} />
@@ -97,6 +99,8 @@ function App() {
 
 
         </Route>
+        {/*shipperlayout*/}
+        
 
       </Routes>
     </AuthProvider>

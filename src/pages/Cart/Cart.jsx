@@ -176,8 +176,8 @@ const Cart = () => {
                 <div className="space-y-2 mb-4">
                   {cartItems.map((item, index) => (
                     <div key={index} className="flex justify-between ">
-                      <span className="text-sm font-roboto w-[15rem] flex-wrap italic sm:text-base md:text-lg lg:text-sm lg:w-[12rem] lg:truncate">
-                        {item.name}
+                      <span className="text-sm font-roboto w-[15rem] flex-wrap italic sm:text-base md:text-lg lg:text-sm lg:w-[13rem] lg:truncate">
+                        {item.name}-{item.color}-{item.size}
                       </span>
                       <span className="text-sm font-roboto text-gray-600 sm:text-base md:text-lg lg:text-sm">
                         ${item.price} x {item.quantity}
@@ -199,10 +199,8 @@ const Cart = () => {
                 {/* Checkout Button */}
                 <Link to="/checkout">
                   <button
-                    className="w-full bg-black text-white font-mono border-none
-              cursor-pointer text-lg rounded-full py-2 px-1 hover:bg-gray
-              hover:text-white
-              font-semibold md:mt-[2rem] md:text-[1.5rem]"
+                    className="w-full bg-black text-white border-none
+              cursor-pointer text-lg rounded-full py-2 px-1 hover:bg-gray-600 md:mt-[2rem] md:text-[1.5rem]"
                   >
                     Checkout
                   </button>
