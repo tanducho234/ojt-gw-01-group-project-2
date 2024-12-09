@@ -278,9 +278,8 @@ const Checkout = () => {
     // Construct the order details object
     const orderDetails = {
       products,
-      voucherDiscountAmount,
-      shippingCost,
-      totalPrice,
+      voucherDiscountAmount: voucherDiscountAmount.toFixed(2),
+      totalPrice: totalPrice.toFixed(2),
       voucherCode: discountCode,
       shippingAddress: {
         recipientName: shippingAddress.recipientName,
