@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Select from "react-select";
 import { useAuth } from "../hooks/useAuth";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { message } from "antd";
 
 const ReturnOrder = () => {
@@ -13,6 +13,7 @@ const ReturnOrder = () => {
   const [error, setError] = useState(null); // Error state
   const { orderId } = useParams();
   const [steps, setSteps] = useState([]);
+  const navigate = useNavigate();
 
   const handleChange = (selectedOption) => {
     setReason(selectedOption.value);
@@ -20,12 +21,11 @@ const ReturnOrder = () => {
 
   const handleReturnOrder = async () => {
     if (!reason) {
-      alert("Please select a reason before returning the order"); // Simple alert
+      message.info("Please select a reason for returning the order.");
       return;
     }
-
+    let loadingmessage = message.loading("Submitting reviews...");
     try {
-  
       const response = await axios.put(
         `https://ojt-gw-01-final-project-back-end.vercel.app/api/order-details/${order._id}`,
         { status: "Returned", description: reason }, // Send the return reason
@@ -42,14 +42,17 @@ const ReturnOrder = () => {
         description: item.description,
       }));
       setSteps(apiSteps);
+      loadingmessage();
+      message.success("Order returned successfully");
 
-      alert("Order returned successfully"); // Use simple alert
+      navigate(-1);
     } catch (error) {
+      loadingmessage();
       console.error(
         "Error updating order status:",
         error.response?.data || error.message
       );
-      alert("Failed to return order");
+      message.error("Failed to return order");
     }
   };
 
@@ -100,9 +103,18 @@ const ReturnOrder = () => {
   const options = [
     { value: "", label: "Select reason here" },
     { value: "Product is defective", label: "Product is defective" },
-    { value: "Wrong model, color, or size", label: "Wrong model, color, or size" },
-    { value: "Product damaged during shipping", label: "Product damaged during shipping" },
-    { value: "Product doesn’t fit or is not suitable", label: "Product doesn’t fit or is not suitable" },
+    {
+      value: "Wrong model, color, or size",
+      label: "Wrong model, color, or size",
+    },
+    {
+      value: "Product damaged during shipping",
+      label: "Product damaged during shipping",
+    },
+    {
+      value: "Product doesn’t fit or is not suitable",
+      label: "Product doesn’t fit or is not suitable",
+    },
   ];
 
   return (
@@ -127,9 +139,9 @@ const ReturnOrder = () => {
 
           <div className="w-full overflow-y-auto space-y-4">
             <h3 className="text-xl font-semibold mb-4">Products in Order</h3>
-            {order.products.map((product) => (
+            {order.products.map((product, index) => (
               <div
-                key={product.productId}
+                key={index}
                 className="flex items-center p-4 bg-gray-100 border rounded-lg"
               >
                 <img

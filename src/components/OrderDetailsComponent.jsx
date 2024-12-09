@@ -108,7 +108,12 @@ const OrderDetail = () => {
       closeModal();
       loadingmessage();
       message.success("Reviews submitted successfully!");
+      setOrder((prevOrder) => ({
+        ...prevOrder,
+        isReviewed: true,
+      }));
     } catch (error) {
+      loadingmessage();
       console.error("Error submitting reviews:", error);
       message.error("Failed to submit reviews.");
     }
