@@ -180,7 +180,7 @@ const OrderDetail = () => {
       case "Pending":
         return "bg-yellow-100 text-yellow-600";
       case "Preparing":
-        return "bg-pink-100 text-pink-600";
+        return "bg-orange-100 text-orange-600";
       case "Canceled":
         return "bg-red-100 text-red-600";
       case "Delivering":
