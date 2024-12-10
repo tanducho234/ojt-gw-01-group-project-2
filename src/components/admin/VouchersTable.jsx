@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Table, Input, Button, Space, Tag, Modal, message } from "antd";
-import { EditOutlined, SearchOutlined, SyncOutlined } from "@ant-design/icons";
+import { EditOutlined, SearchOutlined, SyncOutlined ,ShareAltOutlined} from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -343,12 +343,14 @@ const VoucherTable = () => {
       },
     },
     {
+      width: 100,
       align: "center",
       title: "Action",
       key: "operation",
       fixed: "right",
       render: (_, record) => (
-        <>
+        <div className="flex justify-between">
+
          <Button
             onClick={() => handleEditVoucher(record)}
             color="default"
@@ -356,10 +358,17 @@ const VoucherTable = () => {
             icon={<EditOutlined />}
             title="Edit"
           />
-          <Button type="link" onClick={() => handleSendEmail(record)}>
+           <Button
+            onClick={() => handleSendEmail(record)}
+            color="default"
+            variant="solid"
+            icon={<ShareAltOutlined />}
+            title="Share voucher to user"
+          />
+          {/* <Button type="link" onClick={() => handleSendEmail(record)}>
             <Tag color="blue">Send Voucher</Tag>
-          </Button>
-        </>
+          </Button> */}
+        </div>
       ),
     },
   ];

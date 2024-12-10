@@ -10,6 +10,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { HomeOutlined } from "@ant-design/icons";
 import { Breadcrumb } from "antd";
+import { useFetchData } from "../../hooks/useFetchData";
 
 const LoadingSpinner = () => (
   <div className="flex justify-center items-center h-screen">
@@ -19,6 +20,7 @@ const LoadingSpinner = () => (
 
 const ProductDetail = () => {
   const { token } = useAuth();
+  const {updateCartItemCount}= useFetchData()
   const [loading, setLoading] = useState(true);
   //product quantaty
 
@@ -183,6 +185,11 @@ const ProductDetail = () => {
       });
 
       if (response.status === 200) {
+        const totalQuantity = response.data.products.reduce(
+          (sum, item) => sum + item.quantity,
+          0
+        );
+        updateCartItemCount(totalQuantity)
         toast.success("Product added to cart successfully!");
         // alert('Product added to cart successfully!');
       } else {

@@ -41,8 +41,7 @@ const Review = () => {
                 {reviews.map((review, index) => (
                   <div
                     key={review._id || index}
-                    className="review-item bg-white shadow-xl h-100 rounded-lg p-6 w-full md:w-2/3 lg:w-1/2"
-                  >
+                    className="review-item bg-white shadow-xl h-100 rounded-lg p-6 w-full md:w-2/3 lg:w-1/2">
                     <div className="flex items-center mb-2">
                       <img
                         src={review.productId.generalImgLink}
@@ -60,7 +59,7 @@ const Review = () => {
                       />
 
                       <span className="text-gray-500 text-sm">
-                        Posted on{" "}
+                        Posted on
                         {new Date(review.date).toLocaleDateString("en-CA")}
                       </span>
                     </div>

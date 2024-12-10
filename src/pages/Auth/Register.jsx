@@ -239,7 +239,7 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen lg:flex relative">
+    <div className="min-h-screen lg:flex relative ">
       <style>{styles}</style>
       <ToastContainer closeOnClick={true} />
       {/* Images section - visible on both desktop and mobile */}

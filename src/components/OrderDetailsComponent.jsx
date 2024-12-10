@@ -248,8 +248,7 @@ const OrderDetail = () => {
     <div className="mt-8 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       <Link
         to="/profile/orders"
-        className="text-gray-600 text-sm flex items-center mb-4"
-      >
+        className="text-gray-600 text-sm flex items-center mb-4">
         <FontAwesomeIcon icon={faChevronLeft} className="mr-2" /> Back to orders
       </Link>
 
@@ -270,8 +269,7 @@ const OrderDetail = () => {
               <span
                 className={`mt-2 sm:mt-0 px-4 py-2 text-sm font-medium rounded-full ${getStatusStyle(
                   order.status
-                )}`}
-              >
+                )}`}>
                 {order.status}
               </span>
             </div>
@@ -323,8 +321,7 @@ const OrderDetail = () => {
                   size="small"
                   current={steps.findIndex(
                     (step) => step.status === order.status
-                  )}
-                >
+                  )}>
                   {steps.map((step, index) => (
                     <Steps.Step
                       subTitle={step.description}
@@ -374,8 +371,7 @@ const OrderDetail = () => {
                       <a
                         href={order.paymentLink}
                         target="_blank"
-                        rel="noopener noreferrer"
-                      >
+                        rel="noopener noreferrer">
                         <button className="bg-green-500 font-bold text-white px-4 py-2 rounded-full hover:bg-green-600">
                           Continue to Payment
                         </button>
@@ -499,16 +495,14 @@ const OrderDetail = () => {
                   <div className="flex justify-center gap-4 mt-4">
                     <button
                       onClick={handleReturnOrder}
-                      className="bg-white font-bold text-red-600 border-[1px] border-rose-500 rounded-full py-2 px-10 hover:bg-pink-100 transition duration-300"
-                    >
+                      className="bg-white font-bold text-red-600 border-[1px] border-rose-500 rounded-full py-2 px-10 hover:bg-pink-100 transition duration-300">
                       Return Order
                     </button>
                     <>
                       {order.isReviewed != true && (
                         <button
                           className="bg-black font-bold text-white py-2 px-10 rounded-full hover:bg-gray-600 transition duration-300"
-                          onClick={openModal}
-                        >
+                          onClick={openModal}>
                           Send Review
                         </button>
                       )}
@@ -522,8 +516,7 @@ const OrderDetail = () => {
                   <div className="flex justify-center items-center gap-4 mt-4">
                     <button
                       onClick={showModal}
-                      className="bg-white font-bold text-red-600 border border-rose-500 rounded-full py-2 px-10 hover:bg-pink-100 transition duration-300"
-                    >
+                      className="bg-white font-bold text-red-600 border border-rose-500 rounded-full py-2 px-10 hover:bg-pink-100 transition duration-300">
                       Cancel Order
                     </button>
                   </div>
@@ -534,7 +527,7 @@ const OrderDetail = () => {
                       <div className="bg-white rounded-xl shadow-lg p-6 w-[25rem] h-[26rem]">
                         {/* Modal Title */}
                         <h2 className="mt-8 text-lg font-bold mb-4 text-center">
-                          Why are you canceling this order?{" "}
+                          Why are you canceling this order?
                           <span className="text-red-500">*</span>
                         </h2>
                         <p className="text-sm mb-4 text-gray-600 text-center">
@@ -546,8 +539,7 @@ const OrderDetail = () => {
                           {reasons.map((reason, index) => (
                             <label
                               key={index}
-                              className="flex items-center ml-8 gap-2 mb-2 cursor-pointer"
-                            >
+                              className="flex items-center ml-8 gap-2 mb-2 cursor-pointer">
                               <input
                                 type="radio"
                                 name="cancelReason"
@@ -567,14 +559,12 @@ const OrderDetail = () => {
                         <div className="flex justify-center gap-4 mt-6">
                           <button
                             onClick={hideModal}
-                            className="bg-white font-bold text-black border border-black rounded-full py-4 px-12 hover:bg-rose-600 hover:text-white hover:border-none transition duration-300"
-                          >
+                            className="bg-white font-bold text-black border border-black rounded-full py-4 px-12 hover:bg-rose-600 hover:text-white hover:border-none transition duration-300">
                             Cancel
                           </button>
                           <button
                             onClick={handleCancelOrder}
-                            className="bg-black font-bold text-white border border-white rounded-full py-4 px-12 hover:bg-gray-600 hover:text-black hover:border hover:border-black transition duration-300"
-                          >
+                            className="bg-black font-bold text-white border border-white rounded-full py-4 px-12 hover:bg-gray-600 hover:text-black hover:border hover:border-black transition duration-300">
                             Submit
                           </button>
                         </div>
@@ -591,14 +581,12 @@ const OrderDetail = () => {
                 onConfirm={handleCancelOrder}
                 onCancel={cancel}
                 okText="Yes"
-                cancelText="No"
-              >
+                cancelText="No">
                 <div className="max-w-md mx-auto mt-2 p-2">
                   <div className="flex justify-center gap-4 mt-2">
                     <Button
                       disabled
-                      className="bg-white font-bold text-red-600 border border-rose-500 rounded-full py-2 px-10 hover:bg-pink-100 transition duration-300"
-                    >
+                      className="bg-white font-bold text-red-600 border border-rose-500 rounded-full py-2 px-10 hover:bg-pink-100 transition duration-300">
                       Cancel Order
                     </Button>
                   </div>
@@ -660,14 +648,12 @@ const OrderDetail = () => {
             <div className="flex justify-end space-x-4">
               <button
                 onClick={closeModal}
-                className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300"
-              >
+                className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300">
                 Cancel
               </button>
               <button
                 onClick={handleSubmitReview}
-                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-              >
+                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
                 Submit Review
               </button>
             </div>

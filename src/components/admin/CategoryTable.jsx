@@ -194,7 +194,7 @@ const CategoryTable = () => {
           <img
             src={link}
             alt="Category"
-            style={{ maxHeight: "50px", display: "block", margin: "0 auto" }}
+            style={{ maxHeight: "50px", minHeight: "50px", display: "block", margin: "0 auto" }}
           />
         ) : (
           "No Image"

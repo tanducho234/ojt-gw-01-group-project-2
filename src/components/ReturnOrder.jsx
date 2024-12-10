@@ -122,8 +122,7 @@ const ReturnOrder = () => {
     <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
       <button
         onClick={handleBack} // Trigger the navigate function on click
-        className="text-gray-600 text-sm flex items-center mb-4"
-      >
+        className="text-gray-600 text-sm flex items-center mb-4">
         <FontAwesomeIcon icon={faChevronLeft} className="mr-2" />
         Back to order details
       </button>
@@ -141,7 +140,7 @@ const ReturnOrder = () => {
             {/* Left Side: Order Details */}
 
             <div className="w-full lg:w-2/3 p-4 border bg-gray-100 rounded-lg">
-              <div>
+              {/* <div>
                 <h2 className="text-2xl font-semibold mb-4">
                   Register your return
                 </h2>
@@ -149,7 +148,7 @@ const ReturnOrder = () => {
                   Here, select the items you would like to return from your
                   order and provide a detailed reason for order's return
                 </p>
-              </div>
+              </div> */}
 
               <h3 className="text-xl font-semibold mt-6 mb-4">
                 Products in Order
@@ -158,8 +157,7 @@ const ReturnOrder = () => {
                 {order.products.map((product, index) => (
                   <div
                     key={index}
-                    className="flex items-center p-4 bg-gray-50 border rounded-lg"
-                  >
+                    className="flex items-center p-4 bg-gray-50 border rounded-lg">
                     <img
                       src={product.imgLink}
                       alt={product.name}
@@ -202,7 +200,7 @@ const ReturnOrder = () => {
                   <span className="font-bold text-wrap">{order._id}</span>
                 </p>
                 <p className="break-words">
-                  Order Date:{" "}
+                  Order Date:
                   <span className="font-bold">
                     {new Date(order.createdAt).toLocaleDateString("en-GB", {
                       day: "2-digit",
@@ -221,8 +219,7 @@ const ReturnOrder = () => {
                     order.status !== "Delivered"
                       ? "opacity-50 cursor-not-allowed"
                       : "hover:bg-gray-200 hover:text-black"
-                  }`}
-                >
+                  }`}>
                   Submit Return Request
                 </button>
               </div>

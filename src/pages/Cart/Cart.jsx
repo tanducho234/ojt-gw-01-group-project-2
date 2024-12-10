@@ -5,6 +5,7 @@ import { useAuth } from "../../hooks/useAuth";
 import { Link } from "react-router-dom";
 import "../Cart/Cart.css";
 import { toast } from "react-toastify";
+import { useFetchData } from "../../hooks/useFetchData";
 
 const LoadingSpinner = () => (
   <div className="flex justify-center items-center h-screen">
@@ -16,6 +17,7 @@ const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const { token } = useAuth();
   const [loading, setLoading] = useState(true);
+  const {updateCartItemCount}=useFetchData()
 
   // Fetch cart data from API
 
@@ -54,10 +56,16 @@ const Cart = () => {
           Authorization: `Bearer ${token}`,
         },
       };
-      await axios.delete(url, {
+      const response=await axios.delete(url, {
         data: body,
         ...config,
       });
+
+      const totalQuantity = response.data.products.reduce(
+        (sum, item) => sum + item.quantity,
+        0
+      );
+      updateCartItemCount(totalQuantity)
 
       // Remove item locally
       setCartItems((prevItems) =>
@@ -96,7 +104,13 @@ const Cart = () => {
         },
       };
 
-      await axios.put(url, body, config);
+      const response =await axios.put(url, body, config);
+      const totalQuantity = response.data.products.reduce(
+        (sum, item) => sum + item.quantity,
+        0
+      );
+      updateCartItemCount(totalQuantity)
+      
 
       // Update quantity locally
       setCartItems((prevItems) =>

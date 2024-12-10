@@ -1,12 +1,26 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Form, Input, Button, Select, Modal, message, Space } from "antd";
+import {
+  Form,
+  Input,
+  Button,
+  Select,
+  Modal,
+  message,
+  Space,
+  Table,
+  List,
+} from "antd";
 import axios from "axios";
 import { useAuth } from "../../hooks/useAuth";
+import EditSingleColorForm from "./EditColorsForm";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
 const { Option } = Select;
 
 const ManageProductVariant = () => {
+  const [isEditMode, setIsEditMode] = useState(false); // Flag to check if it's edit or add mode
+
   const { token } = useAuth();
   const { productId } = useParams();
   const [product, setProduct] = useState(null);
@@ -17,6 +31,7 @@ const ManageProductVariant = () => {
   const [currentSize, setCurrentSize] = useState("");
   const [currentPrice, setCurrentPrice] = useState(0);
   const [currentQuantity, setCurrentQuantity] = useState(0);
+  const [selectedColor, setSelectedColor] = useState(null); // Store selected color for editing
 
   // Fetch product details on load
   useEffect(() => {
@@ -28,38 +43,35 @@ const ManageProductVariant = () => {
         if (response.status !== 200)
           throw new Error("Failed to fetch product.");
         setProduct(response.data);
-        message.success("Product loaded successfully!");
+        loadingMessage();
       } catch (error) {
+        loadingMessage();
         message.error(error.message);
       }
     };
+    let loadingMessage = message.loading("Loading variants", 0);
     fetchProduct();
   }, [productId]);
 
-  const addSize = () => {
-    if (currentSize && currentPrice > 0 && currentQuantity > 0) {
-      setSizes([
-        ...sizes,
-        { size: currentSize, price: currentPrice, quantity: currentQuantity },
-      ]);
-      setCurrentSize("");
-      setCurrentPrice(0);
-      setCurrentQuantity(0);
-    } else {
-      message.warning("Please fill out all size fields.");
-    }
+  const handleEditClick = (color) => {
+    console.log("color", color);
+    setSelectedColor(color);
+    setIsEditMode(true); // Set to edit mode
+    setIsModalVisible(true); // Open the modal
   };
 
-  const handleAddVariant = async () => {
-    const variantData = {
-      color,
-      sizes,
-      imgLinks: imgLinks.split(",").map((link) => link.trim()),
-    };
+  const handleAddClick = () => {
+    setSelectedColor(null); // No color selected, it's a new addition
+    setIsEditMode(false); // Set to add mode
+    setIsModalVisible(true); // Open the modal
+  };
+
+  const handleUpdateColors = async (updatedColor) => {
+    let loadingMessage = message.loading("Updating variant", 0);
     try {
       const response = await axios.put(
-        `https://ojt-gw-01-final-project-back-end.vercel.app/api/products/${productId}/colors`,
-        variantData,
+        `http://localhost:3000/api/products/${productId}/colors`,
+        updatedColor,
         {
           headers: {
             "Content-Type": "application/json",
@@ -67,138 +79,137 @@ const ManageProductVariant = () => {
           },
         }
       );
-      if (response.status !== 200) throw new Error("Failed to update variant.");
-      setProduct(response.data.product);
+      setProduct(response.data);
+      loadingMessage();
       message.success("Variant added successfully!");
       setIsModalVisible(false);
     } catch (error) {
+      loadingMessage();
       message.error("Failed to add variant.");
     }
   };
 
-  const showModal = () => {
-    setColor("");
-    setSizes([]);
-    setImgLinks("");
-    setIsModalVisible(true);
+  const handleAddNewColor = async (newColor) => {
+    let loadingMessage = message.loading("Adding new variant", 0);
+    try {
+      const response = await axios.put(
+        `http://localhost:3000/api/products/${productId}/colors`,
+        newColor,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setProduct(response.data);
+      loadingMessage()
+      message.success("Variant added successfully!");
+      setIsModalVisible(false);
+    } catch (error) {
+      loadingMessage()
+      message.error("Failed to add variant.");
+    }
   };
-
-  const handleCancel = () => setIsModalVisible(false);
-
   return (
-    <div>
-      <h2>Manage Product Variant for {product?.name || "Loading..."}</h2>
-      <Button type="primary" onClick={showModal}>
-        Add Variant
+    <div className="min-h-[100vh]">
+      <Button
+        onClick={handleAddClick}
+        type="primary"
+        style={{ marginBottom: 16, float: "right", backgroundColor: "black" }}>
+        Add New Color
       </Button>
       <Modal
-        title="Add Variant"
-        visible={isModalVisible}
-        onCancel={handleCancel}
-        footer={[
-          <Button key="cancel" onClick={handleCancel}>
-            Cancel
-          </Button>,
-          <Button key="submit" type="primary" onClick={handleAddVariant}>
-            Submit
-          </Button>,
-        ]}>
-        <Form layout="vertical">
-          <Form.Item label="Color" rules={[{ required: true }]}>
-            <Select onChange={setColor} value={color}>
-              {[
-                "Green",
-                "Red",
-                "Yellow",
-                "Orange",
-                "Blue",
-                "Purple",
-                "Pink",
-                "White",
-                "Black",
-                "Brown",
-                "Gray",
-                "HotPink",
-              ].map((c) => (
-                <Option key={c} value={c}>
-                  {c}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item>
-
-          <Form.Item label="Sizes">
-            <Space direction="vertical" style={{ width: "100%" }}>
-              <Space>
-                <Select
-                  placeholder="Select Size"
-                  value={currentSize}
-                  onChange={setCurrentSize}
-                  style={{ width: "100px" }}>
-                  {["S", "M", "L", "XL"].map((size) => (
-                    <Option key={size} value={size}>
-                      {size}
-                    </Option>
-                  ))}
-                </Select>
-                <Input
-                  placeholder="Price"
-                  type="number"
-                  value={currentPrice}
-                  onChange={(e) => setCurrentPrice(Number(e.target.value))}
-                  style={{ width: "100px" }}
-                />
-                <Input
-                  placeholder="Quantity"
-                  type="number"
-                  value={currentQuantity}
-                  onChange={(e) => setCurrentQuantity(Number(e.target.value))}
-                  style={{ width: "100px" }}
-                />
-                <Button onClick={addSize}>Add Size</Button>
-              </Space>
-              {sizes.map((size, index) => (
-                <div key={index}>
-                  <strong>{size.size}</strong> - Price: ${size.price} - Qty:
-                  {size.quantity}
-                </div>
-              ))}
-            </Space>
-          </Form.Item>
-
-          <Form.Item label="Image Links">
-            <Input.TextArea
-              placeholder="Comma separated image URLs"
-              value={imgLinks}
-              onChange={(e) => setImgLinks(e.target.value)}
-            />
-          </Form.Item>
-        </Form>
+        title={isEditMode ? "Edit Color" : "Add Color"}
+        open={isModalVisible}
+        onCancel={() => setIsModalVisible(false)}
+        footer={null}
+        width={600}>
+        <EditSingleColorForm
+          initialColor={selectedColor} // Pass the selected color (null for add mode)
+          onSubmit={isEditMode ? handleUpdateColors : handleAddNewColor} // Call the respective function
+          existingColors={product?.colors}
+        />
       </Modal>
-
       <div style={{ marginTop: "20px" }}>
-        <h3>Current Variants</h3>
         {product?.colors?.map((colorVariant, index) => (
-          <div key={index}>
-            <strong>Color:</strong> {colorVariant.color}
-            <br />
-            <strong>Sizes:</strong>
-            {colorVariant.sizes.map(
-              (s) => `${s.size} (Price: $${s.price}, Qty: ${s.quantity})`
+          <Table
+            key={`table-${colorVariant.color.toLowerCase()}-${index}`} // Ensure unique key for each Table
+            bordered
+            title={() => (
+              <div
+                style={{
+                  fontWeight: "bold",
+                  fontSize: "1.5em",
+                  textAlign: "left",
+                  color:
+                    colorVariant.color.toLowerCase() === "white"
+                      ? "#000"
+                      : colorVariant.color.toLowerCase(),
+                }}>
+                {colorVariant.color}
+                <Button
+                  style={{ marginLeft: "8px", float: "right" }}
+                  icon={<DeleteOutlined />}
+                  danger
+                />
+                <Button
+                  style={{ marginLeft: "8px", float: "right" }}
+                  color="default"
+                  icon={<EditOutlined />}
+                  onClick={() => handleEditClick(colorVariant)}></Button>
+              </div>
             )}
-            <br />
-            <strong>Images:</strong>
-            {colorVariant.imgLinks.map((link, idx) => (
-              <a
-                href={link}
-                key={idx}
-                target="_blank"
-                rel="noopener noreferrer">
-                View {idx + 1}
-              </a>
-            ))}
-            <hr />
-          </div>
+            dataSource={colorVariant.sizes.map((size, sizeIndex) => ({
+              ...size,
+              key: `${colorVariant.color.toLowerCase()}-${sizeIndex}`, // Ensure each size item has a unique key
+            }))}
+            columns={[
+              {
+                title: "Size",
+                dataIndex: "size",
+                key: "size",
+                width: 80,
+                align: "center",
+              },
+              {
+                width: 80,
+                align: "center",
+                title: "Price",
+                dataIndex: "price",
+                key: "price",
+                render: (price) => `$${price}`,
+              },
+              {
+                width: 80,
+                align: "center",
+                title: "Quantity",
+                dataIndex: "quantity",
+                key: "quantity",
+              },
+              {
+                align: "center",
+                title: "Images",
+                render: (_, record) => (
+                  <div className="flex flex-row justify-evenly">
+                    {colorVariant.imgLinks.map((link, imgIndex) => (
+                      <img
+                        key={`img-${colorVariant.color.toLowerCase()}-${imgIndex}`} // Ensure unique key for each image
+                        src={link}
+                        alt={`Image ${imgIndex + 1}`}
+                        className="w-[150px] object-cover m-0.5"
+                      />
+                    ))}
+                  </div>
+                ),
+                onCell: (record, index) => ({
+                  rowSpan: index % 10 === 0 ? 10 : 0,
+                }),
+              },
+            ]}
+            pagination={false}
+            size="small"
+          />
         ))}
       </div>
     </div>

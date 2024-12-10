@@ -1,5 +1,14 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Table, Input, Button, Space, Tag, Modal, message } from "antd";
+import {
+  Table,
+  Input,
+  Button,
+  Space,
+  Tag,
+  Modal,
+  message,
+  Tooltip,
+} from "antd";
 import { EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
@@ -283,12 +292,28 @@ const ProductTable = () => {
 
   const columns = [
     {
+      align:"center",
       title: "Product ID",
       dataIndex: "_id",
-      key: "_id", 
+      key: "_id",
       fixed: "left",
-      sorter: (a, b) => a._id.localeCompare(b._id),
+      width:50,
       ...getColumnSearchProps("_id"),
+      render: (id) => (
+        <Tooltip title={id}>
+          <div
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden", 
+              textOverflow: "ellipsis",
+              direction: "rtl", // Makes the ellipsis appear on the left side
+              textAlign: "left", // Keeps the text aligned correctly
+              maxWidth: "50px",
+            }}>
+            {id}
+          </div>
+        </Tooltip>
+      ),
     },
     {
       title: "Name",
@@ -366,13 +391,24 @@ const ProductTable = () => {
           <img
             src={link}
             alt="product"
-            style={{ maxHeight: "50px", display: "block", margin: "0 auto" }}
+            style={{
+              maxHeight: "50px",
+              display: "block",
+              margin: "0 auto",
+              minHeight: "50px",
+            }}
           />
         ) : (
           "No Image"
         ),
     },
- 
+    {
+      title: "Sold Quantity",
+      dataIndex: "soldQuantity",
+      key: "soldQuantity",
+      sorter: (a, b) => a.soldQuantity - b.soldQuantity,
+    },
+
     {
       title: "Action",
       key: "operation",
@@ -380,23 +416,26 @@ const ProductTable = () => {
       width: "auto",
       align: "center",
       render: (_, record) => (
-        <>
-          <Button
-            onClick={() => handleEditProduct(record)}
-            color="default"
-            variant="solid"
-            icon={<EditOutlined />}
-            title="Edit"
-          />
-          <Link to={`/admin/products/${record._id}`}>
+        <div className="flex justify-between">
+          <Tooltip title="Edit Product">
             <Button
-              type="primary"
+              onClick={() => handleEditProduct(record)}
               color="default"
               variant="solid"
-              icon={<PlusOutlined />}
+              icon={<EditOutlined />}
             />
-          </Link>
-        </>
+          </Tooltip>
+          <Tooltip title="Add Product Variant">
+            <Link to={`/admin/products/${record._id}`}>
+              <Button
+                type="primary"
+                color="default"
+                variant="solid"
+                icon={<PlusOutlined />}
+              />
+            </Link>
+          </Tooltip>
+        </div>
       ),
     },
   ];

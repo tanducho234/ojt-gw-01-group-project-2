@@ -46,8 +46,9 @@ import ReturnOrder from "./components/ReturnOrder";
 
 function App() {
   return (
-    <FetchDataProvider>
+   
     <AuthProvider>
+       <FetchDataProvider>
       <ScrollToTop />
        <Routes>
         <Route path="*" element={<PageNotFound/>} />
@@ -103,8 +104,8 @@ function App() {
         
 
       </Routes>
+      </FetchDataProvider>
     </AuthProvider>
-    </FetchDataProvider>
   );
 }
 
