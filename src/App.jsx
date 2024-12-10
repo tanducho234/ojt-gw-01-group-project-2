@@ -14,8 +14,10 @@ import Checkout from "./pages/Checkout/Checkout";
 import Register from "./pages/Auth/Register";
 import Login from "./pages/Auth/Login";
 
+import { ShippingOrders } from "./pages/Order/orderdetail";
+
 import AboutUs from "./pages/About/About";
-import { AuthProvider, useAuth } from "./hooks/useAuth";
+import { AuthProvider } from "./hooks/useAuth";
 import { FetchDataProvider } from "./hooks/useFetchData";
 import { AddProduct } from "./pages/Admin/AddProduct";
 import { Dashboard } from "./pages/Admin/Dashboard";
@@ -41,62 +43,65 @@ import OrderTable from "./components/admin/OrderTable";
 import { UnderConstructionPage } from "./pages/UnderConstructionPage";
 import ManageProductVariant from "./components/admin/ManageProductVariant";
 
-
 function App() {
   return (
     <FetchDataProvider>
-    <AuthProvider>
-      <ScrollToTop />
-       <Routes>
-        <Route path="*" element={<PageNotFound/>} />
-        <Route path="coming-soon" element={<UnderConstructionPage/>} />
+      <AuthProvider>
+        <ScrollToTop />
+        <Routes>
+          <Route path="*" element={<PageNotFound />} />
+          <Route path="coming-soon" element={<UnderConstructionPage />} />
 
-        <Route path="about" element={<AboutUs />} />
-        <Route path="login" element={<Login />} />
-        <Route path="register" element={<Register />} />
-        <Route path="/" element={<HomeLayout />}>
-          <Route path="" element={<Home />} />
-          <Route path="home" element={<Home />} />
-      
-        
-          <Route path="products" element={<Products />} />
-          <Route path="products/:id" element={<ProductDetail />} />
-         
-        </Route>
-        <Route path="/admin/login" element={<AdminLogin />} />
-        {/* Authenticated user layout */}
-        <Route path="/" element={<ProtectedLayout />}>
-          <Route path="/checkout" element={<Checkout />} />
-          <Route path="/checkout/success/:id" element={<OrderSuccess />} />
-          
-          <Route path="/checkout/failed/:id" element={<OrderFailed />} />
-          <Route path="/profile" element={<ProfileLayout />}>
-            {/* Nested routes within Profile */}
-            <Route path="account" element={<Account />} />
-            <Route path="orders" element={<Order />} />
-            <Route path="orders/:orderId" element={<OrderDetailsComponent />} />
-            <Route path="reviews" element={<Review />} />
-            {/* <Route path="settings" element={<AccountSettings />} /> */}
+          <Route path="about" element={<AboutUs />} />
+          <Route path="login" element={<Login />} />
+          <Route path="register" element={<Register />} />
+          <Route path="/" element={<HomeLayout />}>
+            <Route path="" element={<Home />} />
+            <Route path="home" element={<Home />} />
+
+            <Route path="products" element={<Products />} />
+            <Route path="products/:id" element={<ProductDetail />} />
           </Route>
-          <Route path="/cart" element={<Cart />} />
-        </Route>
-        {/* Admin layout */}
-        <Route path="/admin" element={<AdminLayout />}>
-          <Route path="" element={<Dashboard />} />
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="products/add" element={<AddProduct />} />
-          <Route path="products" element={<ProductTable />} />
-          <Route path="vouchers" element={<VoucherTable />} />
-          <Route path="brands" element={<BrandTable />} />
-          <Route path="categories" element={<CategoryTable />} />
-          <Route path="orders" element={<OrderTable />} />
-          <Route path="products/:productId" element={<ManageProductVariant />} />
+          <Route path="/admin/login" element={<AdminLogin />} />
+          {/* Authenticated user layout */}
+          <Route path="/" element={<ProtectedLayout />}>
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/checkout/success/:id" element={<OrderSuccess />} />
 
-
-        </Route>
-
-      </Routes>
-    </AuthProvider>
+            <Route path="/checkout/failed/:id" element={<OrderFailed />} />
+            <Route path="/profile" element={<ProfileLayout />}>
+              {/* Nested routes within Profile */}
+              <Route path="account" element={<Account />} />
+              <Route path="orders" element={<Order />} />
+              <Route
+                path="orders/:orderId"
+                element={<OrderDetailsComponent />}
+              />
+              <Route path="reviews" element={<Review />} />
+              {/* <Route path="settings" element={<AccountSettings />} /> */}
+            </Route>
+            <Route path="/cart" element={<Cart />} />
+          </Route>
+          {/* Admin layout */}
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route path="" element={<Dashboard />} />
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="products/add" element={<AddProduct />} />
+            <Route path="products" element={<ProductTable />} />
+            <Route path="vouchers" element={<VoucherTable />} />
+            <Route path="brands" element={<BrandTable />} />
+            <Route path="categories" element={<CategoryTable />} />
+            <Route path="orders" element={<OrderTable />} />
+            <Route
+              path="products/:productId"
+              element={<ManageProductVariant />}
+            />
+          </Route>
+          {/* Ordershipper layout */}
+          <Route path="/orderdetail" element={<ShippingOrders />}/>
+         
+        </Routes>
+      </AuthProvider>
     </FetchDataProvider>
   );
 }
