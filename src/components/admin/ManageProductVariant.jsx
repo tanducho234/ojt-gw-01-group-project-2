@@ -70,7 +70,7 @@ const ManageProductVariant = () => {
     let loadingMessage = message.loading("Updating variant", 0);
     try {
       const response = await axios.put(
-        `http://localhost:3000/api/products/${productId}/colors`,
+        `https://ojt-gw-01-final-project-back-end.vercel.app/api/products/${productId}/colors`,
         updatedColor,
         {
           headers: {
@@ -93,7 +93,7 @@ const ManageProductVariant = () => {
     let loadingMessage = message.loading("Adding new variant", 0);
     try {
       const response = await axios.put(
-        `http://localhost:3000/api/products/${productId}/colors`,
+        `https://ojt-gw-01-final-project-back-end.vercel.app/api/products/${productId}/colors`,
         newColor,
         {
           headers: {
