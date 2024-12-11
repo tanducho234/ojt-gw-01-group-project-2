@@ -181,7 +181,6 @@ const ProductForm = ({ initialValues, onSubmit }) => {
         label="Description"
         rules={[
           { required: true, message: "Please enter the product description" },
-          { max: 500, message: "Description cannot exceed 500 characters" },
         ]}>
         <Input.TextArea
           placeholder="Enter product description"
