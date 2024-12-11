@@ -3,7 +3,7 @@ import { useAuth } from "../../hooks/useAuth";
 import axios from "axios";
 import { message } from "antd";
 
-export const ShippingLogin = () => {
+ const ShippingLogin = () => {
   const URL = "https://ojt-gw-01-final-project-back-end.vercel.app";
 
   const [username, setUsername] = useState("");
@@ -98,3 +98,5 @@ export const ShippingLogin = () => {
     </div>
   );
 };
+
+export default ShippingLogin;

@@ -4,7 +4,7 @@ import { useAuth } from "../hooks/useAuth";
 export const ShipperLayout = () => {
   const { user } = useAuth();
 
-  if (!user.role !== "user" || user.role !== "admin") {
+  if (user.role !== "shipper") {
     return <Navigate to="/shipper/login" />;
   }
 

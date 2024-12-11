@@ -63,9 +63,16 @@ export const AuthProvider = ({ children }) => {
   // call this function to sign out logged in user
   const logout = () => {
     const isAdmin = user?.role === "admin";
+    const isShipper = user?.role === "shipper";
     setUser(null);
     setToken(null);
-    navigate(isAdmin ? "/admin/login" : "/login", { replace: true });
+    if (isAdmin) {
+      navigate("/admin/login", { replace: true });
+    } else if (isShipper) {
+      navigate("/shipper/login", { replace: true });
+    } else {
+      navigate("/login", { replace: true });
+    }
   };
 
   const value = useMemo(

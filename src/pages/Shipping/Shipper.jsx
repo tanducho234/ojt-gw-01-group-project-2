@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 
-export const ShippingOrders = () => {
+ const ShippingOrders = () => {
   const { token } = useAuth();
   const [orders, setOrders] = useState([]); // State for all orders
   const [filteredOrders, setFilteredOrders] = useState([]); // State for filtered orders
@@ -172,3 +172,5 @@ export const ShippingOrders = () => {
     </div>
   );
 };
+
+export default ShippingOrders;

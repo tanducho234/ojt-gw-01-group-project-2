@@ -14,7 +14,6 @@ import Checkout from "./pages/Checkout/Checkout";
 import Register from "./pages/Auth/Register";
 import Login from "./pages/Auth/Login";
 
-import { ShippingLogin } from "./pages/Shipping/Login";
 import AboutUs from "./pages/About/About";
 import { AuthProvider } from "./hooks/useAuth";
 import { FetchDataProvider } from "./hooks/useFetchData";
@@ -45,6 +44,9 @@ import ReturnOrder from "./components/ReturnOrder";
 import { ShipperLayout } from "./utils/ShipperLayout";
 import CustomerTable from "./components/admin/CustomerTable";
 import UserTable from "./components/admin/UserTable";
+import ShippingLogin from "./pages/Shipping/Login";
+import ShippingOrders from "./pages/Shipping/Shipper";
+import OrderDetailShipper from "./pages/Shipping/OrderDetailShipper";
 
 function App() {
   return (
@@ -107,6 +109,8 @@ function App() {
           </Route>
           {/*shipperlayout*/}
           <Route path="/shipper" element={<ShipperLayout />}>
+            <Route path="" element={<ShippingOrders />} />
+            <Route path=":orderId" element={<OrderDetailShipper />} />
           </Route>
         </Routes>
       </FetchDataProvider>
