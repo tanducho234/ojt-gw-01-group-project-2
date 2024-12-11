@@ -71,8 +71,7 @@ const ProductDetail = () => {
             <div className="mt-4 text-center">
               <button
                 className="px-4 py-2 text-white bg-black rounded hover:bg-gray-600"
-                onClick={() => setShowAll(!showAll)}
-              >
+                onClick={() => setShowAll(!showAll)}>
                 {showAll ? "Show Less" : "Show All"}
               </button>
             </div>
@@ -230,7 +229,6 @@ const ProductDetail = () => {
               },
             ]}
           />
-
           {/* Product Container */}
           <div className="flex flex-wrap lg:flex-nowrap gap-8">
             {/* Product Images */}
@@ -326,8 +324,7 @@ const ProductDetail = () => {
                           selectedColor === item.color
                             ? "2px solid black"
                             : "2px solid gray",
-                      }}
-                    >
+                      }}>
                       {selectedColor === item.color && (
                         <span className="">✓</span>
                       )}
@@ -353,8 +350,7 @@ const ProductDetail = () => {
                   selectedSize === size.size
                     ? "bg-black text-white"
                     : "bg-gray-200 hover:bg-gray-300"
-                }`}
-                          >
+                }`}>
                             {size.size}
                           </button>
                         ))
@@ -371,8 +367,7 @@ const ProductDetail = () => {
                 <div className="flex items-center bg-gray-100 rounded-full">
                   <button
                     onClick={decrement}
-                    className="w-14 h-12 flex items-center justify-center text-2xl rounded-l-full hover:bg-gray-200"
-                  >
+                    className="w-14 h-12 flex items-center justify-center text-2xl rounded-l-full hover:bg-gray-200">
                     -
                   </button>
                   <input
@@ -388,8 +383,7 @@ const ProductDetail = () => {
                   />
                   <button
                     onClick={increment}
-                    className="w-14 h-12 flex items-center justify-center text-2xl rounded-r-full hover:bg-gray-200"
-                  >
+                    className="w-14 h-12 flex items-center justify-center text-2xl rounded-r-full hover:bg-gray-200">
                     +
                   </button>
                 </div>
@@ -407,15 +401,13 @@ const ProductDetail = () => {
                     !selectedColor || !selectedSize
                       ? "bg-gray-400 cursor-not-allowed"
                       : "bg-black hover:bg-gray-800"
-                  }`}
-                >
+                  }`}>
                   Add to Cart
                 </button>
                 <ToastContainer closeOnClick={true} />
               </div>
             </div>
           </div>
-
           <ConfigProvider
             theme={{
               components: {
@@ -425,28 +417,31 @@ const ProductDetail = () => {
                   colorPrimary: "#000000",
                 },
               },
-            }}
-          >
+            }}>
             <Tabs
-              tabBarGutter={700}
-              defaultActiveKey="1"
-              centered
-              items={items}
-              onChange={onChange}
-              size="large"
-              type="line"
-            />
-
-            <Tabs
-              // tabBarGutter={500}
-              tabBarStyle={{ color: "#000000" }}
-              tabBarGutter={500}
-              centered
+              tabBarStyle={{
+                color: "#000000",
+                overflowX: "auto",
+                overflowY: "hidden",
+                whiteSpace: "nowrap",
+                WebkitOverflowScrolling: "touch",
+              }}
+              tabBarGutter={{
+                xs: 100,
+                sm: 200,
+                md: 300,
+                lg: 500,
+              }}
+              centered={true}
               className="w-full"
               defaultActiveKey="1"
               items={items}
               onChange={onChange}
-              size="large"
+              size={{
+                xs: "small",
+                sm: "middle",
+                md: "large",
+              }}
             />
           </ConfigProvider>
         </div>
