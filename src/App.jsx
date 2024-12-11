@@ -42,7 +42,7 @@ import OrderTable from "./components/admin/OrderTable";
 import { UnderConstructionPage } from "./pages/UnderConstructionPage";
 import ManageProductVariant from "./components/admin/ManageProductVariant";
 import ReturnOrder from "./components/ReturnOrder";
-import { ShipperLayout } from "./utils/shipperLayout";
+import { ShipperLayout } from "./utils/ShipperLayout";
 
 function App() {
   return (
