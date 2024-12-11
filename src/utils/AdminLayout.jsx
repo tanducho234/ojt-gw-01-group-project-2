@@ -28,6 +28,7 @@ import {
   faTshirt,
   faVideo,
   faSignOutAlt,
+  faShieldHalved,
 } from "@fortawesome/free-solid-svg-icons"; // FontAwesome icons
 
 export const AdminLayout = () => {
@@ -40,14 +41,8 @@ export const AdminLayout = () => {
       label: "Dashboard",
       key: "dashboard",
       to: "/dashboard",
-    }, 
-    {
-      icon: <FontAwesomeIcon icon={faUsers} />,
-      label: "Users",
-      key: "users",
-      to: "/users",
-    }, // FontAwesome faUsers
-    // FontAwesome faVideo for Dashboard (video-related icon)
+    },
+
     {
       icon: <FontAwesomeIcon icon={faShoppingCart} />,
       label: "Products",
@@ -60,6 +55,26 @@ export const AdminLayout = () => {
       key: "orders",
       to: "/orders",
     }, // FontAwesome faChartBar for Order Details (graph-like)
+    {
+      icon: <FontAwesomeIcon icon={faTag} />,
+      label: "Vouchers",
+      key: "vouchers",
+      to: "/vouchers",
+    }, // FontAwesome faTag for Vouchers
+    {
+      icon: <FontAwesomeIcon icon={faShieldHalved} />,
+      label: "Users",
+      key: "users",
+      to: "/users",
+    },
+    {
+      icon: <FontAwesomeIcon icon={faUsers} />,
+      label: "Customers",
+      key: "customers",
+      to: "/customers",
+    },
+
+
     {
       icon: <FontAwesomeIcon icon={faStore} />,
       label: "Brands",
@@ -78,18 +93,7 @@ export const AdminLayout = () => {
     //   key: "styles",
     //   to: "/styles",
     // }, // FontAwesome faTshirt for Styles
-    {
-      icon: <FontAwesomeIcon icon={faTag} />,
-      label: "Vouchers",
-      key: "vouchers",
-      to: "/vouchers",
-    }, // FontAwesome faTag for Vouchers
-    {
-      icon: <FontAwesomeIcon icon={faStore} />,
-      label: "Shop",
-      key: "shop",
-      to: "/shop",
-    }, // FontAwesome faStore for Shop
+
     {
       icon: <FontAwesomeIcon icon={faSignOutAlt} />,
       label: "Logout",

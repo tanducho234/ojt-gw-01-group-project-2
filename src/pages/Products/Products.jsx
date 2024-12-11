@@ -232,6 +232,27 @@ function Products() {
     });
   };
 
+
+  const handlePrevious = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+    if (currentPage > 1) {
+      handlePageChange(currentPage - 1);
+    }
+  };
+
+  const handleNext = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+    if (currentPage < totalPages) {
+      handlePageChange(currentPage + 1);
+    }
+  };
+
   return (
     <div className="flex w-full flex-wrap p-5">
       <ToastContainer closeOnClick={true} />
@@ -528,6 +549,8 @@ function Products() {
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={handlePageChange}
+            onPrevious={handlePrevious}
+            onNext={handleNext}
           />
         </div>
       </div>

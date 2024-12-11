@@ -53,6 +53,8 @@ export const AuthProvider = ({ children }) => {
 
     if (role === "user") {
       navigate("/");
+    } else if (role === "shipper") {
+      navigate("/shipper");
     } else {
       navigate("/admin/dashboard");
     }
@@ -60,7 +62,7 @@ export const AuthProvider = ({ children }) => {
 
   // call this function to sign out logged in user
   const logout = () => {
-    const isAdmin = user?.role === 'admin';
+    const isAdmin = user?.role === "admin";
     setUser(null);
     setToken(null);
     navigate(isAdmin ? "/admin/login" : "/login", { replace: true });

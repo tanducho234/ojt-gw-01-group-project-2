@@ -30,7 +30,7 @@ function Home({ customerReviews = [] }) {
     customers: 30000,
   };
 
-  const brands = ["Versace", "Vector", "Gucci", "Prada", "Calvin_Klein"];
+  const brands = ["Versace", "Zara", "Gucci", "Prada", "Calvin_Klein"];
 
   const handleReviewScroll = (direction) => {
     const container = reviewContainerRef.current;
@@ -52,7 +52,7 @@ function Home({ customerReviews = [] }) {
   const fetchRandomTopReviews = async () => {
     try {
       const response = await axios.get(
-        "https://ojt-gw-01-final-project-back-end.vercel.app/api/reviews/random-top-reviews"
+        "http://localhost:3000/api/reviews/random-top-reviews"
       );
 
       if (response.status === 200) {
@@ -286,9 +286,9 @@ function Home({ customerReviews = [] }) {
             {[...brands, ...brands, ...brands].map((brand, index) => (
               <img
                 key={`${brand}-${index}`}
-                src={`/images/${brand}.png`}
+                src={`/assets/images/${brand}.png`}
                 alt={brand}
-                className="max-w-[120px] md:max-w-[200px] h-auto transform transition-all duration-500 hover:scale-110 hover:brightness-110 hover:contrast-110 select-none"
+                className="max-w-[120px] md:max-w-[200px] h-[30px] transform transition-all duration-500 hover:scale-110 hover:brightness-110 hover:contrast-110 select-none"
                 draggable="false"
               />
             ))}

@@ -6,6 +6,7 @@ import {
   FaArrowRightFromBracket,
 } from "react-icons/fa6";
 import { useAuth } from "../../hooks/useAuth";
+import { useFetchData } from "../../hooks/useFetchData";
 
 const Navbar = () => {
   const navigate = useNavigate(); // Initialize the useNavigate hook
@@ -16,7 +17,7 @@ const Navbar = () => {
     setMobileMenuOpen(!isMobileMenuOpen);
   };
   const { logout, user } = useAuth();
-
+  const { cartItemCount } = useFetchData();
   const handleLogout = () => {
     logout();
   };
@@ -103,9 +104,9 @@ const Navbar = () => {
               className="w-8 h-8"
             /> */}
             <FaCartShopping size={25} />
-            {/* <span className="absolute -top-2 -right-2 flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full">
-              10
-            </span> */}
+            <span className="absolute -top-2 -right-2 flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full">
+              {cartItemCount}
+            </span>
           </Link>
           {/* <Link to="/login">
             <img

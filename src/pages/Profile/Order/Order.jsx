@@ -69,9 +69,9 @@ const Order = () => {
       case "Pending":
         return "bg-yellow-100 text-yellow-600";
       case "Preparing":
-        return "bg-pink-300 text-pink-800";
+        return "bg-orange-100 text-orange-600";
       case "Canceled":
-        return "bg-red-200 text-red-600";
+        return "bg-red-100 text-red-600";
       case "Delivering":
         return "bg-blue-100 text-blue-600";
       case "Delivered":
@@ -183,7 +183,6 @@ const Order = () => {
                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-6 pt-6 border-t">
                       <Link
                         to={`${order._id}`}
-                   
                         className="text-black font-medium text-sm sm:text-base mb-2 sm:mb-0">
                         View details <FontAwesomeIcon icon={faChevronRight} />
                       </Link>

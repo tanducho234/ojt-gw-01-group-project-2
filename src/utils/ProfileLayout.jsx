@@ -14,41 +14,6 @@ import { useAuth } from "../hooks/useAuth";
 import { Link, Outlet } from "react-router-dom";
 import ProfileAddress from "../components/AddressProfileUser";
 
-const items = [
-  {
-    icon: <UserOutlined />,
-    label: "Account",
-    key: "account",
-    to: "/account",
-  },
-  {
-    icon: <ShoppingCartOutlined />,
-    label: "Orders",
-    key: "orders",
-    to: "/orders",
-  },
-  {
-    icon: <StarOutlined />,
-    label: "Reviews",
-    key: "reviews",
-    to: "/reviews",
-  },
-  {
-    icon: <LogoutOutlined />,
-    label: "Log Out",
-    key: "logout",
-    onClick: () => {
-      logout();
-    },
-  },
-].map(({ icon, label, key, to, onClick }) => ({
-  key,
-  icon,
-  label: to ? <Link to={`/profile${to}`}>{label}</Link> : label,
-  onClick,
-}));
-
-
 const { Content } = Layout;
 
 export const ProfileLayout = () => {
@@ -58,13 +23,46 @@ export const ProfileLayout = () => {
 
   const screens = Grid.useBreakpoint(); // Get the current screen size
 
+  const items = [
+    {
+      icon: <UserOutlined />,
+      label: "Account",
+      key: "account",
+      to: "/account",
+    },
+    {
+      icon: <ShoppingCartOutlined />,
+      label: "Orders",
+      key: "orders",
+      to: "/orders",
+    },
+    {
+      icon: <StarOutlined />,
+      label: "Reviews",
+      key: "reviews",
+      to: "/reviews",
+    },
+    {
+      icon: <LogoutOutlined />,
+      label: "Log Out",
+      key: "logout",
+      onClick: () => {
+        logout();
+      },
+    },
+  ].map(({ icon, label, key, to, onClick }) => ({
+    key,
+    icon,
+    label: to ? <Link to={`/profile${to}`}>{label}</Link> : label,
+    onClick,
+  }));
+
   // Close the drawer when switching to a large screen
   useEffect(() => {
     if (screens.lg) {
       setDrawerVisible(false);
     }
   }, [screens.lg]);
-
 
   return (
     <Layout>
@@ -76,7 +74,7 @@ export const ProfileLayout = () => {
             fontSize: "24px",
             margin: "16px", // Adjust position
             cursor: "pointer",
-            width:"20px",
+            width: "20px",
           }}
         />
       )}
@@ -88,7 +86,7 @@ export const ProfileLayout = () => {
         onClose={() => setDrawerVisible(false)}
         open={drawerVisible}
         width="50%"
-         // Occupy half of the screen width
+        // Occupy half of the screen width
       >
         <Menu
           mode="inline"
@@ -99,7 +97,6 @@ export const ProfileLayout = () => {
             if (e.key === "4") logout();
           }}
           items={items}
-          
         />
       </Drawer>
 
@@ -112,8 +109,7 @@ export const ProfileLayout = () => {
             top: 0,
             background: "white",
             minHeight: "full",
-          }}
-        >
+          }}>
           <Menu
             mode="inline"
             defaultSelectedKeys={[
@@ -128,16 +124,14 @@ export const ProfileLayout = () => {
         <Content
           style={{
             margin: "24px 16px 0",
-          }}
-        >
+          }}>
           <div
             style={{
               padding: 24,
               minHeight: 360,
               background: "white",
               borderRadius: "20px",
-            }}
-          >
+            }}>
             <Outlet />
           </div>
         </Content>

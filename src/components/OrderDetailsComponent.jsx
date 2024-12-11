@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronLeft,
@@ -8,37 +9,159 @@ import {
   faArrowUpRightFromSquare,
 } from "@fortawesome/free-solid-svg-icons";
 
-import Modal from "react-modal";
 import axios from "axios";
 import { useAuth } from "../hooks/useAuth";
 import { Button, message, Popconfirm } from "antd";
 import { Steps } from "antd";
 import { LoadingSpinner } from "./LoadingSpinner";
+import Star from "./Star";
 
 const OrderDetail = () => {
   const { orderId } = useParams();
   const { token } = useAuth();
   const [order, setOrder] = useState({});
   const [steps, setSteps] = useState([]);
-
+  const [groupedProducts, setGroupedProducts] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [ratings, setRatings] = useState([]);
+
+  // Group products by productId
+  const groupProductsByProductId = (products) => {
+    const grouped = {};
+    products.forEach((item) => {
+      if (!grouped[item.productId]) {
+        grouped[item.productId] = {
+          productId: item.productId,
+          name: item.name,
+          imgLink: item.imgLink,
+          items: [],
+          rating: 5,
+          feedback: "",
+        };
+      }
+      grouped[item.productId].items.push(`${item.color}, ${item.size}`);
+    });
+
+    return Object.values(grouped).map((product) => ({
+      ...product,
+      item: product.items.join("; "),
+    }));
+  };
+
+  // Open modal with grouped products
+  const openModal = () => {
+    const grouped = groupProductsByProductId(order.products);
+    setGroupedProducts(grouped);
+    setRatings(
+      grouped.map((product) => ({
+        productId: product.productId,
+        rating: product.rating,
+        feedback: product.feedback,
+      }))
+    );
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  // Update rating for a specific product
+  const handleRatingChange = (productId, newRating) => {
+    setRatings((prevRatings) =>
+      prevRatings.map((item) =>
+        item.productId === productId ? { ...item, rating: newRating } : item
+      )
+    );
+  };
+
+  // Update review text for a specific product
+  const handleReviewChange = (productId, feedback) => {
+    setRatings((prevRatings) =>
+      prevRatings.map((item) =>
+        item.productId === productId ? { ...item, feedback } : item
+      )
+    );
+  };
+
+  // Submit reviews for all products
+  const handleSubmitReview = async () => {
+    // Send the reviews to the API, for example, through a POST request
+    try {
+      const reviews = ratings.map((rating) => ({
+        productId: rating.productId,
+        rating: rating.rating,
+        feedback: rating.feedback,
+      }));
+      let loadingmessage = message.loading("Submitting reviews...");
+      console.log("Review data:", reviews);
+
+      await axios.post(
+        "https://ojt-gw-01-final-project-back-end.vercel.app/api/reviews",
+        { orderId, reviews },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      closeModal();
+      loadingmessage();
+      message.success("Reviews submitted successfully!");
+      setOrder((prevOrder) => ({
+        ...prevOrder,
+        isReviewed: true,
+      }));
+    } catch (error) {
+      loadingmessage();
+      console.error("Error submitting reviews:", error);
+      message.error("Failed to submit reviews.");
+    }
+  };
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedReason, setSelectedReason] = useState("");
+
+  // Predefined reasons for cancellation
+  const reasons = [
+    "No longer needed",
+    "Bought by mistake",
+    "Better price available",
+    "Wrong address",
+    "Others",
+  ];
+
+  // Handlers
+  const showModal = () => setIsModalVisible(true);
+  const hideModal = () => setIsModalVisible(false);
 
   const handleCancelOrder = async () => {
+    if (!selectedReason) {
+      message.error("Please select a reason before canceling the order"); // Thông báo lỗi
+      return; // Ngăn thực thi tiếp
+    }
+
     try {
+      hideModal();
       const response = await axios.put(
         `https://ojt-gw-01-final-project-back-end.vercel.app/api/order-details/${order._id}`,
-        { status: "Canceled" },
+        { status: "Canceled", description: selectedReason }, // Gửi thêm lý do hủy
         { headers: { Authorization: `Bearer ${token}` } }
       );
+
+      // Cập nhật trạng thái đơn hàng mới
       setOrder(response.data);
 
+      // Map lại các bước trong status history
       const apiSteps = response.data.statusHistory.map((item) => ({
         status: item.status, // Map API status to local 'status'
         date: item.timestamp, // Use 'timestamp' for the time
+        description: item.description,
       }));
       setSteps(apiSteps);
 
       message.success("Order canceled successfully");
+      // Đóng modal sau khi hủy thành công
     } catch (error) {
       console.error(
         "Error updating order status:",
@@ -51,12 +174,13 @@ const OrderDetail = () => {
   const cancel = () => {
     message.error("Order cancelation aborted");
   };
+
   const getStatusStyle = (status) => {
     switch (status) {
       case "Pending":
         return "bg-yellow-100 text-yellow-600";
       case "Preparing":
-        return "bg-pink-100 text-pink-600";
+        return "bg-orange-100 text-orange-600";
       case "Canceled":
         return "bg-red-100 text-red-600";
       case "Delivering":
@@ -81,7 +205,6 @@ const OrderDetail = () => {
         return "Unknown";
     }
   };
-  // Gọi lại khi token thay đổi
 
   const fetchSteps = async () => {
     try {
@@ -99,7 +222,10 @@ const OrderDetail = () => {
       const apiSteps = response.data.statusHistory.map((item) => ({
         status: item.status, // Map API status to local 'status'
         date: item.timestamp, // Use 'timestamp' for the time
+        description: item.description,
       }));
+      console.log("data: ", response.data);
+
       setOrder(response.data);
       setSteps(apiSteps);
     } catch (error) {
@@ -110,17 +236,19 @@ const OrderDetail = () => {
   };
 
   useEffect(() => {
-    console.log(orderId);
-
     fetchSteps();
   }, []);
+  const navigate = useNavigate();
+
+  const handleReturnOrder = () => {
+    navigate(`return`);
+  };
 
   return (
     <div className="mt-8 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       <Link
         to="/profile/orders"
-        className="text-gray-600 text-sm flex items-center mb-4"
-      >
+        className="text-gray-600 text-sm flex items-center mb-4">
         <FontAwesomeIcon icon={faChevronLeft} className="mr-2" /> Back to orders
       </Link>
 
@@ -141,8 +269,7 @@ const OrderDetail = () => {
               <span
                 className={`mt-2 sm:mt-0 px-4 py-2 text-sm font-medium rounded-full ${getStatusStyle(
                   order.status
-                )}`}
-              >
+                )}`}>
                 {order.status}
               </span>
             </div>
@@ -154,11 +281,8 @@ const OrderDetail = () => {
             <div className="bg-white border rounded-lg p-6 shadow-md mb-6 flex-1">
               <h2 className="text-lg font-medium mb-4">Products</h2>
               <div className="space-y-4 sm:space-y-6">
-                {order.products?.map((item) => (
-                  <div
-                    className="flex items-start sm:items-center"
-                    key={item.productId}
-                  >
+                {order.products?.map((item, index) => (
+                  <div className="flex items-start sm:items-center" key={index}>
                     <img
                       src={item.imgLink}
                       alt={item.name}
@@ -197,8 +321,7 @@ const OrderDetail = () => {
                   size="small"
                   current={steps.findIndex(
                     (step) => step.status === order.status
-                  )}
-                >
+                  )}>
                   {steps.map((step, index) => (
                     <Steps.Step
                       subTitle={step.description}
@@ -248,8 +371,7 @@ const OrderDetail = () => {
                       <a
                         href={order.paymentLink}
                         target="_blank"
-                        rel="noopener noreferrer"
-                      >
+                        rel="noopener noreferrer">
                         <button className="bg-green-500 font-bold text-white px-4 py-2 rounded-full hover:bg-green-600">
                           Continue to Payment
                         </button>
@@ -333,9 +455,11 @@ const OrderDetail = () => {
                   <span className="text-gray-600">Subtotal:</span>
                   <span className="text-gray-600 font-semibold">
                     $
-                    {order.totalPrice -
+                    {(
+                      order.totalPrice -
                       order.shippingCost +
-                      order.voucherDiscountAmount}
+                      order.voucherDiscountAmount
+                    ).toFixed(2)}
                   </span>
                 </div>
                 <div className="flex justify-between">
@@ -365,73 +489,104 @@ const OrderDetail = () => {
 
           {/* Action Buttons */}
           <div className="flex justify-center mt-6">
-            {order.status === "Delivered" && (
-              <div class="max-w-md mx-auto mt-8 p-6">
-                <div class="flex justify-center gap-4 mt-4">
-                  {/* <button class="bg-white font-bold text-red-600 border-[1px] border-rose-500 rounded-full py-2 px-10 hover:bg-pink-100 transition duration-300">
-                Return Order
-              </button>
-              <button class="bg-black font-bold text-white py-2 px-10 rounded-full hover:bg-gray-600 transition duration-300">
-                Send Review
-              </button> */}
+            <div className="max-w-md mx-auto mt-8 p-6">
+              {order.status === "Delivered" && (
+                <div className="max-w-md mx-auto mt-8 p-6">
+                  <div className="flex justify-center gap-4 mt-4">
+                    <button
+                      onClick={handleReturnOrder}
+                      className="bg-white font-bold text-red-600 border-[1px] border-rose-500 rounded-full py-2 px-10 hover:bg-pink-100 transition duration-300">
+                      Return Order
+                    </button>
+                    <>
+                      {order.isReviewed != true && (
+                        <button
+                          className="bg-black font-bold text-white py-2 px-10 rounded-full hover:bg-gray-600 transition duration-300"
+                          onClick={openModal}>
+                          Send Review
+                        </button>
+                      )}
+                    </>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+              {(order.status === "Pending" || order.status === "Preparing") && (
+                <>
+                  {/* Cancel Order Button */}
+                  <div className="flex justify-center items-center gap-4 mt-4">
+                    <button
+                      onClick={showModal}
+                      className="bg-white font-bold text-red-600 border border-rose-500 rounded-full py-2 px-10 hover:bg-pink-100 transition duration-300">
+                      Cancel Order
+                    </button>
+                  </div>
 
-            {order.status === "Pending" && (
-              <Popconfirm
-                title="Are you sure you want to cancel this order?"
-                onConfirm={handleCancelOrder}
-                onCancel={cancel}
-                okText="Yes"
-                cancelText="No"
-              >
-                <div class="max-w-md mx-auto mt-8 p-6">
-                  <div class="flex justify-center items-center gap-4 mt-4">
-                    <Button
-                      danger
-                      className="bg-white font-bold text-red-600 border border-rose-500 rounded-full py-2 px-10 hover:bg-pink-100 transition duration-300"
-                    >
-                      Cancel Order
-                    </Button>
-                  </div>
-                </div>
-              </Popconfirm>
-            )}
-            {order.status === "Preparing" && (
-              <Popconfirm
-                title="Are you sure you want to cancel this order?"
-                onConfirm={handleCancelOrder}
-                onCancel={cancel}
-                okText="Yes"
-                cancelText="No"
-              >
-                <div class="max-w-md mx-auto mt-8 p-6">
-                  <div class="flex justify-center items-center gap-4 mt-4">
-                    <Button
-                      danger
-                      className="bg-white font-bold text-red-600 border border-rose-500 rounded-full py-2 px-10 hover:bg-pink-100 transition duration-300"
-                    >
-                      Cancel Order
-                    </Button>
-                  </div>
-                </div>
-              </Popconfirm>
-            )}
+                  {/* Modal Pop-up */}
+                  {isModalVisible && (
+                    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+                      <div className="bg-white rounded-xl shadow-lg p-6 w-[25rem] h-[26rem]">
+                        {/* Modal Title */}
+                        <h2 className="mt-8 text-lg font-bold mb-4 text-center">
+                          Why are you canceling this order?
+                          <span className="text-red-500">*</span>
+                        </h2>
+                        <p className="text-sm mb-4 text-gray-600 text-center">
+                          Pick a reason from the options provided below:
+                        </p>
+
+                        {/* Radio Buttons for Reasons */}
+                        <form>
+                          {reasons.map((reason, index) => (
+                            <label
+                              key={index}
+                              className="flex items-center ml-8 gap-2 mb-2 cursor-pointer">
+                              <input
+                                type="radio"
+                                name="cancelReason"
+                                value={reason}
+                                checked={selectedReason === reason}
+                                onChange={(e) =>
+                                  setSelectedReason(e.target.value)
+                                }
+                                className="text-rose-500 focus:ring-rose-500"
+                              />
+                              <span className="text-gray-700">{reason}</span>
+                            </label>
+                          ))}
+                        </form>
+
+                        {/* Modal Buttons */}
+                        <div className="flex justify-center gap-4 mt-6">
+                          <button
+                            onClick={hideModal}
+                            className="bg-white font-bold text-black border border-black rounded-full py-4 px-12 hover:bg-rose-600 hover:text-white hover:border-none transition duration-300">
+                            Cancel
+                          </button>
+                          <button
+                            onClick={handleCancelOrder}
+                            className="bg-black font-bold text-white border border-white rounded-full py-4 px-12 hover:bg-gray-600 hover:text-black hover:border hover:border-black transition duration-300">
+                            Submit
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+
             {order.status === "Delivering" && (
               <Popconfirm
                 title="Are you sure you want to cancel this order?"
                 onConfirm={handleCancelOrder}
                 onCancel={cancel}
                 okText="Yes"
-                cancelText="No"
-              >
-                <div class="max-w-md mx-auto mt-2 p-2">
-                  <div class="flex justify-center gap-4 mt-2">
+                cancelText="No">
+                <div className="max-w-md mx-auto mt-2 p-2">
+                  <div className="flex justify-center gap-4 mt-2">
                     <Button
                       disabled
-                      className="bg-white font-bold text-red-600 border border-rose-500 rounded-full py-2 px-10 hover:bg-pink-100 transition duration-300"
-                    >
+                      className="bg-white font-bold text-red-600 border border-rose-500 rounded-full py-2 px-10 hover:bg-pink-100 transition duration-300">
                       Cancel Order
                     </Button>
                   </div>
@@ -443,33 +598,68 @@ const OrderDetail = () => {
       )}
 
       {/* Modal for Review */}
-      {/* <Modal
-        isOpen={isReviewModalOpen}
-        onRequestClose={closeReviewModal}
-        contentLabel="Review Modal"
-        className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
-        overlayClassName="fixed inset-0">
-        <div className="bg-white p-6 rounded-lg w-full max-w-md">
-          <h2 className="text-lg font-medium mb-4">Send Review</h2>
-          <textarea
-            value={review}
-            onChange={(e) => setReview(e.target.value)}
-            className="w-full h-32 border border-gray-300 rounded-lg p-2 mb-4"
-            placeholder="Write your review here..."></textarea>
-          <div className="flex justify-end space-x-4">
-            <button
-              onClick={closeReviewModal}
-              className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300">
-              Cancel
-            </button>
-            <button
-              onClick={handleReviewSubmit}
-              className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
-              Submit Review
-            </button>
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg w-full max-w-md max-h-[80vh] overflow-y-auto">
+            <h2 className="text-lg font-medium mb-4">Send Review</h2>
+            <div className="space-y-4">
+              {groupedProducts.map((product) => (
+                <div key={product.productId} className="border-b pb-4 mb-4">
+                  <div className="flex items-center mb-2">
+                    <img
+                      src={product.imgLink}
+                      alt={product.name}
+                      className="w-16 h-16 object-cover rounded-md mr-4"
+                    />
+                    <div>
+                      <p className="font-medium">{product.name}</p>
+                      <p className="text-gray-600 text-sm">
+                        Items: {product.item}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Star Rating */}
+                  <div className="mb-2 flex item-center justify-center">
+                    <Star
+                      rating={
+                        ratings.find((r) => r.productId === product.productId)
+                          ?.rating || 5
+                      }
+                      onRatingChange={(newRating) =>
+                        handleRatingChange(product.productId, newRating)
+                      }
+                    />
+                  </div>
+                  {/* Textarea for comments */}
+                  <div>
+                    <textarea
+                      onChange={(e) =>
+                        handleReviewChange(product.productId, e.target.value)
+                      }
+                      rows="4"
+                      className="w-full p-2 border rounded-md"
+                      placeholder="Write your review here..."
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="flex justify-end space-x-4">
+              <button
+                onClick={closeModal}
+                className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300">
+                Cancel
+              </button>
+              <button
+                onClick={handleSubmitReview}
+                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+                Submit Review
+              </button>
+            </div>
           </div>
         </div>
-      </Modal> */}
+      )}
     </div>
   );
 };

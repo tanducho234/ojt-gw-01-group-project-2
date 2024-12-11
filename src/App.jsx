@@ -14,8 +14,7 @@ import Checkout from "./pages/Checkout/Checkout";
 import Register from "./pages/Auth/Register";
 import Login from "./pages/Auth/Login";
 
-import { ShippingOrders } from "./pages/Shipping/Shipper";
-
+import { ShippingLogin } from "./pages/Shipping/Login";
 import AboutUs from "./pages/About/About";
 import { AuthProvider } from "./hooks/useAuth";
 import { FetchDataProvider } from "./hooks/useFetchData";
@@ -42,13 +41,15 @@ import CategoryTable from "./components/admin/CategoryTable";
 import OrderTable from "./components/admin/OrderTable";
 import { UnderConstructionPage } from "./pages/UnderConstructionPage";
 import ManageProductVariant from "./components/admin/ManageProductVariant";
-
-import OrderDetailShipper from "./pages/Shipping/OrderDetailShipper";
+import ReturnOrder from "./components/ReturnOrder";
+import { ShipperLayout } from "./utils/ShipperLayout";
+import CustomerTable from "./components/admin/CustomerTable";
+import UserTable from "./components/admin/UserTable";
 
 function App() {
   return (
-    <FetchDataProvider>
-      <AuthProvider>
+    <AuthProvider>
+      <FetchDataProvider>
         <ScrollToTop />
         <Routes>
           <Route path="*" element={<PageNotFound />} />
@@ -60,11 +61,11 @@ function App() {
           <Route path="/" element={<HomeLayout />}>
             <Route path="" element={<Home />} />
             <Route path="home" element={<Home />} />
-
             <Route path="products" element={<Products />} />
             <Route path="products/:id" element={<ProductDetail />} />
           </Route>
           <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/shipper/login" element={<ShippingLogin />} />
           {/* Authenticated user layout */}
           <Route path="/" element={<ProtectedLayout />}>
             <Route path="/checkout" element={<Checkout />} />
@@ -79,6 +80,8 @@ function App() {
                 path="orders/:orderId"
                 element={<OrderDetailsComponent />}
               />
+              <Route path="orders/:orderId/return" element={<ReturnOrder />} />
+
               <Route path="reviews" element={<Review />} />
               {/* <Route path="settings" element={<AccountSettings />} /> */}
             </Route>
@@ -94,19 +97,20 @@ function App() {
             <Route path="brands" element={<BrandTable />} />
             <Route path="categories" element={<CategoryTable />} />
             <Route path="orders" element={<OrderTable />} />
+            <Route path="customers" element={<CustomerTable />} />
+            <Route path="users" element={<UserTable />} />
+
             <Route
               path="products/:productId"
               element={<ManageProductVariant />}
             />
           </Route>
-          <Route path="/shipper" element={<ShippingOrders />}>
+          {/*shipperlayout*/}
+          <Route path="/shipper" element={<ShipperLayout />}>
           </Route>
-          <Route path="/shipper/:orderId" element={<OrderDetailShipper />} />
-
-          {/* Ordershipper layout */}
         </Routes>
-      </AuthProvider>
-    </FetchDataProvider>
+      </FetchDataProvider>
+    </AuthProvider>
   );
 }
 

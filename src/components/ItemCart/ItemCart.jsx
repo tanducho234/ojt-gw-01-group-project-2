@@ -85,7 +85,7 @@ const CartItem = ({ item, onRemove, onQuantityChange }) => {
             />
           </svg>
         </button>
-        <span className="text-sm font-semibold sm:text-base 2xl:text-xl">{quantity}</span>
+        <span className="text-sm font-semibold sm:text-base 2xl:text-xl min-w-10 text-center">{quantity}</span>
         <button onClick={handleIncrease} className="p-1 bg-gray-200 rounded-full">
           <svg
             className="h-4 w-4 text-gray-600 sm:h-5 sm:w-5 2xl:h-6 2xl:w-6"

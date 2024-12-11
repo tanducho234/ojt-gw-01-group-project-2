@@ -1,6 +1,21 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Table, Input, Button, Space, Tag, Modal, message, Select } from "antd";
-import { PlusOutlined, SearchOutlined, SyncOutlined } from "@ant-design/icons";
+import {
+  Table,
+  Input,
+  Button,
+  Space,
+  Tag,
+  Modal,
+  message,
+  Select,
+  Steps,
+} from "antd";
+import {
+  EditOutlined,
+  PlusOutlined,
+  SearchOutlined,
+  SyncOutlined,
+} from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -57,9 +72,7 @@ const OrderTable = () => {
         );
         // Update the order status locally
         const updatedOrders = orders.map((order) =>
-          order._id === selectedOrder._id
-            ? { ...order, status: newStatus }
-            : order
+          order._id === selectedOrder._id ? response.data : order
         );
         setOrders(updatedOrders);
         message.success("Order status updated successfully!");
@@ -232,46 +245,7 @@ const OrderTable = () => {
       ],
       onFilter: (value, record) => record.paymentMethod === value,
     },
-    {
-      width: 120,
-      align: "center",
-      title: "Order Status",
-      dataIndex: "status",
-      key: "status",
-      filters: [
-        { text: "Pending", value: "Pending" },
-        { text: "Preparing", value: "Preparing" },
-        { text: "Delivering", value: "Delivering" },
-        { text: "Delivered", value: "Delivered" },
-        { text: "Returned", value: "Returned" },
-      ],
-      onFilter: (value, record) => record.status === value,
 
-      render: (status, record) => {
-        return recordEditing.some((item) => item._id === record._id) ? (
-          <Tag icon={<SyncOutlined spin />} color="processing">
-            Updating
-          </Tag>
-        ) : (
-          <Tag
-            color={
-              status === "Pending"
-                ? "blue"
-                : status === "Preparing"
-                ? "geekblue"
-                : status === "Delivering"
-                ? "orange"
-                : status === "Delivered"
-                ? "green"
-                : "red"
-            }
-            style={{ cursor: "pointer" }}
-            onClick={() => handleUpdateStatus(record)}>
-            {status}
-          </Tag>
-        );
-      },
-    },
     {
       width: 30,
       title: "Total Price",
@@ -341,6 +315,43 @@ const OrderTable = () => {
         },
       ],
     },
+    {
+      width: 120,
+      title: "Order Status",
+      dataIndex: "status",
+      key: "status",
+      filters: [
+        { text: "Pending", value: "Pending" },
+        { text: "Preparing", value: "Preparing" },
+        { text: "Delivering", value: "Delivering" },
+        { text: "Delivered", value: "Delivered" },
+        { text: "Returned", value: "Returned" },
+      ],
+      onFilter: (value, record) => record.status === value,
+      render: (status, record) => {
+        return recordEditing.some((item) => item._id === record._id) ? (
+          <Tag icon={<SyncOutlined spin />} color="processing">
+            Updating
+          </Tag>
+        ) : (
+          <>
+            <Tag
+              icon={status !== "Canceled" ? <EditOutlined /> : null}
+              className={`
+              ${status === "Pending" ? "bg-yellow-100 text-yellow-600" : ""}
+              ${status === "Preparing" ? "bg-orange-100 text-orange-600" : ""}
+              ${status === "Delivering" ? "bg-blue-100 text-blue-600" : ""} 
+              ${status === "Delivered" ? "bg-green-100 text-green-600" : ""}
+              ${status === "Returned" ? "bg-gray-100 text-gray-600" : ""}
+              ${status === "Canceled" ? "bg-red-100 text-red-600" : ""} 
+              cursor-pointer`}
+              onClick={() => handleUpdateStatus(record)}>
+              {status}
+            </Tag>
+          </>
+        );
+      },
+    },
 
     // {
     //   title: "Action",
@@ -391,16 +402,45 @@ const OrderTable = () => {
         open={isStatusModalVisible}
         onCancel={() => setIsStatusModalVisible(false)}
         onOk={handleSaveStatus}>
+        <Steps
+          status={
+            ["Canceled", "Returned"].includes(selectedOrder?.status)
+              ? "error"
+              : undefined
+          }
+          direction="vertical"
+          size="small"
+          current={selectedOrder?.statusHistory.findIndex(
+            (step) => step.status === selectedOrder.status
+          )}>
+          {selectedOrder?.statusHistory.map((step, index) => (
+            <Steps.Step
+              key={index}
+              subTitle={step.description}
+              title={step.status}
+              description={new Intl.DateTimeFormat("vi", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false, // 24-hour format
+              }).format(new Date(step.timestamp))}
+            />
+          ))}
+        </Steps>
         <Select
           value={newStatus}
           onChange={(value) => setNewStatus(value)}
           style={{ width: "100%" }}>
           {statusOptions
             .filter((status) => {
-              if (selectedOrder?.status === "Preparing") {
-                return status.value !== "Pending";
-              }
-              return true;
+              const currentStatusIndex = statusOptions.findIndex(
+                (s) => s.value === selectedOrder?.status
+              );
+              const nextStatusIndex = currentStatusIndex + 1;
+              // Only allow selecting the next status in sequence
+              return status.value === statusOptions[nextStatusIndex]?.value;
             })
             .map((status) => (
               <Select.Option key={status.value} value={status.value}>

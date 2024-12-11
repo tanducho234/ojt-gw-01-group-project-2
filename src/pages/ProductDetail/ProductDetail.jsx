@@ -4,18 +4,13 @@ import axios from "axios";
 import Review from "../../components/Review/Review";
 import StarRating from "../../components/StarRating";
 import { useAuth } from "../../hooks/useAuth";
-import { Tabs } from "antd";
+import { Tabs, ConfigProvider } from "antd";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Account from "../Profile/Account/Account";
-import {
-  HomeOutlined,
-  ProductOutlined,
-  ShoppingCartOutlined,
-} from "@ant-design/icons";
+import { HomeOutlined } from "@ant-design/icons";
 import { Breadcrumb } from "antd";
-import { set } from "react-hook-form";
+import { useFetchData } from "../../hooks/useFetchData";
 
 const LoadingSpinner = () => (
   <div className="flex justify-center items-center h-screen">
@@ -25,6 +20,7 @@ const LoadingSpinner = () => (
 
 const ProductDetail = () => {
   const { token } = useAuth();
+  const { updateCartItemCount } = useFetchData();
   const [loading, setLoading] = useState(true);
   //product quantaty
 
@@ -39,6 +35,10 @@ const ProductDetail = () => {
   const [product, setProduct] = useState({});
   const [salePrice, setSalePrice] = useState(0);
   const [reviews, setReview] = useState([]);
+
+  const [showAll, setShowAll] = useState(false);
+
+  const displayedReviews = showAll ? reviews : reviews.slice(0, 6);
 
   const items = [
     {
@@ -62,11 +62,20 @@ const ProductDetail = () => {
               All review ({reviews.length})
             </span>
           </div>
-          <div className="flex flex-wrap justify-evenly bg-[#f9fafd]  ">
-            {reviews.map((review) => (
+          <div className="flex flex-wrap justify-evenly bg-[#f9fafd]">
+            {displayedReviews.map((review) => (
               <Review key={review._id} review={review} />
             ))}
           </div>
+          {reviews.length > 6 && (
+            <div className="mt-4 text-center">
+              <button
+                className="px-4 py-2 text-white bg-black rounded hover:bg-gray-600"
+                onClick={() => setShowAll(!showAll)}>
+                {showAll ? "Show Less" : "Show All"}
+              </button>
+            </div>
+          )}
         </>
       ),
     },
@@ -87,7 +96,7 @@ const ProductDetail = () => {
 
   const calculateSalePrice = (price, salePercentage) => {
     if (salePercentage > 0) {
-      return Number((price * (1 - salePercentage / 100)))
+      return Number(price * (1 - salePercentage / 100))
         .toFixed(2)
         .replace(/\.00$/, "");
     }
@@ -102,7 +111,6 @@ const ProductDetail = () => {
     setProductQuantaty(null);
     setQuantity(1);
     setSalePrice(calculateSalePrice(product.price, product.salePercentage));
-
   };
   const handleSizeSelect = (size) => {
     setSelectedSize(size.size);
@@ -111,7 +119,6 @@ const ProductDetail = () => {
     setSalePrice(calculateSalePrice(size.price, product.salePercentage));
 
     setQuantity(1);
-    
   };
 
   useEffect(() => {
@@ -123,8 +130,10 @@ const ProductDetail = () => {
       .then((response) => {
         setProduct(response.data);
         setCurrentPrice(response.data.price);
-        
-       setSalePrice(calculateSalePrice(response.data.price, response.data.salePercentage));
+
+        setSalePrice(
+          calculateSalePrice(response.data.price, response.data.salePercentage)
+        );
 
         setSelectedColor(response.data.colors[0].color);
         setImages(response.data.colors[0].imgLinks);
@@ -175,6 +184,11 @@ const ProductDetail = () => {
       });
 
       if (response.status === 200) {
+        const totalQuantity = response.data.products.reduce(
+          (sum, item) => sum + item.quantity,
+          0
+        );
+        updateCartItemCount(totalQuantity);
         toast.success("Product added to cart successfully!");
         // alert('Product added to cart successfully!');
       } else {
@@ -215,7 +229,6 @@ const ProductDetail = () => {
               },
             ]}
           />
-
           {/* Product Container */}
           <div className="flex flex-wrap lg:flex-nowrap gap-8">
             {/* Product Images */}
@@ -395,18 +408,42 @@ const ProductDetail = () => {
               </div>
             </div>
           </div>
-
-          <Tabs
-            // tabBarGutter={500}
-            tabBarStyle={{ color: "#000000" }}
-            tabBarGutter={500}
-            centered
-            className="w-full"
-            defaultActiveKey="1"
-            items={items}
-            onChange={onChange}
-            size="large"
-          />
+          <ConfigProvider
+            theme={{
+              components: {
+                Tabs: {
+                  colorText: "#8c8c8c",
+                  colorTextActive: "#000000",
+                  colorPrimary: "#000000",
+                },
+              },
+            }}>
+            <Tabs
+              tabBarStyle={{
+                color: "#000000",
+                overflowX: "auto",
+                overflowY: "hidden",
+                whiteSpace: "nowrap",
+                WebkitOverflowScrolling: "touch",
+              }}
+              tabBarGutter={{
+                xs: 100,
+                sm: 200,
+                md: 300,
+                lg: 500,
+              }}
+              centered={true}
+              className="w-full"
+              defaultActiveKey="1"
+              items={items}
+              onChange={onChange}
+              size={{
+                xs: "small",
+                sm: "middle",
+                md: "large",
+              }}
+            />
+          </ConfigProvider>
         </div>
       )}
     </>

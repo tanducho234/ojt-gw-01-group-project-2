@@ -7,6 +7,8 @@ import {
   DatePicker,
   Button,
   Switch,
+  Row,
+  Col,
 } from "antd";
 import moment from "moment";
 
@@ -58,60 +60,88 @@ const VoucherForm = ({ initialValues, onSubmit }) => {
           { required: true, message: "Please enter the voucher code" },
           { max: 15, message: "Code cannot exceed 15 characters" },
         ]}>
-        <Input placeholder="Enter voucher code" />
+        <Input
+          count={{
+            show: true,
+            max: 15,
+          }}
+          onChange={(e) => {
+            const upperValue = e.target.value.toUpperCase();
+            form.setFieldsValue({ code: upperValue });
+          }}
+          placeholder="Enter voucher code"
+        />
       </Form.Item>
 
-      <Form.Item
-        name="type"
-        label="Voucher Type"
-        rules={[{ required: true, message: "Please select the voucher type" }]}>
-        <Select>
-          <Option value="public">Public</Option>
-          <Option value="restricted">Restricted</Option>
-        </Select>
-      </Form.Item>
+      <Row gutter={16}>
+        <Col span={12}>
+          <Form.Item
+            name="type"
+            label="Voucher Type"
+            rules={[
+              { required: true, message: "Please select the voucher type" },
+            ]}>
+            <Select>
+              <Option value="public">Public</Option>
+              <Option value="restricted">Restricted</Option>
+            </Select>
+          </Form.Item>
+        </Col>
+        <Col span={12}>
+          <Form.Item
+            name="discountAmount"
+            label="Discount Amount ($)"
+            rules={[
+              { required: true, message: "Please enter the discount amount" },
+              { type: "number", min: 0, message: "Must be a positive value" },
+            ]}>
+            <InputNumber min={0} style={{ width: "100%" }} />
+          </Form.Item>
+        </Col>
+      </Row>
 
-      <Form.Item
-        name="discountAmount"
-        label="Discount Amount ($)"
-        rules={[
-          { required: true, message: "Please enter the discount amount" },
-          { type: "number", min: 0, message: "Must be a positive value" },
-        ]}>
-        <InputNumber min={0} style={{ width: "100%" }} />
-      </Form.Item>
+      {/* Second Row */}
+      <Row gutter={16}>
+        <Col span={12}>
+          <Form.Item
+            name="discountPercentage"
+            label="Discount Percentage (%)"
+            rules={[
+              {
+                type: "number",
+                min: 0,
+                max: 100,
+                message: "Must be between 0-100",
+              },
+            ]}>
+            <InputNumber min={0} max={100} style={{ width: "100%" }} />
+          </Form.Item>
+        </Col>
+        <Col span={12}>
+          <Form.Item
+            name="minOrderValue"
+            label="Minimum Order Value ($)"
+            rules={[
+              { type: "number", min: 0, message: "Must be a positive value" },
+            ]}>
+            <InputNumber min={0} style={{ width: "100%" }} />
+          </Form.Item>
+        </Col>
+      </Row>
 
-      <Form.Item
-        name="discountPercentage"
-        label="Discount Percentage (%)"
-        rules={[
-          {
-            type: "number",
-            min: 0,
-            max: 100,
-            message: "Must be between 0-100",
-          },
-        ]}>
-        <InputNumber min={0} max={100} style={{ width: "100%" }} />
-      </Form.Item>
-
-      <Form.Item
-        name="minOrderValue"
-        label="Minimum Order Value ($)"
-        rules={[
-          { type: "number", min: 0, message: "Must be a positive value" },
-        ]}>
-        <InputNumber min={0} style={{ width: "100%" }} />
-      </Form.Item>
-
-      <Form.Item name="maxUsage" label="Max Usage">
-        <InputNumber min={0} style={{ width: "100%" }} />
-      </Form.Item>
-
-      <Form.Item name="expirationDate" label="Expiration Date">
-        <DatePicker style={{ width: "100%" }} />
-      </Form.Item>
-
+      {/* Third Row */}
+      <Row gutter={16}>
+        <Col span={12}>
+          <Form.Item name="maxUsage" label="Max Usage">
+            <InputNumber min={0} style={{ width: "100%" }} />
+          </Form.Item>
+        </Col>
+        <Col span={12}>
+          <Form.Item name="expirationDate" label="Expiration Date">
+            <DatePicker style={{ width: "100%" }} />
+          </Form.Item>
+        </Col>
+      </Row>
       <Form.Item label="Active" name="isActive" valuePropName="checked">
         <Switch
           defaultChecked={true}
