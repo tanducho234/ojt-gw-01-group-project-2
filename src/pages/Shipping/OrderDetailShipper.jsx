@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronLeft,
@@ -8,55 +9,117 @@ import {
   faArrowUpRightFromSquare,
 } from "@fortawesome/free-solid-svg-icons";
 
-import Modal from "react-modal";
 import axios from "axios";
-import { useAuth } from "../hooks/useAuth";
+
 import { Button, message, Popconfirm } from "antd";
 import { Steps } from "antd";
-import { LoadingSpinner } from "./LoadingSpinner";
+import { useAuth } from "../../hooks/useAuth";
+import { LoadingSpinner } from "../../components/LoadingSpinner";
 
-const OrderDetail = () => {
+const OrderDetailShipper = () => {
   const { orderId } = useParams();
   const { token } = useAuth();
   const [order, setOrder] = useState({});
   const [steps, setSteps] = useState([]);
-
   const [loading, setLoading] = useState(true);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedReason, setSelectedReason] = useState("");
 
-  const handleCancelOrder = async () => {
+  // Predefined reasons for cancellation
+  const reasons = [
+    "Customer does not receive order",
+    "Order error",
+    "Customer does not make payment",
+    "Wrong person to receive order",
+  ];
+
+  // Handlers
+  const showModal = () => setIsModalVisible(true);
+  const hideModal = () => setIsModalVisible(false);
+
+  const handleReturnOrder = async () => {
+    if (!selectedReason) {
+      message.error("Please select a reason before Returning the order"); // Thông báo lỗi
+      return; // Ngăn thực thi tiếp
+    }
+
     try {
+      hideModal();
       const response = await axios.put(
         `https://ojt-gw-01-final-project-back-end.vercel.app/api/order-details/${order._id}`,
-        { status: "Canceled" },
+        { status: "Returned", description: selectedReason }, // Gửi thêm lý do hủy
         { headers: { Authorization: `Bearer ${token}` } }
       );
+
+      // Cập nhật trạng thái đơn hàng mới
       setOrder(response.data);
 
+      // Map lại các bước trong status history
       const apiSteps = response.data.statusHistory.map((item) => ({
         status: item.status, // Map API status to local 'status'
         date: item.timestamp, // Use 'timestamp' for the time
+        description: item.description,
       }));
       setSteps(apiSteps);
 
-      message.success("Order canceled successfully");
+      message.success("Order returned successfully");
+      // Đóng modal sau khi hủy thành công
     } catch (error) {
       console.error(
         "Error updating order status:",
         error.response?.data || error.message
       );
-      message.error("Failed to cancel order");
+      message.error("Failed to return order");
     }
   };
-
-  const cancel = () => {
-    message.error("Order cancelation aborted");
+  const handleDeliverySuccess = async () => {
+    try {
+      const requestBody = {
+        status: "Delivered",
+        description: selectedReason
+      };
+      
+      // Check if the payment method is COD, and if so, include the payment status
+      if (order.paymentMethod === "COD") {
+        requestBody.paymentStatus = "Paid";
+      }
+      
+      const response = await axios.put(
+        `https://ojt-gw-01-final-project-back-end.vercel.app/api/order-details/${order._id}`,
+        requestBody,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+  
+      // Update the local state with the new order data
+      setOrder(response.data);
+  
+      // Map status history and update the steps
+      const apiSteps = response.data.statusHistory.map((item) => ({
+        status: item.status,
+        date: item.timestamp,
+        description: item.description || "", // Handle description if empty
+      }));
+      setSteps(apiSteps);
+  
+      message.success("Order marked as Delivered successfully");
+    } catch (error) {
+      console.error(
+        "Error updating order status:",
+        error.response?.data || error.message
+      );
+      message.error("Failed to mark order as Delivered");
+    }
   };
+  
+
+
+
   const getStatusStyle = (status) => {
     switch (status) {
       case "Pending":
         return "bg-yellow-100 text-yellow-600";
       case "Preparing":
-        return "bg-pink-100 text-pink-600";
+        return "bg-orange-100 text-orange-600";
       case "Canceled":
         return "bg-red-100 text-red-600";
       case "Delivering":
@@ -81,7 +144,6 @@ const OrderDetail = () => {
         return "Unknown";
     }
   };
-  // Gọi lại khi token thay đổi
 
   const fetchSteps = async () => {
     try {
@@ -99,7 +161,10 @@ const OrderDetail = () => {
       const apiSteps = response.data.statusHistory.map((item) => ({
         status: item.status, // Map API status to local 'status'
         date: item.timestamp, // Use 'timestamp' for the time
+        description: item.description,
       }));
+      console.log("data: ", response.data);
+
       setOrder(response.data);
       setSteps(apiSteps);
     } catch (error) {
@@ -110,18 +175,17 @@ const OrderDetail = () => {
   };
 
   useEffect(() => {
-    console.log(orderId);
-
     fetchSteps();
   }, []);
+  const navigate = useNavigate();
 
   return (
     <div className="mt-8 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       <Link
-        to="/profile/orders"
+        to="/shipper"
         className="text-gray-600 text-sm flex items-center mb-4"
       >
-        <FontAwesomeIcon icon={faChevronLeft} className="mr-2" /> Back to orders
+        <FontAwesomeIcon icon={faChevronLeft} className="mr-2" /> Back to shipper packages
       </Link>
 
       {/* Order Details Title Section */}
@@ -154,11 +218,8 @@ const OrderDetail = () => {
             <div className="bg-white border rounded-lg p-6 shadow-md mb-6 flex-1">
               <h2 className="text-lg font-medium mb-4">Products</h2>
               <div className="space-y-4 sm:space-y-6">
-                {order.products?.map((item) => (
-                  <div
-                    className="flex items-start sm:items-center"
-                    key={item.productId}
-                  >
+                {order.products?.map((item, index) => (
+                  <div className="flex items-start sm:items-center" key={index}>
                     <img
                       src={item.imgLink}
                       alt={item.name}
@@ -241,21 +302,7 @@ const OrderDetail = () => {
                   </span>
                 </div>
                 {/* Conditional Button for Pending Payment Status */}
-                {order.paymentStatus === "Pending" &&
-                  order.paymentMethod !== "COD" &&
-                  order.status !== "Canceled" && (
-                    <div className="flex justify-between mt-4">
-                      <a
-                        href={order.paymentLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <button className="bg-green-500 font-bold text-white px-4 py-2 rounded-full hover:bg-green-600">
-                          Continue to Payment
-                        </button>
-                      </a>
-                    </div>
-                  )}
+                
               </div>
             </div>
 
@@ -333,9 +380,11 @@ const OrderDetail = () => {
                   <span className="text-gray-600">Subtotal:</span>
                   <span className="text-gray-600 font-semibold">
                     $
-                    {order.totalPrice -
+                    {(
+                      order.totalPrice -
                       order.shippingCost +
-                      order.voucherDiscountAmount}
+                      order.voucherDiscountAmount
+                    ).toFixed(2)}
                   </span>
                 </div>
                 <div className="flex justify-between">
@@ -365,113 +414,88 @@ const OrderDetail = () => {
 
           {/* Action Buttons */}
           <div className="flex justify-center mt-6">
-            {order.status === "Delivered" && (
-              <div class="max-w-md mx-auto mt-8 p-6">
-                <div class="flex justify-center gap-4 mt-4">
-                  {/* <button class="bg-white font-bold text-red-600 border-[1px] border-rose-500 rounded-full py-2 px-10 hover:bg-pink-100 transition duration-300">
-                Return Order
-              </button>
-              <button class="bg-black font-bold text-white py-2 px-10 rounded-full hover:bg-gray-600 transition duration-300">
-                Send Review
-              </button> */}
-                </div>
-              </div>
-            )}
+            <div className="max-w-md mx-auto mt-8 p-6">
+              {order.status === "Delivering" && (
+                <>
+                  <div>
+                    <button
+                      onClick={handleDeliverySuccess}
+                      className="bg-black font-bold   border border-black text-white rounded-full py-2 px-10 hover:bg-white  hover:text-black transition duration-300"
+                    >
+                      Delivery Success
+                    </button>
+                  </div>
+                  {/* Cancel Order Button */}
+                  <div className="flex justify-center items-center gap-4 mt-4">
+                    <button
+                      onClick={showModal}
+                      className="bg-white font-bold text-red-600 border border-rose-500 rounded-full py-2 px-12 hover:bg-pink-100 transition duration-300"
+                    >
+                      Return Order
+                    </button>
+                  </div>
 
-            {order.status === "Pending" && (
-              <Popconfirm
-                title="Are you sure you want to cancel this order?"
-                onConfirm={handleCancelOrder}
-                onCancel={cancel}
-                okText="Yes"
-                cancelText="No"
-              >
-                <div class="max-w-md mx-auto mt-8 p-6">
-                  <div class="flex justify-center items-center gap-4 mt-4">
-                    <Button
-                      danger
-                      className="bg-white font-bold text-red-600 border border-rose-500 rounded-full py-2 px-10 hover:bg-pink-100 transition duration-300"
-                    >
-                      Cancel Order
-                    </Button>
-                  </div>
-                </div>
-              </Popconfirm>
-            )}
-            {order.status === "Preparing" && (
-              <Popconfirm
-                title="Are you sure you want to cancel this order?"
-                onConfirm={handleCancelOrder}
-                onCancel={cancel}
-                okText="Yes"
-                cancelText="No"
-              >
-                <div class="max-w-md mx-auto mt-8 p-6">
-                  <div class="flex justify-center items-center gap-4 mt-4">
-                    <Button
-                      danger
-                      className="bg-white font-bold text-red-600 border border-rose-500 rounded-full py-2 px-10 hover:bg-pink-100 transition duration-300"
-                    >
-                      Cancel Order
-                    </Button>
-                  </div>
-                </div>
-              </Popconfirm>
-            )}
-            {order.status === "Delivering" && (
-              <Popconfirm
-                title="Are you sure you want to cancel this order?"
-                onConfirm={handleCancelOrder}
-                onCancel={cancel}
-                okText="Yes"
-                cancelText="No"
-              >
-                <div class="max-w-md mx-auto mt-2 p-2">
-                  <div class="flex justify-center gap-4 mt-2">
-                    <Button
-                      disabled
-                      className="bg-white font-bold text-red-600 border border-rose-500 rounded-full py-2 px-10 hover:bg-pink-100 transition duration-300"
-                    >
-                      Cancel Order
-                    </Button>
-                  </div>
-                </div>
-              </Popconfirm>
-            )}
+                  {/* Modal Pop-up */}
+                  {isModalVisible && (
+                    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+                      <div className="bg-white rounded-xl shadow-lg p-6 w-[25rem] h-[26rem]">
+                        {/* Modal Title */}
+                        <h2 className="mt-8 text-lg font-bold mb-4 text-center">
+                          Why are you return this order?
+                          <span className="text-red-500">*</span>
+                        </h2>
+                        <p className="text-sm mb-4 text-gray-600 text-center">
+                          Pick a reason from the options provided below:
+                        </p>
+
+                        {/* Radio Buttons for Reasons */}
+                        <form>
+                          {reasons.map((reason, index) => (
+                            <label
+                              key={index}
+                              className="flex items-center ml-8 gap-2 mb-2 cursor-pointer"
+                            >
+                              <input
+                                type="radio"
+                                name="cancelReason"
+                                value={reason}
+                                checked={selectedReason === reason}
+                                onChange={(e) =>
+                                  setSelectedReason(e.target.value)
+                                }
+                                className="text-rose-500 focus:ring-rose-500"
+                              />
+                              <span className="text-gray-700">{reason}</span>
+                            </label>
+                          ))}
+                        </form>
+
+                        {/* Modal Buttons */}
+                        <div className="flex justify-center gap-4 mt-6">
+                          <button
+                            onClick={hideModal}
+                            className="bg-white font-bold text-black border border-black rounded-full py-4 px-12 hover:bg-rose-600 hover:text-white hover:border-none transition duration-300"
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            onClick={handleReturnOrder}
+                            className="bg-black font-bold text-white border border-white rounded-full py-4 px-12 hover:bg-gray-600 hover:text-black hover:border hover:border-black transition duration-300"
+                          >
+                            Submit
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
           </div>
         </>
       )}
-
-      {/* Modal for Review */}
-      {/* <Modal
-        isOpen={isReviewModalOpen}
-        onRequestClose={closeReviewModal}
-        contentLabel="Review Modal"
-        className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
-        overlayClassName="fixed inset-0">
-        <div className="bg-white p-6 rounded-lg w-full max-w-md">
-          <h2 className="text-lg font-medium mb-4">Send Review</h2>
-          <textarea
-            value={review}
-            onChange={(e) => setReview(e.target.value)}
-            className="w-full h-32 border border-gray-300 rounded-lg p-2 mb-4"
-            placeholder="Write your review here..."></textarea>
-          <div className="flex justify-end space-x-4">
-            <button
-              onClick={closeReviewModal}
-              className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300">
-              Cancel
-            </button>
-            <button
-              onClick={handleReviewSubmit}
-              className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
-              Submit Review
-            </button>
-          </div>
-        </div>
-      </Modal> */}
     </div>
   );
 };
 
-export default OrderDetail;
+export default OrderDetailShipper;

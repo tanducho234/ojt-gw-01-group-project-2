@@ -14,7 +14,7 @@ import Checkout from "./pages/Checkout/Checkout";
 import Register from "./pages/Auth/Register";
 import Login from "./pages/Auth/Login";
 
-import { ShippingOrders } from "./pages/Order/orderdetail";
+import { ShippingOrders } from "./pages/Shipping/Shipper";
 
 import AboutUs from "./pages/About/About";
 import { AuthProvider } from "./hooks/useAuth";
@@ -42,6 +42,8 @@ import CategoryTable from "./components/admin/CategoryTable";
 import OrderTable from "./components/admin/OrderTable";
 import { UnderConstructionPage } from "./pages/UnderConstructionPage";
 import ManageProductVariant from "./components/admin/ManageProductVariant";
+
+import OrderDetailShipper from "./pages/Shipping/OrderDetailShipper";
 
 function App() {
   return (
@@ -97,9 +99,11 @@ function App() {
               element={<ManageProductVariant />}
             />
           </Route>
+          <Route path="/shipper" element={<ShippingOrders />}>
+          </Route>
+          <Route path="/shipper/:orderId" element={<OrderDetailShipper />} />
+
           {/* Ordershipper layout */}
-          <Route path="/orderdetail" element={<ShippingOrders />}/>
-         
         </Routes>
       </AuthProvider>
     </FetchDataProvider>
