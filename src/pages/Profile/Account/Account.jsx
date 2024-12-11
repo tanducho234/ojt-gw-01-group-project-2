@@ -17,7 +17,7 @@ const ChangePasswordModal = ({ show, onClose }) => {
 
   const close = () => {
     setCurrentPassword("");
-    setNewPassword(""); 
+    setNewPassword("");
     setConfirmPassword("");
     setError("");
     onClose();
@@ -131,8 +131,7 @@ const ChangePasswordModal = ({ show, onClose }) => {
                 <button
                   type="button"
                   className="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500"
-                  onClick={onClose}
-                >
+                  onClick={onClose}>
                   Cancel
                 </button>
                 <button
@@ -162,6 +161,8 @@ function AccountPage() {
     fullName: "",
     email: "",
     phone: "",
+    gender: "other", // Add default value
+    birthDate: "", // Add birthDate field
   });
   const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
 
@@ -199,6 +200,8 @@ function AccountPage() {
           fullName: response.data.fullName,
           email: response.data.email,
           phone: response.data.phoneNumber,
+          gender: response.data.gender || "other", // Set default value
+          birthDate: response.data.birthDate || "", // Set default value
         });
         console.log("userdata", response.data);
       } catch (err) {
@@ -228,6 +231,8 @@ function AccountPage() {
           fullName: updatedUserInfo.fullName,
           email: updatedUserInfo.email,
           phoneNumber: updatedUserInfo.phone,
+          gender: updatedUserInfo.gender, // Send gender
+          birthDate: updatedUserInfo.birthDate, // Send birthDate
         },
         {
           headers: {
@@ -266,8 +271,7 @@ function AccountPage() {
               </div>
               <button
                 onClick={() => setIsEditing(true)}
-                className="bg-black p-2 rounded-full absolute top-[-14px] right-[-9px] transform translate-x-3 z-10 w-13 h-13"
-              >
+                className="bg-black p-2 rounded-full absolute top-[-14px] right-[-9px] transform translate-x-3 z-10 w-13 h-13">
                 <div>
                   <EditOutlined style={{ fontSize: "24px", color: "white" }} />
                 </div>
@@ -345,18 +349,41 @@ function AccountPage() {
                   />
                 </div>
               </div>
+              <div className="mb-4">
+                <label className="block text-sm font-semibold">Gender</label>
+                <select
+                  name="gender"
+                  value={updatedUserInfo.gender}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300">
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-sm font-semibold">
+                  Birth Date
+                </label>
+                <input
+                  type="date"
+                  name="birthDate"
+                  value={updatedUserInfo.birthDate?.split("T")[0]}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300"
+                />
+              </div>
               <div className="flex justify-between">
                 <button
                   type="button"
                   onClick={() => setIsEditing(false)}
-                  className="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg"
-                >
+                  className="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg">
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="bg-black text-white px-4 py-2 rounded-lg"
-                >
+                  className="bg-black text-white px-4 py-2 rounded-lg">
                   Save
                 </button>
               </div>
@@ -365,8 +392,7 @@ function AccountPage() {
 
           <button
             className="mt-4 bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800"
-            onClick={() => setShowChangePasswordModal(true)}
-          >
+            onClick={() => setShowChangePasswordModal(true)}>
             Change Password
           </button>
 

@@ -43,6 +43,8 @@ import { UnderConstructionPage } from "./pages/UnderConstructionPage";
 import ManageProductVariant from "./components/admin/ManageProductVariant";
 import ReturnOrder from "./components/ReturnOrder";
 import { ShipperLayout } from "./utils/ShipperLayout";
+import CustomerTable from "./components/admin/CustomerTable";
+import UserTable from "./components/admin/UserTable";
 
 function App() {
   return (
@@ -96,6 +98,9 @@ function App() {
             <Route path="brands" element={<BrandTable />} />
             <Route path="categories" element={<CategoryTable />} />
             <Route path="orders" element={<OrderTable />} />
+            <Route path="customers" element={<CustomerTable />} />
+            <Route path="users" element={<UserTable />} />
+
             <Route
               path="products/:productId"
               element={<ManageProductVariant />}

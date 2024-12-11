@@ -403,6 +403,11 @@ const OrderTable = () => {
         onCancel={() => setIsStatusModalVisible(false)}
         onOk={handleSaveStatus}>
         <Steps
+          status={
+            ["Canceled", "Returned"].includes(selectedOrder?.status)
+              ? "error"
+              : undefined
+          }
           direction="vertical"
           size="small"
           current={selectedOrder?.statusHistory.findIndex(
@@ -411,6 +416,7 @@ const OrderTable = () => {
           {selectedOrder?.statusHistory.map((step, index) => (
             <Steps.Step
               key={index}
+              subTitle={step.description}
               title={step.status}
               description={new Intl.DateTimeFormat("vi", {
                 day: "2-digit",
@@ -420,7 +426,6 @@ const OrderTable = () => {
                 minute: "2-digit",
                 hour12: false, // 24-hour format
               }).format(new Date(step.timestamp))}
-              className={step.status}
             />
           ))}
         </Steps>
@@ -430,10 +435,12 @@ const OrderTable = () => {
           style={{ width: "100%" }}>
           {statusOptions
             .filter((status) => {
-              if (selectedOrder?.status === "Preparing") {
-                return status.value !== "Pending";
-              }
-              return true;
+              const currentStatusIndex = statusOptions.findIndex(
+                (s) => s.value === selectedOrder?.status
+              );
+              const nextStatusIndex = currentStatusIndex + 1;
+              // Only allow selecting the next status in sequence
+              return status.value === statusOptions[nextStatusIndex]?.value;
             })
             .map((status) => (
               <Select.Option key={status.value} value={status.value}>

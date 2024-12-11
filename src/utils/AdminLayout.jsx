@@ -28,6 +28,7 @@ import {
   faTshirt,
   faVideo,
   faSignOutAlt,
+  faShieldHalved,
 } from "@fortawesome/free-solid-svg-icons"; // FontAwesome icons
 
 export const AdminLayout = () => {
@@ -61,11 +62,18 @@ export const AdminLayout = () => {
       to: "/vouchers",
     }, // FontAwesome faTag for Vouchers
     {
-      icon: <FontAwesomeIcon icon={faUsers} />,
+      icon: <FontAwesomeIcon icon={faShieldHalved} />,
       label: "Users",
       key: "users",
       to: "/users",
     },
+    {
+      icon: <FontAwesomeIcon icon={faUsers} />,
+      label: "Customers",
+      key: "customers",
+      to: "/customers",
+    },
+
 
     {
       icon: <FontAwesomeIcon icon={faStore} />,
