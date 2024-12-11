@@ -106,6 +106,7 @@ export const ProfileLayout = () => {
           width={200}
           className="site-layout-background"
           style={{
+            
             top: 0,
             background: "white",
             minHeight: "full",
@@ -123,7 +124,7 @@ export const ProfileLayout = () => {
       <Layout>
         <Content
           style={{
-            margin: "24px 16px 0",
+            margin: "20px 20px 20px 20px",
           }}>
           <div
             style={{

@@ -248,7 +248,8 @@ const OrderDetail = () => {
     <div className="mt-8 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       <Link
         to="/profile/orders"
-        className="text-gray-600 text-sm flex items-center mb-4">
+        className="text-gray-600 text-sm flex items-center mb-4"
+      >
         <FontAwesomeIcon icon={faChevronLeft} className="mr-2" /> Back to orders
       </Link>
 
@@ -258,47 +259,61 @@ const OrderDetail = () => {
         <LoadingSpinner />
       ) : (
         <>
-          <div className="bg-white border rounded-lg p-6 shadow-md mb-6">
-            <div className="flex justify-between items-center mb-4">
-              <div>
-                <h2 className="text-xl font-medium">Order ID: #{order._id}</h2>
-                <p className="text-gray-600 text-sm">
+          <div className="bg-white border rounded-lg p-4 sm:p-6 shadow-md mb-6">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4">
+              {/* Order Info */}
+              <div className="mb-2 sm:mb-0">
+                <h2 className="truncate w-50% text-lg sm:text-xl font-medium">
+                  Order ID: #{order._id}
+                </h2>
+                <p className="text-gray-600 text-xs sm:text-sm">
                   Order date: {new Date(order.createdAt).toLocaleDateString()}
                 </p>
               </div>
+              {/* Order Status */}
               <span
-                className={`mt-2 sm:mt-0 px-4 py-2 text-sm font-medium rounded-full ${getStatusStyle(
+                className={`text-center  mt-2 sm:mt-0 px-0 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium rounded-full ${getStatusStyle(
                   order.status
-                )}`}>
+                )}`}
+              >
                 {order.status}
               </span>
             </div>
           </div>
 
           {/* Products and Status History Section */}
-          <div className="flex gap-6">
+          <div className="flex flex-col sm:flex-row gap-6">
             {/* Products Section */}
-            <div className="bg-white border rounded-lg p-6 shadow-md mb-6 flex-1">
-              <h2 className="text-lg font-medium mb-4">Products</h2>
+            <div className="bg-white border rounded-lg p-4 sm:p-6 shadow-md flex-1 overflow-y-auto scrollbar-thin hover:scrollbar-thumb-gray-400 hover:scrollbar-track-gray-100">
+              {/* Section Title */}
+              <h2 className="text-lg sm:text-xl font-medium mb-4">Products</h2>
+
+              {/* Product List */}
               <div className="space-y-4 sm:space-y-6">
                 {order.products?.map((item, index) => (
-                  <div className="flex items-start sm:items-center" key={index}>
+                  <div
+                    className="flex flex-col sm:flex-row items-start sm:items-center justify-between"
+                    key={index}
+                  >
+                    {/* Product Image */}
                     <img
                       src={item.imgLink}
                       alt={item.name}
-                      className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-md mr-4"
+                      className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-md mb-2 sm:mb-0 sm:mr-4"
                     />
+
+                    {/* Product Details */}
                     <div className="flex-1">
                       <p className="font-medium text-sm sm:text-base">
                         {item.name}
                       </p>
-                      <p className="text-gray-600 text-sm">
+                      <p className="text-gray-600 text-xs sm:text-sm">
                         {item.color}, {item.size}
                       </p>
-                      <p className="text-gray-600 text-sm">
+                      <p className="text-gray-600 text-xs sm:text-sm">
                         Qty: {item.quantity}
                       </p>
-                      <p className="font-medium text-sm sm:text-base">
+                      <p className="font-medium text-sm sm:text-base mt-1 sm:mt-0">
                         ${item.priceAtPurchase}
                       </p>
                     </div>
@@ -308,39 +323,53 @@ const OrderDetail = () => {
             </div>
 
             {/* Status History Section */}
-            <div className="p-1">
-              <h2 className="text-lg font-medium mb-4">History Status</h2>
-              <div className="bg-white p-4 rounded shadow">
-                <Steps
-                  status={
-                    ["Canceled", "Returned"].includes(order.status)
-                      ? "error"
-                      : undefined
-                  }
-                  direction="vertical"
-                  size="small"
-                  current={steps.findIndex(
-                    (step) => step.status === order.status
-                  )}>
-                  {steps.map((step, index) => (
-                    <Steps.Step
-                      subTitle={step.description}
-                      key={index}
-                      title={step.status}
-                      description={new Intl.DateTimeFormat("vi", {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                        hour12: false, // 24-hour format
-                      }).format(new Date(step.date))}
+            <div className="bg-white border rounded-lg p-4 sm:p-6 shadow-md flex-1">
+              {/* Section Title */}
+              <h2 className="text-lg sm:text-xl font-medium mb-4">
+                History Status
+              </h2>
 
-                      // className={"step-returned"}
-                    />
-                  ))}
-                </Steps>
-              </div>
+              {/* Steps Component */}
+              <Steps
+                status={
+                  ["Canceled", "Returned"].includes(order.status)
+                    ? "error"
+                    : undefined
+                }
+                direction="vertical"
+                size="small"
+                current={steps.findIndex(
+                  (step) => step.status === order.status
+                )}
+              >
+                {steps.map((step, index) => (
+                  <Steps.Step
+                    key={index}
+                    title={
+                      <span className="font-medium text-sm sm:text-base">
+                        {step.status}
+                      </span>
+                    }
+                    subTitle={
+                      <span className="text-gray-500 text-xs sm:text-sm">
+                        {step.description}
+                      </span>
+                    }
+                    description={
+                      <span className="text-gray-600 text-xs sm:text-sm">
+                        {new Intl.DateTimeFormat("vi", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          hour12: false,
+                        }).format(new Date(step.date))}
+                      </span>
+                    }
+                  />
+                ))}
+              </Steps>
             </div>
           </div>
 
@@ -371,7 +400,8 @@ const OrderDetail = () => {
                       <a
                         href={order.paymentLink}
                         target="_blank"
-                        rel="noopener noreferrer">
+                        rel="noopener noreferrer"
+                      >
                         <button className="bg-green-500 font-bold text-white px-4 py-2 rounded-full hover:bg-green-600">
                           Continue to Payment
                         </button>
@@ -492,21 +522,28 @@ const OrderDetail = () => {
             <div className="max-w-md mx-auto mt-8 p-6">
               {order.status === "Delivered" && (
                 <div className="max-w-md mx-auto mt-8 p-6">
-                  <div className="flex justify-center gap-4 mt-4">
+                  <div className="flex flex-col sm:flex-row gap-2 justify-center items-center lg:gap-4">
+                    {/* Return Order Button */}
                     <button
                       onClick={handleReturnOrder}
-                      className="bg-white font-bold text-red-600 border-[1px] border-rose-500 rounded-full py-2 px-10 hover:bg-pink-100 transition duration-300">
+                      className="bg-white font-bold text-red-600 border border-rose-500 
+    rounded-full py-2 px-6 sm:px-8 lg:px-10 hover:bg-pink-100 
+    transition duration-300 text-sm sm:text-base lg:text-lg lg:text-nowrap w-full sm:w-auto lg:max-w-xs"
+                    >
                       Return Order
                     </button>
-                    <>
-                      {order.isReviewed != true && (
-                        <button
-                          className="bg-black font-bold text-white py-2 px-10 rounded-full hover:bg-gray-600 transition duration-300"
-                          onClick={openModal}>
-                          Send Review
-                        </button>
-                      )}
-                    </>
+
+                    {/* Send Review Button */}
+                    {order.isReviewed != true && (
+                      <button
+                        onClick={openModal}
+                        className="bg-black font-bold text-white py-2 px-6 sm:px-8 lg:px-10 
+      rounded-full hover:bg-gray-600 transition duration-300 
+      text-sm sm:text-base lg:text-lg lg:text-nowrap w-full sm:w-auto lg:max-w-xs"
+                      >
+                        Send Review
+                      </button>
+                    )}
                   </div>
                 </div>
               )}
@@ -516,7 +553,8 @@ const OrderDetail = () => {
                   <div className="flex justify-center items-center gap-4 mt-4">
                     <button
                       onClick={showModal}
-                      className="bg-white font-bold text-red-600 border border-rose-500 rounded-full py-2 px-10 hover:bg-pink-100 transition duration-300">
+                      className="bg-white font-bold text-red-600 border border-rose-500 rounded-full py-2 px-10 hover:bg-pink-100 transition duration-300"
+                    >
                       Cancel Order
                     </button>
                   </div>
@@ -539,7 +577,8 @@ const OrderDetail = () => {
                           {reasons.map((reason, index) => (
                             <label
                               key={index}
-                              className="flex items-center ml-8 gap-2 mb-2 cursor-pointer">
+                              className="flex items-center ml-8 gap-2 mb-2 cursor-pointer"
+                            >
                               <input
                                 type="radio"
                                 name="cancelReason"
@@ -559,12 +598,14 @@ const OrderDetail = () => {
                         <div className="flex justify-center gap-4 mt-6">
                           <button
                             onClick={hideModal}
-                            className="bg-white font-bold text-black border border-black rounded-full py-4 px-12 hover:bg-rose-600 hover:text-white hover:border-none transition duration-300">
+                            className="bg-white font-bold text-black border border-black rounded-full py-4 px-12 hover:bg-rose-600 hover:text-white hover:border-none transition duration-300"
+                          >
                             Cancel
                           </button>
                           <button
                             onClick={handleCancelOrder}
-                            className="bg-black font-bold text-white border border-white rounded-full py-4 px-12 hover:bg-gray-600 hover:text-black hover:border hover:border-black transition duration-300">
+                            className="bg-black font-bold text-white border border-white rounded-full py-4 px-12 hover:bg-gray-600 hover:text-black hover:border hover:border-black transition duration-300"
+                          >
                             Submit
                           </button>
                         </div>
@@ -581,12 +622,14 @@ const OrderDetail = () => {
                 onConfirm={handleCancelOrder}
                 onCancel={cancel}
                 okText="Yes"
-                cancelText="No">
+                cancelText="No"
+              >
                 <div className="max-w-md mx-auto mt-2 p-2">
                   <div className="flex justify-center gap-4 mt-2">
                     <Button
                       disabled
-                      className="bg-white font-bold text-red-600 border border-rose-500 rounded-full py-2 px-10 hover:bg-pink-100 transition duration-300">
+                      className="bg-white font-bold text-red-600 border border-rose-500 rounded-full py-2 px-10 hover:bg-pink-100 transition duration-300"
+                    >
                       Cancel Order
                     </Button>
                   </div>
@@ -648,12 +691,14 @@ const OrderDetail = () => {
             <div className="flex justify-end space-x-4">
               <button
                 onClick={closeModal}
-                className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300">
+                className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300"
+              >
                 Cancel
               </button>
               <button
                 onClick={handleSubmitReview}
-                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+              >
                 Submit Review
               </button>
             </div>

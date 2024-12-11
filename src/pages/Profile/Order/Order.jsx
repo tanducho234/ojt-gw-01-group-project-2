@@ -93,7 +93,7 @@ const Order = () => {
     <div className="flex">
       <main className="flex-1 w-full ml-auto">
         <div className="mb-6">
-          <h2 className="text-3xl font-semibold">Orders</h2>
+          <h2 className="text-3xl font-bold">Orders</h2>
         </div>
         {/* Tabs */}
         <div

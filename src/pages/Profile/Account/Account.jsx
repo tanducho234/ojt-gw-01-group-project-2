@@ -254,7 +254,7 @@ function AccountPage() {
 
   return (
     <section className="w-full mx-auto bg-white rounded-lg p-8 shadow">
-      {!isEditing && <h2 className="text-2xl font-bold mb-6">Account</h2>}
+      {!isEditing && <h2 className="text-3xl font-bold mb-6">Account</h2>}
 
       {loading ? (
         <LoadingSpinner />
@@ -265,8 +265,8 @@ function AccountPage() {
               <div>
                 <h3 className="text-lg font-semibold">{user.fullName}</h3>
                 <div className="flex justify-between">
-                  <span className="">Email: {user.email}</span>
-                  <span>Phone: {user.phoneNumber}</span>
+                  <span className="truncate w-28 md:w-56">Email: {user.email}</span>
+                  <span className="truncate">Phone: {user.phoneNumber}</span>
                 </div>
               </div>
               <button
