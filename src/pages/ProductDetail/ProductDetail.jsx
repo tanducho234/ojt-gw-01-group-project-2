@@ -4,7 +4,7 @@ import axios from "axios";
 import Review from "../../components/Review/Review";
 import StarRating from "../../components/StarRating";
 import { useAuth } from "../../hooks/useAuth";
-import { Tabs } from "antd";
+import { Tabs, ConfigProvider } from "antd";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -20,7 +20,7 @@ const LoadingSpinner = () => (
 
 const ProductDetail = () => {
   const { token } = useAuth();
-  const {updateCartItemCount}= useFetchData()
+  const { updateCartItemCount } = useFetchData();
   const [loading, setLoading] = useState(true);
   //product quantaty
 
@@ -189,7 +189,7 @@ const ProductDetail = () => {
           (sum, item) => sum + item.quantity,
           0
         );
-        updateCartItemCount(totalQuantity)
+        updateCartItemCount(totalQuantity);
         toast.success("Product added to cart successfully!");
         // alert('Product added to cart successfully!');
       } else {
@@ -416,17 +416,39 @@ const ProductDetail = () => {
             </div>
           </div>
 
-          <Tabs
-            // tabBarGutter={500}
-            tabBarStyle={{ color: "#000000" }}
-            tabBarGutter={500}
-            centered
-            className="w-full"
-            defaultActiveKey="1"
-            items={items}
-            onChange={onChange}
-            size="large"
-          />
+          <ConfigProvider
+            theme={{
+              components: {
+                Tabs: {
+                  colorText: "#8c8c8c",
+                  colorTextActive: "#000000",
+                  colorPrimary: "#000000",
+                },
+              },
+            }}
+          >
+            <Tabs
+              tabBarGutter={700}
+              defaultActiveKey="1"
+              centered
+              items={items}
+              onChange={onChange}
+              size="large"
+              type="line"
+            />
+
+            <Tabs
+              // tabBarGutter={500}
+              tabBarStyle={{ color: "#000000" }}
+              tabBarGutter={500}
+              centered
+              className="w-full"
+              defaultActiveKey="1"
+              items={items}
+              onChange={onChange}
+              size="large"
+            />
+          </ConfigProvider>
         </div>
       )}
     </>
