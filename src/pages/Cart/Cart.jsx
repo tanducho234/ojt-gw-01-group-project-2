@@ -17,7 +17,7 @@ const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const { token } = useAuth();
   const [loading, setLoading] = useState(true);
-  const {updateCartItemCount}=useFetchData()
+  const { updateCartItemCount } = useFetchData();
 
   // Fetch cart data from API
 
@@ -56,7 +56,7 @@ const Cart = () => {
           Authorization: `Bearer ${token}`,
         },
       };
-      const response=await axios.delete(url, {
+      const response = await axios.delete(url, {
         data: body,
         ...config,
       });
@@ -65,7 +65,7 @@ const Cart = () => {
         (sum, item) => sum + item.quantity,
         0
       );
-      updateCartItemCount(totalQuantity)
+      updateCartItemCount();
 
       // Remove item locally
       setCartItems((prevItems) =>
@@ -104,13 +104,12 @@ const Cart = () => {
         },
       };
 
-      const response =await axios.put(url, body, config);
+      const response = await axios.put(url, body, config);
       const totalQuantity = response.data.products.reduce(
         (sum, item) => sum + item.quantity,
         0
       );
-      updateCartItemCount(totalQuantity)
-      
+      updateCartItemCount();
 
       // Update quantity locally
       setCartItems((prevItems) =>
@@ -165,14 +164,13 @@ const Cart = () => {
                 <h1
                   className="text-3xl text-center font-roboto font-bold mb-5 
             text-gray-800 bg-white p-4 rounded-lg shadow-md 
-            sm:w-full lg:w-full 2xl:w-full"
-                >
+            sm:w-full lg:w-full 2xl:w-full">
                   Your Cart
                 </h1>
                 <div className="space-y-6 w-full h-[35rem] overflow-y-auto custom-scrollbar lg:w-full 2xl:h-[48rem] 2xl:w-[60rem] 2xl:ml-[10rem]">
                   {cartItems.map((item, index) => (
                     <CartItem
-                      key={index}
+                      key={`${index}${item.productId}`}
                       item={item}
                       onRemove={onRemove}
                       onQuantityChange={handleQuantityChange}
@@ -214,8 +212,7 @@ const Cart = () => {
                 <Link to="/checkout">
                   <button
                     className="w-full bg-black text-white border-none
-              cursor-pointer text-lg rounded-full py-2 px-1 hover:bg-gray-600 md:mt-[2rem] md:text-[1.5rem]"
-                  >
+              cursor-pointer text-lg rounded-full py-2 px-1 hover:bg-gray-600 md:mt-[2rem] md:text-[1.5rem]">
                     Checkout
                   </button>
                 </Link>

@@ -12,6 +12,7 @@ import {
 } from "antd";
 import {
   EditOutlined,
+  EyeOutlined,
   PlusOutlined,
   SearchOutlined,
   SyncOutlined,
@@ -336,8 +337,8 @@ const OrderTable = () => {
         ) : (
           <>
             <Tag
-              icon={status !== "Canceled" ? <EditOutlined /> : null}
-              className={`
+              icon={status !== "Canceled" ? <EditOutlined /> : <EyeOutlined />}
+              className={`min-w-[90px]
               ${status === "Pending" ? "bg-yellow-100 text-yellow-600" : ""}
               ${status === "Preparing" ? "bg-orange-100 text-orange-600" : ""}
               ${status === "Delivering" ? "bg-blue-100 text-blue-600" : ""} 
@@ -430,6 +431,7 @@ const OrderTable = () => {
           ))}
         </Steps>
         <Select
+          disabled={!["Pending", "Preparing"].includes(selectedOrder?.status)}
           value={newStatus}
           onChange={(value) => setNewStatus(value)}
           style={{ width: "100%" }}>

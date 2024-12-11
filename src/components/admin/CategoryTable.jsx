@@ -32,9 +32,12 @@ const CategoryTable = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get("https://ojt-gw-01-final-project-back-end.vercel.app/api/categories", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.get(
+        "https://ojt-gw-01-final-project-back-end.vercel.app/api/categories",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       setCategories(response.data);
     } catch (error) {
       console.error("Error fetching categories:", error);
@@ -62,9 +65,13 @@ const CategoryTable = () => {
     let loadingMessage = message.loading("Adding category", 0);
 
     try {
-      await axios.post("https://ojt-gw-01-final-project-back-end.vercel.app/api/categories", categoryData, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await axios.post(
+        "https://ojt-gw-01-final-project-back-end.vercel.app/api/categories",
+        categoryData,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       loadingMessage();
       message.success("Category added successfully!");
       setIsModalVisible(false);
@@ -194,7 +201,12 @@ const CategoryTable = () => {
           <img
             src={link}
             alt="Category"
-            style={{ maxHeight: "50px", minHeight: "50px", display: "block", margin: "0 auto" }}
+            style={{
+              maxHeight: "50px",
+              minHeight: "50px",
+              display: "block",
+              margin: "0 auto",
+            }}
           />
         ) : (
           "No Image"

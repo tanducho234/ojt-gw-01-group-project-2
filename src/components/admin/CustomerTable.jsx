@@ -16,7 +16,7 @@ const CustomerTable = () => {
   const fetchCustomers = async () => {
     try {
       const response = await axios.get(
-        "https://sl36qhn5-3000.asse.devtunnels.ms/api/auth/all?role=user",
+        "https://ojt-gw-01-final-project-back-end.vercel.app/api/auth/all?role=user",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -67,14 +67,12 @@ const CustomerTable = () => {
             type="primary"
             onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
             icon={<SearchOutlined />}
-            size="small"
-          >
+            size="small">
             Search
           </Button>
           <Button
             onClick={() => clearFilters && handleReset(clearFilters)}
-            size="small"
-          >
+            size="small">
             Reset
           </Button>
         </Space>
@@ -123,7 +121,6 @@ const CustomerTable = () => {
       key: "phoneNumber",
       render: (phoneNumber) => phoneNumber || "N/A",
       ...getColumnSearchProps("email"),
-
     },
     {
       title: "Gender",
@@ -148,18 +145,18 @@ const CustomerTable = () => {
               day: "2-digit",
             }).format(new Date(birthDate))
           : "N/A",
-          filters: Array.from({length: 50}, (_, i) => ({ 
-            text: `${new Date().getFullYear() - i}`,
-            value: `${new Date().getFullYear() - i}`
-          })),
-          onFilter: (value, record) => {
-            if (!record.birthDate) return false;
-            return new Date(record.birthDate).getFullYear().toString() === value;
-          }
+      filters: Array.from({ length: 50 }, (_, i) => ({
+        text: `${new Date().getFullYear() - i}`,
+        value: `${new Date().getFullYear() - i}`,
+      })),
+      onFilter: (value, record) => {
+        if (!record.birthDate) return false;
+        return new Date(record.birthDate).getFullYear().toString() === value;
+      },
     },
     //createAt
     {
-      title: "Registered At",     
+      title: "Registered At",
       dataIndex: "createdAt",
       key: "createdAt",
       sorter: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
@@ -208,7 +205,6 @@ const CustomerTable = () => {
     //     </Button>
     //   ),
     // },
-  
   ];
 
   return (

@@ -188,7 +188,19 @@ const BrandTable = () => {
       title: "Description",
       dataIndex: "description",
       key: "description",
-      render: (text) => <span>{text || "N/A"}</span>,
+      render: (text) => (
+        <span
+          style={{
+            width: "700px",
+            display: "-webkit-box",
+            WebkitLineClamp: 3,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}>
+          {text || "N/A"}
+        </span>
+      ),
     },
     {
       align: "center",
@@ -201,7 +213,12 @@ const BrandTable = () => {
           <img
             src={link}
             alt="Brand"
-            style={{ maxHeight: "50px", minHeight: "50px", display: "block", margin: "0 auto" }}
+            style={{
+              maxHeight: "50px",
+              minHeight: "50px",
+              display: "block",
+              margin: "0 auto",
+            }}
           />
         ) : (
           "No Image"

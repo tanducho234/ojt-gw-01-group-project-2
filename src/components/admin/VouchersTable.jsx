@@ -1,6 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Table, Input, Button, Space, Tag, Modal, message } from "antd";
-import { EditOutlined, SearchOutlined, SyncOutlined ,ShareAltOutlined} from "@ant-design/icons";
+import {
+  EditOutlined,
+  SearchOutlined,
+  SyncOutlined,
+  ShareAltOutlined,
+} from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -70,7 +75,7 @@ const VoucherTable = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      loadingMessage()
+      loadingMessage();
       message.success("Voucher added successfully!");
       setIsModalVisible(false);
       fetchVouchers(); // Refresh table
@@ -92,7 +97,7 @@ const VoucherTable = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      loadingMessage()
+      loadingMessage();
       message.success("Voucher updated successfully!");
       setIsModalVisible(false);
       setEditingVoucher(null); // Reset state
@@ -350,15 +355,14 @@ const VoucherTable = () => {
       fixed: "right",
       render: (_, record) => (
         <div className="flex justify-between">
-
-         <Button
+          <Button
             onClick={() => handleEditVoucher(record)}
             color="default"
             variant="solid"
             icon={<EditOutlined />}
             title="Edit"
           />
-           <Button
+          <Button
             onClick={() => handleSendEmail(record)}
             color="default"
             variant="solid"

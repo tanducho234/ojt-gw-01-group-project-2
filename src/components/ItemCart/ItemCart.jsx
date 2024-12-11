@@ -1,39 +1,42 @@
-import React, { useState } from "react";
-import '../../index.css'
+import React, { useEffect, useState } from "react";
+import "../../index.css";
+import { Link } from "react-router-dom";
 
 const CartItem = ({ item, onRemove, onQuantityChange }) => {
-  const [quantity, setQuantity] = useState(item.quantity);
+  const [quantity, setQuantity] = useState(null);
 
   const handleIncrease = () => {
-    const newQuantity = quantity + 1;
-    setQuantity(newQuantity);
-    onQuantityChange(item.productId, newQuantity, item.color, item.size);
+    if (quantity < item.availableQuantity) {
+      const newQuantity = quantity + 1;
+      onQuantityChange(item.productId, newQuantity, item.color, item.size);
+    }
   };
-
+  
   const handleDecrease = () => {
     if (quantity > 1) {
       const newQuantity = quantity - 1;
-      setQuantity(newQuantity);
       onQuantityChange(item.productId, newQuantity, item.color, item.size);
     }
   };
 
   const totalPrice = (item.price * quantity).toFixed(2);
-
+  useEffect(() => {
+    console.log("????")
+    setQuantity(item.quantity);
+  }, [item]);
   return (
-    <div className="relative flex items-center font-roboto gap-4 bg-white 
+    <div
+      className="relative flex items-center font-roboto gap-4 bg-white 
     shadow-lg rounded-lg w-full mx-auto p-4 sm:w-[35rem] 2xl:w-full">
       {/* Nút xóa ở góc trên phải */}
       <button
         onClick={() => onRemove(item)}
-        className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-full shadow-md hover:bg-red-600"
-      >
+        className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-full shadow-md hover:bg-red-600">
         <svg
           className="h-4 w-4 2xl:h-6 2xl:w-6"
           fill="none"
           viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
+          stroke="currentColor">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -56,27 +59,42 @@ const CartItem = ({ item, onRemove, onQuantityChange }) => {
       <div className="flex-1 flex flex-col justify-between gap-2">
         {/* Product Info */}
         <div>
-          <h2 className="text-base font-roboto w-[10rem] font-semibold truncate 
+          <Link to={`/products/${item.productId}`}>
+            <h2
+              className="text-base font-roboto w-[10rem] font-semibold truncate 
           sm:w-[18rem] sm:text-lg max-[360px]:text-sm 
-          max-[360px]:w-[8rem] 2xl:text-2xl 2xl:w-[35rem]">{item.name}</h2>
-          <p className="text-xs font-roboto text-gray-600 
-          sm:text-sm 2xl:text-xl">Size: {item.size}</p>
-          <p className="text-xs font-roboto text-gray-600 
-          sm:text-sm 2xl:text-xl">Color: {item.color}</p>
+          max-[360px]:w-[8rem] 2xl:text-2xl 2xl:w-[35rem]">
+              {item.name}
+            </h2>
+          </Link>
+          <p
+            className="text-xs font-roboto text-gray-600 
+          sm:text-sm 2xl:text-xl">
+            Size: {item.size}
+          </p>
+          <p
+            className="text-xs font-roboto text-gray-600 
+          sm:text-sm 2xl:text-xl">
+            Color: {item.color}
+          </p>
         </div>
         {/* Giá sản phẩm */}
-        <p className="text-sm font-bold text-gray-800 
-        sm:text-base 2xl:text-xl">${totalPrice}</p>
+        <p
+          className="text-sm font-bold text-gray-800 
+        sm:text-base 2xl:text-xl">
+          ${totalPrice}
+        </p>
       </div>
       {/* Quantity Controls ở góc dưới phải */}
       <div className="absolute bottom-8 right-3 flex items-center gap-2">
-        <button onClick={handleDecrease} className="p-1 bg-gray-200 rounded-full">
+        <button
+          onClick={handleDecrease}
+          className="p-1 bg-gray-200 rounded-full">
           <svg
             className="h-4 w-4 text-gray-600 sm:h-5 sm:w-5 2xl:h-6 2xl:w-6"
             fill="none"
             viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
+            stroke="currentColor">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -85,14 +103,17 @@ const CartItem = ({ item, onRemove, onQuantityChange }) => {
             />
           </svg>
         </button>
-        <span className="text-sm font-semibold sm:text-base 2xl:text-xl min-w-10 text-center">{quantity}</span>
-        <button onClick={handleIncrease} className="p-1 bg-gray-200 rounded-full">
+        <span className="text-sm font-semibold sm:text-base 2xl:text-xl min-w-10 text-center">
+          {quantity}
+        </span>
+        <button
+          onClick={handleIncrease}
+          className="p-1 bg-gray-200 rounded-full">
           <svg
             className="h-4 w-4 text-gray-600 sm:h-5 sm:w-5 2xl:h-6 2xl:w-6"
             fill="none"
             viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
+            stroke="currentColor">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -101,6 +122,9 @@ const CartItem = ({ item, onRemove, onQuantityChange }) => {
             />
           </svg>
         </button>
+      </div>
+      <div className="absolute bottom-2 right-3 text-xs font-semibold sm:text-sm 2xl:text-lg">
+        <p className="text-gray-600">Available: {item.availableQuantity}</p>
       </div>
     </div>
   );

@@ -188,7 +188,7 @@ const ProductDetail = () => {
           (sum, item) => sum + item.quantity,
           0
         );
-        updateCartItemCount(totalQuantity);
+        updateCartItemCount();
         toast.success("Product added to cart successfully!");
         // alert('Product added to cart successfully!');
       } else {
@@ -388,7 +388,9 @@ const ProductDetail = () => {
                   </button>
                 </div>
                 <button
-                  disabled={!selectedColor || !selectedSize}
+                  disabled={
+                    !selectedColor || !selectedSize || productQuantity == 0
+                  }
                   onClick={() => {
                     handleAddToCart(
                       product._id,
@@ -398,7 +400,7 @@ const ProductDetail = () => {
                     );
                   }}
                   className={`w-[450px] h-12 text-white rounded-full transition-colors border-2 border-gray-300 p-2 ${
-                    !selectedColor || !selectedSize
+                    !selectedColor || !selectedSize || productQuantity == 0
                       ? "bg-gray-400 cursor-not-allowed"
                       : "bg-black hover:bg-gray-800"
                   }`}>

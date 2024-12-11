@@ -248,8 +248,7 @@ const OrderDetail = () => {
     <div className="mt-8 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       <Link
         to="/profile/orders"
-        className="text-gray-600 text-sm flex items-center mb-4"
-      >
+        className="text-gray-600 text-sm flex items-center mb-4">
         <FontAwesomeIcon icon={faChevronLeft} className="mr-2" /> Back to orders
       </Link>
 
@@ -274,8 +273,7 @@ const OrderDetail = () => {
               <span
                 className={`text-center  mt-2 sm:mt-0 px-0 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium rounded-full ${getStatusStyle(
                   order.status
-                )}`}
-              >
+                )}`}>
                 {order.status}
               </span>
             </div>
@@ -291,33 +289,32 @@ const OrderDetail = () => {
               {/* Product List */}
               <div className="space-y-4 sm:space-y-6">
                 {order.products?.map((item, index) => (
-                  <div
-                    className="flex flex-col sm:flex-row items-start sm:items-center justify-between"
-                    key={index}
-                  >
-                    {/* Product Image */}
-                    <img
-                      src={item.imgLink}
-                      alt={item.name}
-                      className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-md mb-2 sm:mb-0 sm:mr-4"
-                    />
+                  <Link to={`/products/${item.productId}`} key={index}>
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between">
+                      {/* Product Image */}
+                      <img
+                        src={item.imgLink}
+                        alt={item.name}
+                        className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-md mb-2 sm:mb-0 sm:mr-4"
+                      />
 
-                    {/* Product Details */}
-                    <div className="flex-1">
-                      <p className="font-medium text-sm sm:text-base">
-                        {item.name}
-                      </p>
-                      <p className="text-gray-600 text-xs sm:text-sm">
-                        {item.color}, {item.size}
-                      </p>
-                      <p className="text-gray-600 text-xs sm:text-sm">
-                        Qty: {item.quantity}
-                      </p>
-                      <p className="font-medium text-sm sm:text-base mt-1 sm:mt-0">
-                        ${item.priceAtPurchase}
-                      </p>
+                      {/* Product Details */}
+                      <div className="flex-1">
+                        <p className="font-medium text-sm sm:text-base">
+                          {item.name}
+                        </p>
+                        <p className="text-gray-600 text-xs sm:text-sm">
+                          {item.color}, {item.size}
+                        </p>
+                        <p className="text-gray-600 text-xs sm:text-sm">
+                          Qty: {item.quantity}
+                        </p>
+                        <p className="font-medium text-sm sm:text-base mt-1 sm:mt-0">
+                          ${item.priceAtPurchase}
+                        </p>
+                      </div>
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
             </div>
@@ -340,8 +337,7 @@ const OrderDetail = () => {
                 size="small"
                 current={steps.findIndex(
                   (step) => step.status === order.status
-                )}
-              >
+                )}>
                 {steps.map((step, index) => (
                   <Steps.Step
                     key={index}
@@ -400,8 +396,7 @@ const OrderDetail = () => {
                       <a
                         href={order.paymentLink}
                         target="_blank"
-                        rel="noopener noreferrer"
-                      >
+                        rel="noopener noreferrer">
                         <button className="bg-green-500 font-bold text-white px-4 py-2 rounded-full hover:bg-green-600">
                           Continue to Payment
                         </button>
@@ -528,8 +523,7 @@ const OrderDetail = () => {
                       onClick={handleReturnOrder}
                       className="bg-white font-bold text-red-600 border border-rose-500 
     rounded-full py-2 px-6 sm:px-8 lg:px-10 hover:bg-pink-100 
-    transition duration-300 text-sm sm:text-base lg:text-lg lg:text-nowrap w-full sm:w-auto lg:max-w-xs"
-                    >
+    transition duration-300 text-sm sm:text-base lg:text-lg lg:text-nowrap w-full sm:w-auto lg:max-w-xs">
                       Return Order
                     </button>
 
@@ -539,8 +533,7 @@ const OrderDetail = () => {
                         onClick={openModal}
                         className="bg-black font-bold text-white py-2 px-6 sm:px-8 lg:px-10 
       rounded-full hover:bg-gray-600 transition duration-300 
-      text-sm sm:text-base lg:text-lg lg:text-nowrap w-full sm:w-auto lg:max-w-xs"
-                      >
+      text-sm sm:text-base lg:text-lg lg:text-nowrap w-full sm:w-auto lg:max-w-xs">
                         Send Review
                       </button>
                     )}
@@ -553,8 +546,7 @@ const OrderDetail = () => {
                   <div className="flex justify-center items-center gap-4 mt-4">
                     <button
                       onClick={showModal}
-                      className="bg-white font-bold text-red-600 border border-rose-500 rounded-full py-2 px-10 hover:bg-pink-100 transition duration-300"
-                    >
+                      className="bg-white font-bold text-red-600 border border-rose-500 rounded-full py-2 px-10 hover:bg-pink-100 transition duration-300">
                       Cancel Order
                     </button>
                   </div>
@@ -577,8 +569,7 @@ const OrderDetail = () => {
                           {reasons.map((reason, index) => (
                             <label
                               key={index}
-                              className="flex items-center ml-8 gap-2 mb-2 cursor-pointer"
-                            >
+                              className="flex items-center ml-8 gap-2 mb-2 cursor-pointer">
                               <input
                                 type="radio"
                                 name="cancelReason"
@@ -598,14 +589,12 @@ const OrderDetail = () => {
                         <div className="flex justify-center gap-4 mt-6">
                           <button
                             onClick={hideModal}
-                            className="bg-white font-bold text-black border border-black rounded-full py-4 px-12 hover:bg-rose-600 hover:text-white hover:border-none transition duration-300"
-                          >
+                            className="bg-white font-bold text-black border border-black rounded-full py-4 px-12 hover:bg-rose-600 hover:text-white hover:border-none transition duration-300">
                             Cancel
                           </button>
                           <button
                             onClick={handleCancelOrder}
-                            className="bg-black font-bold text-white border border-white rounded-full py-4 px-12 hover:bg-gray-600 hover:text-black hover:border hover:border-black transition duration-300"
-                          >
+                            className="bg-black font-bold text-white border border-white rounded-full py-4 px-12 hover:bg-gray-600 hover:text-black hover:border hover:border-black transition duration-300">
                             Submit
                           </button>
                         </div>
@@ -622,14 +611,12 @@ const OrderDetail = () => {
                 onConfirm={handleCancelOrder}
                 onCancel={cancel}
                 okText="Yes"
-                cancelText="No"
-              >
+                cancelText="No">
                 <div className="max-w-md mx-auto mt-2 p-2">
                   <div className="flex justify-center gap-4 mt-2">
                     <Button
                       disabled
-                      className="bg-white font-bold text-red-600 border border-rose-500 rounded-full py-2 px-10 hover:bg-pink-100 transition duration-300"
-                    >
+                      className="bg-white font-bold text-red-600 border border-rose-500 rounded-full py-2 px-10 hover:bg-pink-100 transition duration-300">
                       Cancel Order
                     </Button>
                   </div>
@@ -691,14 +678,12 @@ const OrderDetail = () => {
             <div className="flex justify-end space-x-4">
               <button
                 onClick={closeModal}
-                className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300"
-              >
+                className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300">
                 Cancel
               </button>
               <button
                 onClick={handleSubmitReview}
-                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-              >
+                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
                 Submit Review
               </button>
             </div>

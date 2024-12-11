@@ -52,22 +52,28 @@ const BrandForm = ({ initialValues, onSubmit }) => {
     <Form form={form} layout="vertical" onFinish={handleFinish}>
       <Form.Item
         name="name"
-        label="Brand Name"
+        label="Name"
         rules={[
-          { required: true, message: "Please enter the brand name" },
-          { max: 50, message: "Brand name cannot exceed 50 characters" },
+          { required: true, message: "Please enter the name" },
+          { max: 50, message: "Name cannot exceed 50 characters" },
         ]}>
-        <Input placeholder="Enter brand name" />
+        <Input
+          count={{
+            show: true,
+            max: 50,
+          }}
+          placeholder="Enter  name"
+        />
       </Form.Item>
 
       <Form.Item
         name="description"
-        label="Brand Description"
+        label="Description"
         rules={[
           { required: true, message: "Please enter a description" },
           { max: 500, message: "Description cannot exceed 500 characters" },
         ]}>
-        <Input.TextArea placeholder="Enter brand description" rows={4} />
+        <Input.TextArea placeholder="Enter description" rows={4} />
       </Form.Item>
 
       <Form.Item label="Upload Image">
@@ -82,7 +88,7 @@ const BrandForm = ({ initialValues, onSubmit }) => {
         </Upload>
         {imageUrl && (
           <div style={{ marginTop: 16 }}>
-            <img src={imageUrl} alt="Brand" style={{ maxHeight: 200 }} />
+            <img src={imageUrl} alt="imgage" style={{ maxHeight: 200 }} />
           </div>
         )}
       </Form.Item>

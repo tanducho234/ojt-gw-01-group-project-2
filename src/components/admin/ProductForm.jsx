@@ -185,7 +185,6 @@ const ProductForm = ({ initialValues, onSubmit }) => {
         <Input.TextArea
           placeholder="Enter product description"
           autoSize={{ minRows: 3, maxRows: 6 }}
-     
         />
       </Form.Item>
       <Form.Item

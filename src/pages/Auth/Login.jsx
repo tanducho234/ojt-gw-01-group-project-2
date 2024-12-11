@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { FaHouse } from "react-icons/fa6";
 import axios from "axios";
 import { useAuth } from "../../hooks/useAuth";
-import { toast,ToastContainer, Bounce } from "react-toastify";
+import { toast, ToastContainer, Bounce } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
 
@@ -166,13 +166,15 @@ const Login = () => {
       // Here you would usually send a request to your backend to authenticate the user
       // For the sake of this example, we're using a mock authentication
 
-      
       await toast.promise(
         axios
-          .post(`https://ojt-gw-01-final-project-back-end.vercel.app/api/auth/login`, {
-            email: formData.email,
-            password: formData.password,
-          })
+          .post(
+            `https://ojt-gw-01-final-project-back-end.vercel.app/api/auth/login`,
+            {
+              email: formData.email,
+              password: formData.password,
+            }
+          )
           .then((response) => {
             if (response.data.role === "user") {
               login(response.data.role, response.data.token);
@@ -187,7 +189,10 @@ const Login = () => {
           error: {
             render({ data }) {
               // Return error message from server if available
-              return data.response?.data?.message || "Login failed. Please try again.";
+              return (
+                data.response?.data?.message ||
+                "Login failed. Please try again."
+              );
             },
           },
         }
@@ -197,7 +202,7 @@ const Login = () => {
 
   return (
     <>
-      <ToastContainer/>
+      <ToastContainer />
       <div className="min-h-screen lg:flex">
         <style>{styles}</style>
         {/* Images Section */}
@@ -329,17 +334,15 @@ const Login = () => {
                     />
                     <label
                       htmlFor="remember-me"
-                      className="ml-2 block text-sm text-gray-900"
-                    >
+                      className="ml-2 block text-sm text-gray-900">
                       Remember me
                     </label>
                   </div>
 
                   <div className="text-sm">
-                  <Link
+                    <Link
                       to="/home"
-                      className="font-medium text-black-600 hover:text-gray-500 flex items-center gap-2"
-                    >
+                      className="font-medium text-black-600 hover:text-gray-500 flex items-center gap-2">
                       <FaHouse className="w-4 h-4" />
                       Back to homepage
                     </Link>
@@ -349,8 +352,7 @@ const Login = () => {
 
               <button
                 type="submit"
-                className="w-full py-3 bg-black text-white rounded-3xl hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
+                className="w-full py-3 bg-black text-white rounded-3xl hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 Login
               </button>
 
@@ -358,8 +360,7 @@ const Login = () => {
                 <span className="text-gray-600">Don't have an account? </span>
                 <Link
                   to="/register"
-                  className="font-medium text-black-600 hover:text-gray-500"
-                >
+                  className="font-medium text-black-600 hover:text-gray-500">
                   Register
                 </Link>
               </div>

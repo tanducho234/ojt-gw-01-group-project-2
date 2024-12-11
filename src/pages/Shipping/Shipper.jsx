@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 
- const ShippingOrders = () => {
+const ShippingOrders = () => {
   const { token } = useAuth();
   const [orders, setOrders] = useState([]); // State for all orders
   const [filteredOrders, setFilteredOrders] = useState([]); // State for filtered orders
@@ -59,7 +59,9 @@ import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
       <header className="bg-white shadow-lg py-4 px-6 mb-2">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <img src="assets/images/Logofast.png" alt="Logo" className="h-12" />
-          <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">
+          <button
+            onClick={handleLogout}
+            className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">
             Logout
           </button>
         </div>
@@ -83,8 +85,7 @@ import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
                   : status === "Delivered"
                   ? "bg-green-500 hover:bg-green-600"
                   : "bg-yellow-500 hover:bg-yellow-600"
-              }`}
-            >
+              }`}>
               {status}
             </button>
           ))}
@@ -99,8 +100,7 @@ import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
           {statusSteps.map((status) => (
             <div
               key={status}
-              className="bg-gray-50 shadow-md p-4 rounded-lg text-center"
-            >
+              className="bg-gray-50 shadow-md p-4 rounded-lg text-center">
               <p className="text-2xl font-bold">
                 {countOrdersByStatus(status)}
               </p>
@@ -115,17 +115,15 @@ import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
             {filteredOrders.map((order) => (
               <div
                 key={order._id}
-                className="flex flex-col bg-gray-50 border border-gray-200 shadow-md rounded-lg p-4"
-              >
+                className="flex flex-col bg-gray-50 border border-gray-200 shadow-md rounded-lg p-4">
                 <h3 className="text-lg font-semibold mb-2">
                   Order ID: {order._id}
                 </h3>
                 <h4 className="font-semibold mb-2">Status: {order.status}</h4>
 
                 {/* Steps for Order Status */}
-                
-                <Steps
 
+                <Steps
                   status={
                     ["Canceled", "Returned"].includes(order.status)
                       ? "error"
@@ -135,8 +133,7 @@ import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
                   size="small"
                   current={order.statusHistory.findIndex(
                     (step) => step.status === order.status
-                  )}
-                >
+                  )}>
                   {order.statusHistory.map((step, index) => (
                     <Steps.Step
                       subTitle={step.description}
@@ -156,13 +153,11 @@ import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
                   ))}
                 </Steps>
                 <div className="flex flex-1 items-end justify-center text-center ">
-
-                <Link
-                  to={`${order._id}`}
-                  className="bg-black text-white py-2 px-4 rounded-lg w-full hover:bg-gray-800 mt-4"
-                >
-                  View details <FontAwesomeIcon icon={faChevronRight} />
-                </Link>
+                  <Link
+                    to={`${order._id}`}
+                    className="bg-black text-white py-2 px-4 rounded-lg w-full hover:bg-gray-800 mt-4">
+                    View details <FontAwesomeIcon icon={faChevronRight} />
+                  </Link>
                 </div>
               </div>
             ))}

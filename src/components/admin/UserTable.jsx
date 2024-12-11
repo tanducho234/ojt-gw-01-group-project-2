@@ -9,8 +9,13 @@ import {
   Modal,
   Form,
   message,
+  Tooltip,
 } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import axios from "axios";
 import { useAuth } from "../../hooks/useAuth";
@@ -18,7 +23,7 @@ import { useAuth } from "../../hooks/useAuth";
 const { TabPane } = Tabs;
 
 const UserTable = () => {
-  const { token } = useAuth();
+  const { token, user } = useAuth();
   const [admins, setAdmins] = useState([]);
   const [shippers, setShippers] = useState([]);
   const [loadingAdmins, setLoadingAdmins] = useState(true);
@@ -31,7 +36,7 @@ const UserTable = () => {
   const fetchUsers = async (role, setUsers, setLoading) => {
     try {
       const response = await axios.get(
-        `https://sl36qhn5-3000.asse.devtunnels.ms/api/auth/all?role=${role}`,
+        `https://ojt-gw-01-final-project-back-end.vercel.app/api/auth/all?role=${role}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -60,12 +65,13 @@ const UserTable = () => {
   const handleDelete = async (id, role) => {
     try {
       await axios.delete(
-        `https://sl36qhn5-3000.asse.devtunnels.ms/api/auth/${id}`,
+        `https://ojt-gw-01-final-project-back-end.vercel.app/api/auth/admin/delete-account`,
         {
+          data: { id },
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      message.success(`${role} deleted successfully.`);
+      message.success(`${role.toUpperCase()} deleted successfully.`);
       if (role === "admin") fetchUsers("admin", setAdmins, setLoadingAdmins);
       if (role === "shipper")
         fetchUsers("shipper", setShippers, setLoadingShippers);
@@ -76,11 +82,15 @@ const UserTable = () => {
   };
 
   const handleFormSubmit = async (values) => {
+    if (values.password !== values.confirmPassword) {
+      message.error("Passwords do not match.");
+      return;
+    }
     try {
       if (editingRecord) {
         // Update existing record
         await axios.put(
-          `https://sl36qhn5-3000.asse.devtunnels.ms/api/auth/${editingRecord._id}`,
+          `https://ojt-gw-01-final-project-back-end.vercel.app/api/auth/${editingRecord._id}`,
           { ...values, role: currentRole },
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -88,11 +98,11 @@ const UserTable = () => {
       } else {
         // Create new record
         await axios.post(
-          `https://sl36qhn5-3000.asse.devtunnels.ms/api/auth`,
+          `https://ojt-gw-01-final-project-back-end.vercel.app/api/auth/admin/create-user`,
           { ...values, role: currentRole },
           { headers: { Authorization: `Bearer ${token}` } }
         );
-        message.success(`${currentRole} created successfully.`);
+        message.success(`${currentRole.toUpperCase()} created successfully.`);
       }
       fetchUsers(
         currentRole,
@@ -130,21 +140,29 @@ const UserTable = () => {
       render: (phoneNumber) => phoneNumber || "N/A",
     },
     {
+      width: "100px",
+      align: "center",
       title: "Actions",
       key: "actions",
-      render: (_, record) => (
-        <Space>
-          <Button type="link" onClick={() => handleEdit(record, role)}>
-            Edit
-          </Button>
-          <Button
-            type="link"
-            danger
-            onClick={() => handleDelete(record._id, role)}>
-            Delete
-          </Button>
-        </Space>
-      ),
+      render: (_, record) =>
+        user.id !== record._id && (
+          // <div className="flex justify-between">
+          //   <Tooltip title="Edit">
+          //     <Button
+          //       color="default"
+          //       variant="solid"
+          //       onClick={() => handleEdit(record, role)}
+          //       icon={<EditOutlined />}></Button>
+          //   </Tooltip>
+          <Tooltip title="Delete">
+            <Button
+              variant="solid"
+              danger
+              onClick={() => handleDelete(record._id, role)}
+              icon={<DeleteOutlined />}></Button>
+          </Tooltip>
+          // </div>
+        ),
     },
   ];
 
@@ -181,18 +199,20 @@ const UserTable = () => {
             pagination={{ position: ["bottomCenter"] }}
           />
         </TabPane>
-        <TabPane
-          tab="Shippers"
-          key="2"
-          extra={
-            <Button
-              onClick={() => {
-                setModalVisible(true);
-                setCurrentRole("shipper");
-              }}>
-              Add Shipper
-            </Button>
-          }>
+        <TabPane tab="Shippers" key="2">
+          <Button
+            type="primary"
+            style={{
+              marginBottom: 16,
+              float: "right",
+              backgroundColor: "black",
+            }}
+            onClick={() => {
+              setModalVisible(true);
+              setCurrentRole("shipper");
+            }}>
+            Add Shipper
+          </Button>
           <Table
             title={() => (
               <span style={{ fontWeight: "bold", fontSize: "1.5em" }}>
@@ -230,12 +250,46 @@ const UserTable = () => {
           <Form.Item
             name="email"
             label="Email"
-            rules={[{ required: true, message: "Please enter the email." }]}>
+            rules={[
+              { required: true, message: "Please enter the email." },
+              {
+                type: "email",
+                message: "Please enter a valid email address",
+              },
+            ]}>
             <Input />
           </Form.Item>
           <Form.Item name="phoneNumber" label="Phone Number">
             <Input />
           </Form.Item>
+          {!editingRecord && (
+            <>
+              <Form.Item
+                name="password"
+                label="Password"
+                rules={[
+                  { required: true, message: "Please enter the password." },
+                  {
+                    min: 8,
+                    message: "Password must be at least 8 characters.",
+                  },
+                ]}>
+                <Input.Password />
+              </Form.Item>
+              <Form.Item
+                name="confirmPassword"
+                label="Confirm Password"
+                rules={[
+                  { required: true, message: "Please confirm the password." },
+                  {
+                    min: 8,
+                    message: "Password must be at least 8 characters.",
+                  },
+                ]}>
+                <Input.Password />
+              </Form.Item>
+            </>
+          )}
           <Form.Item>
             <Button type="primary" htmlType="submit">
               {editingRecord ? "Update" : "Create"}

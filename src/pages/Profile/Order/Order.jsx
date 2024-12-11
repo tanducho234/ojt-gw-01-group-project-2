@@ -6,7 +6,6 @@ import axios from "axios";
 import { useAuth } from "../../../hooks/useAuth";
 import { LoadingSpinner } from "../../../components/LoadingSpinner";
 
-
 const Order = () => {
   const { token } = useAuth();
   const [loading, setLoading] = useState(true);
@@ -24,23 +23,6 @@ const Order = () => {
     "Returned",
     "Canceled",
   ];
-
-  const handleWheelScroll = (event) => {
-    if (tabsRef.current && isMouseInTabs) {
-      event.preventDefault();
-      tabsRef.current.scrollLeft += event.deltaY;
-    }
-  };
-
-  const handleMouseEnterTabs = () => setIsMouseInTabs(true);
-  const handleMouseLeaveTabs = () => setIsMouseInTabs(false);
-
-  useEffect(() => {
-    window.addEventListener("wheel", handleWheelScroll, { passive: false });
-    return () => {
-      window.removeEventListener("wheel", handleWheelScroll);
-    };
-  }, [isMouseInTabs]);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -98,14 +80,9 @@ const Order = () => {
         {/* Tabs */}
         <div
           ref={tabsRef}
-          onMouseEnter={handleMouseEnterTabs}
-          onMouseLeave={handleMouseLeaveTabs}
-          className="flex space-x-8 pb-2 cursor-pointer"
+          className="flex space-x-8 pb-2 cursor-pointer overflow-x-auto scroll-smooth"
           style={{
-            scrollbarWidth: "thin",
-            scrollbarColor: "#6B7280 #E5E7EB",
-            overflowX: "hidden",
-            scrollBehavior: "smooth",
+            whiteSpace: "nowrap", // Prevent line breaks for tabs
           }}>
           {tabs.map((tab) => (
             <button

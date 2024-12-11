@@ -21,7 +21,7 @@ export const AdminLogin = () => {
 
       if (response.data.role === "admin") {
         await login(response.data.role, response.data.token);
-        loadingMessage()
+        loadingMessage();
         message.success("Login successful!");
       } else {
         loadingMessage();

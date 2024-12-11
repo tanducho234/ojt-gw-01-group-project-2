@@ -232,7 +232,6 @@ function Products() {
     });
   };
 
-
   const handlePrevious = () => {
     window.scrollTo({
       top: 0,

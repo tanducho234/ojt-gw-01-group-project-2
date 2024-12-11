@@ -66,7 +66,7 @@ function ProductCard({ product,root=null }) {
           {/* Giá trị rating */}
           {product.totalReview > 0 && (
             <span className="text-black text-[12px] ml-2 md:text-[14px]">
-              {rating.toFixed(1)}/{5}
+              {rating.toFixed(1).replace(/\.0$/, "")}/{5}
             </span>
           )}
         </div>

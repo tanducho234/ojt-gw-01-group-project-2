@@ -7,7 +7,11 @@ import { toast, ToastContainer } from "react-toastify";
 import { Button, message, Popconfirm } from "antd";
 import { set } from "react-hook-form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMapMarkerAlt, faPhone, faUser } from "@fortawesome/free-solid-svg-icons";
+import {
+  faMapMarkerAlt,
+  faPhone,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
 
 const LoadingSpinner = () => (
   <div className="flex justify-center items-center h-screen">
@@ -278,6 +282,7 @@ const Checkout = () => {
     // Construct the order details object
     const orderDetails = {
       products,
+      shippingCost,
       voucherDiscountAmount: voucherDiscountAmount.toFixed(2),
       totalPrice: totalPrice.toFixed(2),
       voucherCode: discountCode,
@@ -384,7 +389,7 @@ const Checkout = () => {
                           Selected Shipping Address
                         </h3>
                         <p className="mt-2">
-                          <span className="font-semibold">Name:</span>
+                          <span className="font-semibold">Name: </span>
                           {
                             addresses.find(
                               (addr) => addr._id === selectedAddress
@@ -392,7 +397,7 @@ const Checkout = () => {
                           }
                         </p>
                         <p>
-                          <span className="font-semibold">Phone:</span>
+                          <span className="font-semibold">Phone: </span>
                           {
                             addresses.find(
                               (addr) => addr._id === selectedAddress
@@ -400,7 +405,7 @@ const Checkout = () => {
                           }
                         </p>
                         <p>
-                          <span className="font-semibold">Address:</span>
+                          <span className="font-semibold">Address: </span>
                           {
                             addresses.find(
                               (addr) => addr._id === selectedAddress

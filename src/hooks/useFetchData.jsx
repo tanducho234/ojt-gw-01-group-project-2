@@ -56,7 +56,6 @@ export const FetchDataProvider = ({ children }) => {
         (sum, item) => sum + item.quantity,
         0
       );
-      console.log("totalQuantity", totalQuantity);
       setCartItemCount(totalQuantity); // Set cart item count from the API response
     } catch (err) {
       setError("Failed to fetch data");
@@ -72,8 +71,22 @@ export const FetchDataProvider = ({ children }) => {
   }, []); // Empty dependency array to run once on mount
 
   // Function to update cart item count on backend
-  const updateCartItemCount = (newCount) => {
-    setCartItemCount(newCount);
+  const updateCartItemCount = async () => {
+    try {
+      const cartResponse = await axios.get(`${URL}/api/carts`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const totalQuantity = cartResponse.data.reduce(
+        (sum, item) => sum + item.quantity,
+        0
+      );
+      setCartItemCount(totalQuantity);
+    } catch (err) {
+      console.error("Failed to update cart count:", err);
+      setError("Failed to update cart count");
+    }
   };
 
   // Memoize context value to optimize re-renders

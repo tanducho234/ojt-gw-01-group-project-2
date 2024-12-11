@@ -292,19 +292,19 @@ const ProductTable = () => {
 
   const columns = [
     {
-      align:"center",
+      align: "center",
       title: "Product ID",
       dataIndex: "_id",
       key: "_id",
       fixed: "left",
-      width:50,
+      width: 50,
       ...getColumnSearchProps("_id"),
       render: (id) => (
         <Tooltip title={id}>
           <div
             style={{
               whiteSpace: "nowrap",
-              overflow: "hidden", 
+              overflow: "hidden",
               textOverflow: "ellipsis",
               direction: "rtl", // Makes the ellipsis appear on the left side
               textAlign: "left", // Keeps the text aligned correctly

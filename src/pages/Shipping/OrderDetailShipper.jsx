@@ -76,23 +76,23 @@ const OrderDetailShipper = () => {
     try {
       const requestBody = {
         status: "Delivered",
-        description: selectedReason
+        description: selectedReason,
       };
-      
+
       // Check if the payment method is COD, and if so, include the payment status
       if (order.paymentMethod === "COD") {
         requestBody.paymentStatus = "Paid";
       }
-      
+
       const response = await axios.put(
         `https://ojt-gw-01-final-project-back-end.vercel.app/api/order-details/${order._id}`,
         requestBody,
         { headers: { Authorization: `Bearer ${token}` } }
       );
-  
+
       // Update the local state with the new order data
       setOrder(response.data);
-  
+
       // Map status history and update the steps
       const apiSteps = response.data.statusHistory.map((item) => ({
         status: item.status,
@@ -100,7 +100,7 @@ const OrderDetailShipper = () => {
         description: item.description || "", // Handle description if empty
       }));
       setSteps(apiSteps);
-  
+
       message.success("Order marked as Delivered successfully");
     } catch (error) {
       console.error(
@@ -110,9 +110,6 @@ const OrderDetailShipper = () => {
       message.error("Failed to mark order as Delivered");
     }
   };
-  
-
-
 
   const getStatusStyle = (status) => {
     switch (status) {
@@ -183,9 +180,9 @@ const OrderDetailShipper = () => {
     <div className="mt-8 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       <Link
         to="/shipper"
-        className="text-gray-600 text-sm flex items-center mb-4"
-      >
-        <FontAwesomeIcon icon={faChevronLeft} className="mr-2" /> Back to shipper packages
+        className="text-gray-600 text-sm flex items-center mb-4">
+        <FontAwesomeIcon icon={faChevronLeft} className="mr-2" /> Back to
+        shipper packages
       </Link>
 
       {/* Order Details Title Section */}
@@ -205,8 +202,7 @@ const OrderDetailShipper = () => {
               <span
                 className={`mt-2 sm:mt-0 px-4 py-2 text-sm font-medium rounded-full ${getStatusStyle(
                   order.status
-                )}`}
-              >
+                )}`}>
                 {order.status}
               </span>
             </div>
@@ -219,27 +215,29 @@ const OrderDetailShipper = () => {
               <h2 className="text-lg font-medium mb-4">Products</h2>
               <div className="space-y-4 sm:space-y-6">
                 {order.products?.map((item, index) => (
-                  <div className="flex items-start sm:items-center" key={index}>
-                    <img
-                      src={item.imgLink}
-                      alt={item.name}
-                      className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-md mr-4"
-                    />
-                    <div className="flex-1">
-                      <p className="font-medium text-sm sm:text-base">
-                        {item.name}
-                      </p>
-                      <p className="text-gray-600 text-sm">
-                        {item.color}, {item.size}
-                      </p>
-                      <p className="text-gray-600 text-sm">
-                        Qty: {item.quantity}
-                      </p>
-                      <p className="font-medium text-sm sm:text-base">
-                        ${item.priceAtPurchase}
-                      </p>
+                  <Link to={`/products/${item.productId}`} key={index}>
+                    <div className="flex items-start sm:items-center">
+                      <img
+                        src={item.imgLink}
+                        alt={item.name}
+                        className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-md mr-4"
+                      />
+                      <div className="flex-1">
+                        <p className="font-medium text-sm sm:text-base">
+                          {item.name}
+                        </p>
+                        <p className="text-gray-600 text-sm">
+                          {item.color}, {item.size}
+                        </p>
+                        <p className="text-gray-600 text-sm">
+                          Qty: {item.quantity}
+                        </p>
+                        <p className="font-medium text-sm sm:text-base">
+                          ${item.priceAtPurchase}
+                        </p>
+                      </div>
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
             </div>
@@ -258,8 +256,7 @@ const OrderDetailShipper = () => {
                   size="small"
                   current={steps.findIndex(
                     (step) => step.status === order.status
-                  )}
-                >
+                  )}>
                   {steps.map((step, index) => (
                     <Steps.Step
                       subTitle={step.description}
@@ -302,13 +299,12 @@ const OrderDetailShipper = () => {
                   </span>
                 </div>
                 {/* Conditional Button for Pending Payment Status */}
-                
               </div>
             </div>
 
             {/* Delivery Information */}
             <div className="p-6">
-              <h2 className="text-lg font-medium mb-4">Delivery</h2>
+              <h2 className="text-lg font-medium mb-4">Customer Address</h2>
               <div className="space-y-4">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Name:</span>
@@ -341,37 +337,7 @@ const OrderDetailShipper = () => {
           <hr />
           {/* Payment and Need Help */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-            <div className="p-6">
-              <h2 className="text-lg font-medium mb-4">Need Help?</h2>
-              <div className="space-y-4">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">
-                    <FontAwesomeIcon icon={faTruck} className="mr-2 text-lg" />
-                    Delivery Info
-                    <FontAwesomeIcon
-                      icon={faArrowUpRightFromSquare}
-                      className="ml-1 text-gray-600"
-                    />
-                  </span>
-                  <span>{order.deliveryInfo}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">
-                    <FontAwesomeIcon
-                      icon={faBoxOpen}
-                      className="mr-2 text-lg"
-                    />
-                    Returns
-                    <FontAwesomeIcon
-                      icon={faArrowUpRightFromSquare}
-                      className="ml-1 text-gray-600"
-                    />
-                  </span>
-                  <span>{order.returnPolicy}</span>
-                </div>
-              </div>
-            </div>
-
+          
             {/* Order Summary */}
             <div className="p-6">
               <h2 className="text-lg font-medium mb-4">Order Summary</h2>
@@ -420,8 +386,7 @@ const OrderDetailShipper = () => {
                   <div>
                     <button
                       onClick={handleDeliverySuccess}
-                      className="bg-black font-bold   border border-black text-white rounded-full py-2 px-10 hover:bg-white  hover:text-black transition duration-300"
-                    >
+                      className="bg-black font-bold   border border-black text-white rounded-full py-2 px-10 hover:bg-white  hover:text-black transition duration-300">
                       Delivery Success
                     </button>
                   </div>
@@ -429,8 +394,7 @@ const OrderDetailShipper = () => {
                   <div className="flex justify-center items-center gap-4 mt-4">
                     <button
                       onClick={showModal}
-                      className="bg-white font-bold text-red-600 border border-rose-500 rounded-full py-2 px-12 hover:bg-pink-100 transition duration-300"
-                    >
+                      className="bg-white font-bold text-red-600 border border-rose-500 rounded-full py-2 px-12 hover:bg-pink-100 transition duration-300">
                       Return Order
                     </button>
                   </div>
@@ -453,8 +417,7 @@ const OrderDetailShipper = () => {
                           {reasons.map((reason, index) => (
                             <label
                               key={index}
-                              className="flex items-center ml-8 gap-2 mb-2 cursor-pointer"
-                            >
+                              className="flex items-center ml-8 gap-2 mb-2 cursor-pointer">
                               <input
                                 type="radio"
                                 name="cancelReason"
@@ -474,14 +437,12 @@ const OrderDetailShipper = () => {
                         <div className="flex justify-center gap-4 mt-6">
                           <button
                             onClick={hideModal}
-                            className="bg-white font-bold text-black border border-black rounded-full py-4 px-12 hover:bg-rose-600 hover:text-white hover:border-none transition duration-300"
-                          >
+                            className="bg-white font-bold text-black border border-black rounded-full py-4 px-12 hover:bg-rose-600 hover:text-white hover:border-none transition duration-300">
                             Cancel
                           </button>
                           <button
                             onClick={handleReturnOrder}
-                            className="bg-black font-bold text-white border border-white rounded-full py-4 px-12 hover:bg-gray-600 hover:text-black hover:border hover:border-black transition duration-300"
-                          >
+                            className="bg-black font-bold text-white border border-white rounded-full py-4 px-12 hover:bg-gray-600 hover:text-black hover:border hover:border-black transition duration-300">
                             Submit
                           </button>
                         </div>

@@ -76,6 +76,8 @@ function App() {
             <Route path="/checkout/failed/:id" element={<OrderFailed />} />
             <Route path="/profile" element={<ProfileLayout />}>
               {/* Nested routes within Profile */}
+              <Route path="" element={<Account />} />
+
               <Route path="account" element={<Account />} />
               <Route path="orders" element={<Order />} />
               <Route

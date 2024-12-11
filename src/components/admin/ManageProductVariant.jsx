@@ -103,11 +103,11 @@ const ManageProductVariant = () => {
         }
       );
       setProduct(response.data);
-      loadingMessage()
+      loadingMessage();
       message.success("Variant added successfully!");
       setIsModalVisible(false);
     } catch (error) {
-      loadingMessage()
+      loadingMessage();
       message.error("Failed to add variant.");
     }
   };
@@ -148,11 +148,11 @@ const ManageProductVariant = () => {
                       : colorVariant.color.toLowerCase(),
                 }}>
                 {colorVariant.color}
-                <Button
+                {/* <Button
                   style={{ marginLeft: "8px", float: "right" }}
                   icon={<DeleteOutlined />}
                   danger
-                />
+                /> */}
                 <Button
                   style={{ marginLeft: "8px", float: "right" }}
                   color="default"

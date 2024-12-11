@@ -4,37 +4,42 @@ import { Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 
 const Footer = () => {
-
   const [email, setEmail] = useState("");
 
   const handleSubscribe = async (e) => {
     e.preventDefault(); // Ngăn form gửi request mặc định
-    
+
     // Kiểm tra nếu email không hợp lệ
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regex cơ bản kiểm tra định dạng email
     if (!email || !emailPattern.test(email)) {
       toast.error("Please enter a valid email address.");
       return;
     }
-  
+
     try {
       // Gửi yêu cầu đến API
       const response = await axios.post(
         "https://ojt-gw-01-final-project-back-end.vercel.app/api/emails/subscribe-notification",
         { email }
       );
-      toast.success("You have successfully subscribed to the newsletter!", { closeOnClick: true });
+      toast.success("You have successfully subscribed to the newsletter!", {
+        closeOnClick: true,
+      });
       setEmail(""); // Reset input
     } catch (error) {
-      console.error("Error subscribing:", error.response?.data || error.message);
-      toast.error("There was an error subscribing. Please try again.", { closeOnClick: true });
+      console.error(
+        "Error subscribing:",
+        error.response?.data || error.message
+      );
+      toast.error("There was an error subscribing. Please try again.", {
+        closeOnClick: true,
+      });
     }
   };
-  
 
   return (
     <footer className="bg-gray-100 text-gray-800">
-      <ToastContainer/>
+      <ToastContainer />
       {/* Newsletter Section */}
       <div
         className="flex justify-center items-center py-6 md:py-10 px-4 h-64"
@@ -96,8 +101,8 @@ const Footer = () => {
               />
             </Link>
             <p className="text-sm text-gray-600">
-              We have clothes that suit your style and <br></br> which you're proud to
-              wear. From <br></br>women to men.
+              We have clothes that suit your style and <br></br> which you're
+              proud to wear. From <br></br>women to men.
             </p>
             <div className="flex items-center gap-4 md:gap-6">
               {/* Social Media Icons */}

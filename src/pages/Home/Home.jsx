@@ -52,7 +52,7 @@ function Home({ customerReviews = [] }) {
   const fetchRandomTopReviews = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3000/api/reviews/random-top-reviews"
+        "https://ojt-gw-01-final-project-back-end.vercel.app/api/reviews/random-top-reviews"
       );
 
       if (response.status === 200) {
@@ -243,8 +243,7 @@ function Home({ customerReviews = [] }) {
           </p>
           <Link
             to="/products"
-            className="bg-black text-white px-6 md:px-8 py-3 md:py-4 rounded-full cursor-pointer transition-all duration-300 hover:bg-gray-800 hover:shadow-lg transform hover:-translate-y-1 active:translate-y-0 text-sm md:text-base"
-          >
+            className="bg-black text-white px-6 md:px-8 py-3 md:py-4 rounded-full cursor-pointer transition-all duration-300 hover:bg-gray-800 hover:shadow-lg transform hover:-translate-y-1 active:translate-y-0 text-sm md:text-base">
             Shop Now
           </Link>
           <div className="flex flex-wrap md:flex-nowrap gap-4 md:gap-10 mt-6 md:mt-10">
@@ -280,8 +279,7 @@ function Home({ customerReviews = [] }) {
           onMouseMove={handleDragMove}
           onTouchStart={handleDragStart}
           onTouchEnd={handleDragEnd}
-          onTouchMove={handleDragMove}
-        >
+          onTouchMove={handleDragMove}>
           <div className="flex gap-16 md:gap-36 min-w-max">
             {[...brands, ...brands, ...brands].map((brand, index) => (
               <img
@@ -307,8 +305,7 @@ function Home({ customerReviews = [] }) {
         </div>
         <Link
           to="/products?sortBy=createdAt&order=desc"
-          className="px-4 md:px-6 py-2 md:py-3 bg-transparent border-2 border-black rounded cursor-pointer transition-all duration-300 hover:bg-black hover:text-white hover:shadow-lg transform hover:-translate-y-1 text-sm md:text-base"
-        >
+          className="px-4 md:px-6 py-2 md:py-3 bg-transparent border-2 border-black rounded cursor-pointer transition-all duration-300 hover:bg-black hover:text-white hover:shadow-lg transform hover:-translate-y-1 text-sm md:text-base">
           View All
         </Link>
       </section>
@@ -326,8 +323,7 @@ function Home({ customerReviews = [] }) {
         </div>
         <Link
           to="/products?sortBy=soldQuantity"
-          className="px-4 md:px-6 py-2 md:py-3 bg-transparent border-2 border-black rounded cursor-pointer transition-all duration-300 hover:bg-black hover:text-white hover:shadow-lg transform hover:-translate-y-1 text-sm md:text-base"
-        >
+          className="px-4 md:px-6 py-2 md:py-3 bg-transparent border-2 border-black rounded cursor-pointer transition-all duration-300 hover:bg-black hover:text-white hover:shadow-lg transform hover:-translate-y-1 text-sm md:text-base">
           View All
         </Link>
       </section>
@@ -340,8 +336,7 @@ function Home({ customerReviews = [] }) {
           {["Casual", "Formal", "Party", "GYM"].map((style) => (
             <div
               key={style}
-              className="bg-transparent transform transition-all duration-500 hover:scale-105 hover:shadow-lg"
-            >
+              className="bg-transparent transform transition-all duration-500 hover:scale-105 hover:shadow-lg">
               <img
                 src={`/images/${style}.png`}
                 alt={`${style} Style`}
@@ -360,14 +355,12 @@ function Home({ customerReviews = [] }) {
         <div className="relative mt-6 md:mt-10">
           <button
             onClick={() => handleReviewScroll("left")}
-            className="absolute top-1/2 left-0 -translate-y-1/2 bg-gray-300 hover:bg-gray-400 text-white rounded-full w-10 h-10 flex items-center justify-center shadow-md focus:outline-none z-10"
-          >
+            className="absolute top-1/2 left-0 -translate-y-1/2 bg-gray-300 hover:bg-gray-400 text-white rounded-full w-10 h-10 flex items-center justify-center shadow-md focus:outline-none z-10">
             <svg
               class="h-8 w-8 text-zinc-500"
               fill="none"
               viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
+              stroke="currentColor">
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -379,8 +372,7 @@ function Home({ customerReviews = [] }) {
 
           <div
             ref={reviewContainerRef}
-            className="flex gap-4 md:gap-5 overflow-x-auto hide-scrollbar px-12 scroll-smooth"
-          >
+            className="flex gap-4 md:gap-5 overflow-x-auto hide-scrollbar px-12 scroll-smooth">
             {reviews.length > 0 ? (
               reviews.map((review, index) => (
                 <Review key={index} review={review} />
@@ -394,14 +386,12 @@ function Home({ customerReviews = [] }) {
 
           <button
             onClick={() => handleReviewScroll("right")}
-            className="absolute top-1/2 right-0 -translate-y-1/2 bg-gray-300 hover:bg-gray-400 text-white rounded-full w-10 h-10 flex items-center justify-center shadow-md focus:outline-none z-10"
-          >
+            className="absolute top-1/2 right-0 -translate-y-1/2 bg-gray-300 hover:bg-gray-400 text-white rounded-full w-10 h-10 flex items-center justify-center shadow-md focus:outline-none z-10">
             <svg
               class="h-8 w-8 text-zinc-500"
               fill="none"
               viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
+              stroke="currentColor">
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"

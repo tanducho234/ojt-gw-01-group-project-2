@@ -4,7 +4,7 @@ import axios from "axios";
 import { useAuth } from "../../hooks/useAuth";
 import OverviewCards from "../../components/admin/dashboard/OverviewCards";
 import { LoadingSpinner } from "../../components/LoadingSpinner";
-import ExtraCard from "../../components/admin/dashboard/extraCard";
+import ExtraCard from "../../components/admin/dashboard/ExtraCard";
 import SatisfactionCard from "../../components/admin/dashboard/SatisfactionCard";
 import { get } from "react-hook-form";
 import NewUsersOrdersChart from "../../components/admin/dashboard/NewUsersOrdersChart";
