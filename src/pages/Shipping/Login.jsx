@@ -19,7 +19,7 @@ export const ShippingLogin = () => {
         password: password,
       });
 
-      if (response.data.role === "admin") {
+      if (response.data.role === "shipper") {
         await login(response.data.role, response.data.token);
         loadingMessage()
         message.success("Login successful!");
