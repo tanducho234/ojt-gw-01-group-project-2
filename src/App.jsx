@@ -16,7 +16,7 @@ import Login from "./pages/Auth/Login";
 
 import { ShippingLogin } from "./pages/Shipping/Login";
 import AboutUs from "./pages/About/About";
-import { AuthProvider, useAuth } from "./hooks/useAuth";
+import { AuthProvider } from "./hooks/useAuth";
 import { FetchDataProvider } from "./hooks/useFetchData";
 import { AddProduct } from "./pages/Admin/AddProduct";
 import { Dashboard } from "./pages/Admin/Dashboard";
@@ -61,7 +61,6 @@ function App() {
           <Route path="/" element={<HomeLayout />}>
             <Route path="" element={<Home />} />
             <Route path="home" element={<Home />} />
-
             <Route path="products" element={<Products />} />
             <Route path="products/:id" element={<ProductDetail />} />
           </Route>
@@ -107,11 +106,7 @@ function App() {
             />
           </Route>
           {/*shipperlayout*/}
-
           <Route path="/shipper" element={<ShipperLayout />}>
-
-          
-          
           </Route>
         </Routes>
       </FetchDataProvider>
