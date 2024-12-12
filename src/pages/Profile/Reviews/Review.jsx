@@ -22,6 +22,7 @@ const Review = () => {
         } catch (error) {
           console.error("Error fetching data:", error);
           setReviews([]); // Set empty array on error
+          setLoading(false);
         }
       };
       fetchData();
