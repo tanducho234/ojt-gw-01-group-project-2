@@ -31,6 +31,44 @@ const statusOptions = [
 ];
 
 const OrderTable = () => {
+  const defaultExpandable = {
+    expandedRowRender: (record) => (
+      <div className="flex">
+        <Table
+          dataSource={record.products}
+          pagination={false}
+          columns={[
+            {
+              title: "Product Name",
+              dataIndex: "name",
+              key: "name",
+            },
+            {
+              title: "Quantity",
+              dataIndex: "quantity",
+              key: "quantity",
+            },
+            {
+              title: "Price At Purchase",
+              dataIndex: "priceAtPurchase",
+              key: "price",
+              render: (price) => `$${price?.toFixed(2)}`,
+            },
+            {
+              title: "Size",
+              dataIndex: "size",
+              key: "size",
+            },
+            {
+              title: "Color",
+              dataIndex: "color",
+              key: "color",
+            },
+          ]}
+        />
+      </div>
+    ),
+  };
   const navigate = useNavigate();
   const { token } = useAuth();
   const [orders, setOrders] = useState([]);
@@ -38,6 +76,7 @@ const OrderTable = () => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const [recordEditing, setRecordEditing] = useState([]);
+  const [expandable, setExpandable] = useState(defaultExpandable);
 
   const searchInput = useRef(null);
 
@@ -337,7 +376,13 @@ const OrderTable = () => {
         ) : (
           <>
             <Tag
-              icon={!["Canceled", "Returned","Delivered"].includes(status) ? <EditOutlined /> : <EyeOutlined />}            
+              icon={
+                !["Canceled", "Returned", "Delivered"].includes(status) ? (
+                  <EditOutlined />
+                ) : (
+                  <EyeOutlined />
+                )
+              }
               className={`min-w-[90px]
               ${status === "Pending" ? "bg-yellow-100 text-yellow-600" : ""}
               ${status === "Preparing" ? "bg-orange-100 text-orange-600" : ""}
@@ -368,6 +413,7 @@ const OrderTable = () => {
   return (
     <>
       <Table
+        expandable={expandable}
         title={() => (
           <span style={{ fontWeight: "bold", fontSize: "1.5em" }}>
             Orders table
