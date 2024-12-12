@@ -337,7 +337,7 @@ const OrderTable = () => {
         ) : (
           <>
             <Tag
-              icon={status !== "Canceled" ? <EditOutlined /> : <EyeOutlined />}
+              icon={!["Canceled", "Returned","Delivered"].includes(status) ? <EditOutlined /> : <EyeOutlined />}            
               className={`min-w-[90px]
               ${status === "Pending" ? "bg-yellow-100 text-yellow-600" : ""}
               ${status === "Preparing" ? "bg-orange-100 text-orange-600" : ""}
