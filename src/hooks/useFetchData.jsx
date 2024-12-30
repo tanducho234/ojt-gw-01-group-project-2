@@ -37,7 +37,7 @@ export const FetchDataProvider = ({ children }) => {
   const fetchData = async () => {
     try {
       const [categoryResponse, styleResponse, brandResponse, cartResponse] =
-        await Promise.all([
+        await Promise.allSettled([
           axios.get(`${URL}/api/categories`),
           axios.get(`${URL}/api/styles`),
           axios.get(`${URL}/api/brands`),
