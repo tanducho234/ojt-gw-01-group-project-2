@@ -47,16 +47,25 @@ export const FetchDataProvider = ({ children }) => {
             },
           }),
         ]);
-
-      setCategories(categoryResponse.data);
-      setStyles(styleResponse.data);
-      setBrands(brandResponse.data);
+  
+      // Set categories, styles, and brands as usual
+      setCategories(categoryResponse.status === 'fulfilled' ? categoryResponse.value.data : []);
+      setStyles(styleResponse.status === 'fulfilled' ? styleResponse.value.data : []);
+      setBrands(brandResponse.status === 'fulfilled' ? brandResponse.value.data : []);
+  
       console.log("cart data", cartResponse);
-      const totalQuantity = cartResponse.data.reduce(
-        (sum, item) => sum + item.quantity,
-        0
-      );
-      setCartItemCount(totalQuantity); // Set cart item count from the API response
+      
+      // If the cart request is successful, calculate the total quantity
+      if (cartResponse.status === 'fulfilled' && cartResponse.value.data) {
+        const totalQuantity = cartResponse.value.data.reduce(
+          (sum, item) => sum + item.quantity,
+          0
+        );
+        setCartItemCount(totalQuantity); // Set cart item count from the API response
+      } else {
+        setCartItemCount(0); // Set cart item count to 0 if cart request failed
+      }
+  
     } catch (err) {
       setError("Failed to fetch data");
       console.error(err);
@@ -64,6 +73,7 @@ export const FetchDataProvider = ({ children }) => {
       console.log("Brands/Categories/Styles mounted");
     }
   };
+  
 
   // Fetch data on component mount
   useEffect(() => {
